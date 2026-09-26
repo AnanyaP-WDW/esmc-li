@@ -1,0 +1,3 @@
+method,cR@1,cR@5,cR@10,cR@100,paper_cR@10,delta_vs_paper
+protocol_frozen,0.8829,0.8335,0.8096,0.7421,0.8093,0.0003
+protocol_trained,0.9447,0.9064,0.8933,0.8771,0.8947,-0.0014
