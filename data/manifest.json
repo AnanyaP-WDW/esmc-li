@@ -1,0 +1,53 @@
+{
+  "counts": {
+    "astral_40_domains": 15177,
+    "astral_40_domains_in_dir_cla": 15129,
+    "scope_domains_dir_cla": 344851,
+    "scope_families": 5431,
+    "scope_folds": 1485,
+    "scope_superfamilies": 2368
+  },
+  "esmc_cpp": {
+    "commit": "ffe6eec269e213de7298df58b192bc58cff2586e",
+    "esmc_embed_binary": "/Users/ananyapathak/Desktop/oss/esmc.cpp/build/esmc-embed",
+    "gguf": {
+      "bytes": 664280928,
+      "path": "/Users/ananyapathak/Desktop/oss/esmc.cpp/models/esmc-300m-f16.gguf",
+      "sha256": "7c37c24e156920bda289e0716ba90aced235cb8603b34813421e69b8d9ca2bd1"
+    },
+    "path": "/Users/ananyapathak/Desktop/oss/esmc.cpp"
+  },
+  "sources": {
+    "astral_40": {
+      "bytes": 4299207,
+      "path": "data/raw/scope/astral-scopedom-seqres-gd-sel-gs-bib-40-2.08.fa",
+      "sha256": "e6d3213b38225f617966686809fa5531f0de6a7d00d01692477476a1493ab037",
+      "url": "https://scop.berkeley.edu/downloads/scopeseq-2.08/astral-scopedom-seqres-gd-sel-gs-bib-40-2.08.fa"
+    },
+    "pfam_clans": {
+      "bytes": 553777,
+      "path": "data/raw/pfam/Pfam-A.clans.tsv.gz",
+      "sha256": "86062b7ef1a0e0caee0c28cef479ac0d294c80789c51cbf75e513b368ce3a6f6",
+      "url": "https://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.clans.tsv.gz"
+    },
+    "pfam_seed": {
+      "bytes": 194369799,
+      "path": "data/raw/pfam/Pfam-A.seed.gz",
+      "sha256": "c53a1397f6741c3501f21db2179ad7810d98ddf9f3b3172257bd71ca07ba8c3b",
+      "url": "https://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.seed.gz"
+    },
+    "pfam_version": {
+      "bytes": 114,
+      "path": "data/raw/pfam/Pfam.version.gz",
+      "sha256": "32dc24a5fd256ade6930bbcbcc9e30035e435025b0574e4a7fe110b7f433e2c1",
+      "text": "Pfam release       : 38.2\nPfam-A families    : 30134\nDate               : 2026-01\nBased on UniProtKB : 2025_03",
+      "url": "https://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam.version.gz"
+    },
+    "scope_dir_cla": {
+      "bytes": 34697841,
+      "path": "data/raw/scope/dir.cla.scope.2.08-stable.txt",
+      "sha256": "979eceafbc2cb8c50a6549d156d888478a43003e8f9e21e1940d11bcf3d728ca",
+      "url": "https://scop.berkeley.edu/downloads/parse/dir.cla.scope.2.08-stable.txt"
+    }
+  }
+}

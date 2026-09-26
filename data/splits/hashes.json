@@ -1,0 +1,10 @@
+{
+  "pfam_test": "0ffb3b23cbb247230f89b05deed0fd449f2ec48a8c25f2b240aef89f00ba1a78",
+  "pfam_train": "3ac25eb5a86804bc597ecf1a37ec947290faa60303e746943a15575c459fc22d",
+  "pfam_val": "aa3f459e1fe69e2441c7b9f9bb1ac1116264929fb71f41ccc3c363e6bdfdb99f",
+  "scope_protocol_train": "2f5e0cf332f8ba2cc8b36adbe9d6c46bcc024b17893e55ba5f951e944b0b746e",
+  "scope_test": "6a3e64e471db17e699ccacbac376dd0f6fee6c32586069729a8e04641ef4c459",
+  "scope_test_protocol": "6a3e64e471db17e699ccacbac376dd0f6fee6c32586069729a8e04641ef4c459",
+  "scope_train": "f3a80261eac837ec5eecd16648efa1c705eaa85257e536787d24c51789b49c18",
+  "scope_val": "3fdf0b40e79c444b75b0ff01291bed5d44e6d30ac41d61ca36500ed3f34cee55"
+}

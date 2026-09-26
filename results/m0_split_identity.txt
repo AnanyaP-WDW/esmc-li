@@ -1,0 +1,2 @@
+scope: max train<->test identity = 100.00% (d3hnaa1->d3b95a1; alnlen=17 qcov=0.06 tcov=0.07) | max identity over >=80%-coverage alignments = 38.20% | train=9894 test=2314
+pfam: max train<->test identity = 100.00% (N0B1P7_9BACI/70-225->N0B1P7_9BACI/104-188; alnlen=85 qcov=0.55 tcov=1.00) | max identity over >=80%-coverage alignments = 32.80% | train=304673 test=68646
