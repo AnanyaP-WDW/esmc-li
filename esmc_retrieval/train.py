@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import random
 import sys
+import time
 from collections import defaultdict
 from pathlib import Path
 
@@ -31,12 +32,13 @@ class EmbeddingStore:
     """Lazy id -> float32 [L, 960] cache. ponytail: unbounded dict; trim to
     fp16 or an LRU if a full-epoch sweep's resident set hurts on 8GB."""
 
-    def __init__(self) -> None:
+    def __init__(self, cache: Path = CACHE) -> None:
+        self.cache = cache
         self._d: dict[str, np.ndarray] = {}
 
     def get(self, rid: str) -> np.ndarray:
         if rid not in self._d:
-            self._d[rid] = np.load(CACHE / f"{rid}.npy")
+            self._d[rid] = np.load(self.cache / f"{rid}.npy")
         return self._d[rid]
 
 
@@ -196,13 +198,142 @@ def overfit(steps: int = 500, batch_size: int = 16, tau: float = 1.0,
     return 0 if ok else 1
 
 
+# ============================ M3: partial fine-tune ==========================
+
+DEV = "mps" if torch.backends.mps.is_available() else "cpu"
+
+
+def _esmc():
+    from esm.models.esmc.model import EsmcForMaskedLM
+    from esm.models.esmc.tokenizer import EsmcTokenizer
+
+    m = EsmcForMaskedLM.from_pretrained("biohub/ESMC-300M", dtype=torch.float32)
+    return m.esmc, EsmcTokenizer()
+
+
+def m3_cache_dir(k: int) -> Path:
+    return ROOT / "cache" / "m3" / f"k{k}"
+
+
+class Suffix(nn.Module):
+    """transformer.blocks[cut:] + final norm (cut = 30-k), fed by the prefix
+    cache. Attention mask mirrors EsmcModel.forward's non-flash branch:
+    sequence_id = bool_mask[:, None, None, :]."""
+
+    def __init__(self, esmc: nn.Module, cut: int) -> None:
+        super().__init__()
+        self.blocks = nn.ModuleList(list(esmc.transformer.blocks)[cut:])
+        self.norm = esmc.transformer.norm
+
+    def forward(self, x: torch.Tensor,
+                mask: torch.Tensor | None = None) -> torch.Tensor:
+        seq_id = None if mask is None or bool(mask.all()) else mask[:, None, None, :]
+        for b in self.blocks:
+            x, _ = b(x, seq_id)
+        return self.norm(x)
+
+
+def all_scope_rows() -> list[dict]:
+    rows = []
+    for split in ("scope_train", "scope_val", "scope_test"):
+        rows.extend(load_split(ROOT / "data" / "splits" / f"{split}.tsv"))
+    seen: set[str] = set()
+    return [r for r in rows if not (r["id"] in seen or seen.add(r["id"]))]
+
+
+def build_prefix_cache(k: int) -> None:
+    """Cache the input to block 30-k for every scope domain, once."""
+    cut = 30 - k
+    out = m3_cache_dir(k)
+    out.mkdir(parents=True, exist_ok=True)
+    rows = [r for r in all_scope_rows() if not (out / f"{r['id']}.npy").exists()]
+    if not rows:
+        print(f"prefix cache k={k}: already complete")
+        return
+    esmc, tok = _esmc()
+    esmc = esmc.to(DEV).eval()
+    t0 = time.time()
+    with torch.no_grad():
+        for i in range(0, len(rows), 16):
+            batch = rows[i:i + 16]
+            enc = tok([r["sequence"] for r in batch], padding=True,
+                      return_tensors="pt")
+            enc = {kk: vv.to(DEV) for kk, vv in enc.items()}
+            x = esmc.embed(enc["input_ids"])
+            mask = enc["attention_mask"].bool()
+            seq_id = None if bool(mask.all()) else mask[:, None, None, :]
+            for block in list(esmc.transformer.blocks)[:cut]:
+                x, _ = block(x, seq_id)
+            x = x.cpu()
+            for j, r in enumerate(batch):
+                t = int(mask[j].sum())
+                np.save(out / f"{r['id']}.npy", x[j, :t].numpy())
+            if i % 1024 == 0:
+                print(f"  prefix k={k} {i}/{len(rows)}", flush=True)
+    print(f"prefix cache k={k}: +{len(rows)} files in {time.time()-t0:.0f}s")
+
+
+def check_suffix(k: int) -> int:
+    """T3.1: with the k blocks unmodified, prefix-cache + suffix output must
+    match the esmc.cpp embeddings (cache/scope): min cosine >= 0.999."""
+    cut = 30 - k
+    out = m3_cache_dir(k)
+    ids = sorted(p.stem for p in out.glob("*.npy"))
+    if not ids:
+        build_prefix_cache(k)
+        ids = sorted(p.stem for p in out.glob("*.npy"))
+    esmc, _ = _esmc()
+    suffix = Suffix(esmc, cut).to(DEV).eval()
+    store = EmbeddingStore(out)
+    min_cos = 1.0
+    worst = ""
+    t0 = time.time()
+    with torch.no_grad():
+        for i in range(0, len(ids), 16):
+            batch = ids[i:i + 16]
+            embs = [store.get(r) for r in batch]
+            L = max(len(e) for e in embs)
+            x = np.zeros((len(batch), L, 960), dtype=np.float32)
+            m = np.zeros((len(batch), L), dtype=bool)
+            for j, e in enumerate(embs):
+                x[j, :len(e)] = e
+                m[j, :len(e)] = True
+            mt = torch.from_numpy(m)
+            h = suffix(torch.from_numpy(x).to(DEV), mt.to(DEV)).cpu().numpy()
+            for j, rid in enumerate(batch):
+                res_rows = np.where(m[j])[0][1:-1]  # drop CLS/EOS token rows
+                pred = h[j, res_rows]
+                ref = np.load(CACHE / f"{rid}.npy")
+                if len(pred) != len(ref):
+                    raise RuntimeError(f"{rid}: len {len(pred)} vs esmc.cpp {len(ref)}")
+                pn = pred / (np.linalg.norm(pred, axis=1, keepdims=True) + 1e-12)
+                rn = ref / (np.linalg.norm(ref, axis=1, keepdims=True) + 1e-12)
+                cos = float((pn * rn).sum(axis=1).min())
+                if cos < min_cos:
+                    min_cos, worst = cos, rid
+    print(f"T3.1 check k={k}: min cosine {min_cos:.6f} (worst {worst}) "
+          f"over {len(ids)} ids in {time.time()-t0:.0f}s -> "
+          f"{'OK' if min_cos >= 0.999 else 'FAIL'}")
+    log_run("T3.1", {"k": k, "cut": 30 - k, "device": DEV,
+                     "criterion": "min cosine vs esmc.cpp >= 0.999"},
+            {"min_cos": round(min_cos, 6), "n_ids": len(ids),
+             "worst_id": worst}, seed=0, wall_s=time.time() - t0)
+    return 0 if min_cos >= 0.999 else 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--demo", action="store_true",
                     help="one train step each on CPU and MPS (T2.1 exit)")
     ap.add_argument("--overfit", action="store_true",
                     help="memorize one batch of 16 pairs (T2.2 exit)")
+    ap.add_argument("--finetune", type=int, choices=[2, 3], metavar="K",
+                    help="M3 T3.1: build prefix cache for last-k blocks and "
+                         "verify suffix reproduces esmc.cpp embeddings")
     args = ap.parse_args()
+    if args.finetune:
+        build_prefix_cache(args.finetune)
+        return check_suffix(args.finetune)
     if args.demo:
         devices = ["cpu"]
         if torch.backends.mps.is_available():
@@ -210,7 +341,7 @@ def main() -> int:
         return demo(devices)
     if args.overfit:
         return overfit()
-    ap.error("pass --demo or --overfit (T2.4 adds the sweep)")
+    ap.error("pass --demo, --overfit or --finetune K")
     return 2
 
 
