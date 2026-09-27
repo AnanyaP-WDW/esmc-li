@@ -11,11 +11,12 @@
     "commit": "ffe6eec269e213de7298df58b192bc58cff2586e",
     "esmc_embed_binary": "/Users/ananyapathak/Desktop/oss/esmc.cpp/build/esmc-embed",
     "gguf": {
-      "bytes": 664280928,
+      "bytes": 664397696,
       "path": "/Users/ananyapathak/Desktop/oss/esmc.cpp/models/esmc-300m-f16.gguf",
-      "sha256": "7c37c24e156920bda289e0716ba90aced235cb8603b34813421e69b8d9ca2bd1"
+      "sha256": "403ade8ea1d94f7c6fb89c1006c28bfe75e5d09df532ced05ed67e2c9bb9a500"
     },
-    "path": "/Users/ananyapathak/Desktop/oss/esmc.cpp"
+    "path": "/Users/ananyapathak/Desktop/oss/esmc.cpp",
+    "note": "local patch on pinned commit ffe6eec: ffn.layer_norm_bias was dropped by the converter/graph (official esm uses it; embeddings diverged from PyTorch ESM-C at cos~0.1). Regenerated GGUF sha above."
   },
   "sources": {
     "astral_40": {
