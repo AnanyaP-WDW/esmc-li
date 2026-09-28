@@ -15,8 +15,8 @@
       "path": "/Users/ananyapathak/Desktop/oss/esmc.cpp/models/esmc-300m-f16.gguf",
       "sha256": "403ade8ea1d94f7c6fb89c1006c28bfe75e5d09df532ced05ed67e2c9bb9a500"
     },
-    "path": "/Users/ananyapathak/Desktop/oss/esmc.cpp",
-    "note": "local patch on pinned commit ffe6eec: ffn.layer_norm_bias was dropped by the converter/graph (official esm uses it; embeddings diverged from PyTorch ESM-C at cos~0.1). Regenerated GGUF sha above."
+    "note": "local patch on pinned commit ffe6eec: ffn.layer_norm_bias was dropped by the converter/graph (official esm uses it; embeddings diverged from PyTorch ESM-C at cos~0.1). Regenerated GGUF sha above.",
+    "path": "/Users/ananyapathak/Desktop/oss/esmc.cpp"
   },
   "sources": {
     "astral_40": {
@@ -49,6 +49,12 @@
       "path": "data/raw/scope/dir.cla.scope.2.08-stable.txt",
       "sha256": "979eceafbc2cb8c50a6549d156d888478a43003e8f9e21e1940d11bcf3d728ca",
       "url": "https://scop.berkeley.edu/downloads/parse/dir.cla.scope.2.08-stable.txt"
+    },
+    "uniprot_sprot_pfam": {
+      "bytes": 221353443,
+      "path": "data/raw/uniprot/sprot_pfam.tsv",
+      "sha256": "fbd3c0036af3575374d81ecb9ec60704aff06cb57b84f803f07b475b70d38391",
+      "url": "https://rest.uniprot.org/uniprotkb/stream?format=tsv&fields=accession,sequence,xref_pfam&query=reviewed:true"
     }
   }
 }

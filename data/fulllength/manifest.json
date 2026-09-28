@@ -1,0 +1,38 @@
+{
+  "chains_from_test_clans": 50325,
+  "clan_overlap": 0,
+  "counts": {
+    "kept_single_clan": 307142,
+    "multi_clan_dropped": 117116,
+    "no_clan_family": 151490,
+    "noncanonical_replaced": 288,
+    "reviewed": 575748
+  },
+  "db_size": 100000,
+  "length_hist": {
+    "<=100": 5834,
+    "<=1600": 3759,
+    "<=200": 23011,
+    "<=2046": 202,
+    "<=400": 42805,
+    "<=50": 305,
+    "<=800": 23845,
+    ">2046": 239
+  },
+  "max_length": 14507,
+  "n_gt_2046": 239,
+  "n_queries": 500,
+  "query_clans": 113,
+  "sha256": {
+    "db.tsv": "1f4c5653a5103fefc7cecdd0502c9e186a3951ccfa10cb1f98578a024bcf4d1d",
+    "queries.tsv": "70f286a2a1912b61c634f095c2c8e5c7048bb69ed3e758eb013da032fbcdfe8b"
+  },
+  "source": {
+    "bytes": 221353443,
+    "path": "data/raw/uniprot/sprot_pfam.tsv",
+    "sha256": "fbd3c0036af3575374d81ecb9ec60704aff06cb57b84f803f07b475b70d38391",
+    "url": "https://rest.uniprot.org/uniprotkb/stream?format=tsv&fields=accession,sequence,xref_pfam&query=reviewed:true"
+  },
+  "test_clans": 133,
+  "train_val_clans": 755
+}
