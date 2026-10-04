@@ -1,0 +1,10 @@
+method,n_db,n_queries,build_s,index_mb,search_s,qps,notes
+maxsim_cpu,10000,50,0.0,2272.1,24.34,2.054,"T5.1/T5.2, efficiency 84.39%"
+maxsim_cpu,100000,10,0.0,8717.9,25.36,0.394,"T5.1/T5.2, efficiency 91.69%"
+maxsim_mps,10000,50,0.0,2272.1,23.38,2.138,"T5.1/T5.2, efficiency 43.17%"
+maxsim_mps,100000,50,0.0,8717.9,88.72,0.564,"T5.1/T5.2, efficiency 43.66%"
+maxsim_metal,10000,50,0.0,2272.1,12.88,3.883,T5.3 fused kernel; same-run mps 17.9s
+maxsim_metal,100000,50,0.0,8717.9,49.94,1.001,T5.3 fused kernel; same-run mps 102.2s
+faiss_flat_pooled,10000,50,0.55,5.1,0.001,58232.6,IndexFlatIP on mean-pooled f32 rows
+faiss_flat_pooled,100000,50,3.73,51.2,0.007,7559.4,IndexFlatIP on mean-pooled f32 rows
+pylate_plaid,1000,50,1.1,16.4,2.134,23.4,"colbertv2 encode 2s docs (416.9 docs/s) + 0.2s queries; 1K subset, PLAID build incl."
