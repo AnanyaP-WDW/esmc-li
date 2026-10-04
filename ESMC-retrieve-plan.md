@@ -877,13 +877,13 @@ Test approximately:
 (one big matmul + max-reduce), 2 FLOPs per MAC. With D=128, L_q=300,
 ~400 residues/protein:
 
-| DB size | DB residues | MACs/query | FP16 index (D=128) | Search/query, M4 Max (measured)‡ | DB build @ 7.2k res/s† |
-|--------:|------------:|-----------:|-------------------:|---------------------------------:|-----------------------:|
-| 10K  | 4×10⁶  | 1.5×10¹¹ | 1.0 GB | 0.26 s | 9 min |
-| 100K | 4×10⁷  | 1.5×10¹² | 10 GB  | 1.0 s  | 1.5 h |
-| 1M   | 4×10⁸  | 1.5×10¹³ | 102 GB | 10 s   | 15.5 h |
-| 10M  | 4×10⁹  | 1.5×10¹⁴ | 1 TB   | 1.7 min | 6.5 days |
-| 100M | 4×10¹⁰ | 1.5×10¹⁵ | 10 TB  | 17 min | 65 days |
+| DB size | DB residues | MACs/query | FP16 index (D=128) | Search/query, M4 Max (measured)‡ | DB build, end-to-end (measured)§ |
+|--------:|------------:|-----------:|-------------------:|---------------------------------:|---------------------------------:|
+| 10K  | 4×10⁶  | 1.5×10¹¹ | 1.0 GB | 0.26 s | 14 min |
+| 100K | 4×10⁷  | 1.5×10¹² | 10 GB  | 1.0 s  | 2.3 h |
+| 1M   | 4×10⁸  | 1.5×10¹³ | 102 GB | 10 s   | 23 h |
+| 10M  | 4×10⁹  | 1.5×10¹⁴ | 1 TB   | 1.7 min | 9.6 days |
+| 100M | 4×10¹⁰ | 1.5×10¹⁵ | 10 TB  | 17 min | 96 days |
 
 ‡ Measured on this plan's target machine (M4 Max, D=128, 50 queries):
 fused-metal search (T5.3) 0.26 s @10K and 1.00 s @100K per query; T5.1
@@ -891,17 +891,20 @@ baselines cpu 0.49 / 2.54 s and mps 0.47 / 1.77 s at 10K / 100K
 (efficiency 84–92% cpu, 43% mps of GEMM peak — T5.2, `results/m5_search.csv`).
 Rows ≥1M extrapolate linearly (exhaustive cost ∝ DB rows); not yet measured
 at that size (T7.3).
-† Measured: esmc.cpp `--fasta`, mixed 1000-seq corpus, M4 Max Metal F16,
-length-aware batch schedule = 7,161 residues/s end-to-end.
+§ Measured on M4 Max (T6.4, 100K real corpus): frozen default index =
+prefix HF embed 6,298 res/s + 960→128 projection 21,272 res/s + `.esmci`
+write 1.51M rows/s → **4,844 res/s effective** (12 proteins/s at 400 aa);
+base esmc-embed path alone = 7,951 res/s. Rows scale linearly in residues.
 
 So:
 
 * **Search:** exhaustive is interactive to ~100K; 1M is batch-mode on CPU and
   ~10 s/query on the GPU (measured metal, extrapolated — see ‡).
 * **Build dominates at scale.** Embedding the DB, not searching it, is the
-  wall: ~16 h per 1M proteins on one M4 Max, ~1 week for 10M, ~2 months for
-  100M. 100M is out of scope on a laptop regardless of search algorithm;
-  10M is a "one machine-week" experiment that must be budgeted explicitly.
+  wall: ~23 h per 1M proteins on one M4 Max, ~10 days for 10M, ~3 months for
+  100M (measured end-to-end — see §). 100M is out of scope on a laptop
+  regardless of search algorithm; 10M is a "one machine-week" experiment
+  that must be budgeted explicitly.
 * **10M/100M rows motivate V2/V3**, they are not promised results. Do not ship
   an unqualified "we searched 100M proteins" claim.
 
