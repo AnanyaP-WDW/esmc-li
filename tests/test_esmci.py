@@ -49,3 +49,13 @@ def test_float64_input_stored_f16(tmp_path):
     assert idx.dtype == np.float16
     np.testing.assert_array_equal(np.asarray(idx.vecs),
                                   vecs.astype(np.float16))
+
+
+def test_streaming_write_matches_single_chunk(tmp_path):
+    vecs, off, meta = make(n=5, d=3, seed=3)
+    one = write(tmp_path / "one.esmci", vecs, off, meta)
+    many = write(tmp_path / "many.esmci", vecs, off, meta, chunk_rows=2)
+    assert one.read_bytes() == many.read_bytes()
+    assert many.stat().st_size == expected_bytes(5, vecs.shape[0], 3)
+    np.testing.assert_array_equal(np.asarray(Esmci(many).vecs),
+                                  vecs.astype(np.float16))

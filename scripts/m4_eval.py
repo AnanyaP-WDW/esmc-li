@@ -167,16 +167,19 @@ def blockwise_maxsim(db: Path, meta: dict, qpos: list[int],
     return S
 
 
-def build_trained(meta26: dict, rows: list[dict], ckpt: Path) -> None:
-    """suffix+head over db26 prefix rows -> cache/m4/db_tr128.npy (f16)."""
+def build_trained(meta26: dict, rows: list[dict], ckpt: Path,
+                  db26: Path | None = None, out: Path | None = None
+                  ) -> None:
+    """suffix+head over prefix rows -> f16 D=128 rows (default M4 paths)."""
     import torch
     from esm.models.esmc.tokenizer import EsmcTokenizer
 
     from esmc_retrieval.embed import chunk_windows
     from esmc_retrieval.train import Projection, Suffix, _esmc
 
-    out = CACHE / "db_tr128.npy"
-    progress = CACHE / "db_tr128.progress.json"
+    db26 = db26 or CACHE / "db26.npy"
+    out = out or CACHE / "db_tr128.npy"
+    progress = out.with_suffix(".progress.json")
     off, lens = meta26["offsets"], meta26["lens"]
     n = len(rows)
     done = 0
@@ -209,7 +212,7 @@ def build_trained(meta26: dict, rows: list[dict], ckpt: Path) -> None:
             lo += e - s + 2
         return out_
 
-    A26 = arr(CACHE / "db26.npy")
+    A26 = arr(db26)
     t0 = time.time()
     with torch.no_grad():
         i = done

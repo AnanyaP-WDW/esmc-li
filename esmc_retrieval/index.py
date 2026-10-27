@@ -33,23 +33,30 @@ def _sidecar(path: Path) -> Path:
 
 
 def write(path: Path | str, vectors: np.ndarray, offsets: np.ndarray,
-          meta: dict | None = None) -> Path:
+          meta: dict | None = None, chunk_rows: int = 1_000_000) -> Path:
     """Write `.esmci` + JSON sidecar. vectors: (n_res, D) any float dtype
-    (stored f16); offsets: n_proteins+1 row starts."""
+    (stored f16); offsets: n_proteins+1 row starts.
+
+    The payload is streamed in `chunk_rows` blocks so a memory-mapped 1M
+    index (tens of GiB) never materializes a second full copy in RAM.
+    """
     path = Path(path)
-    vecs = np.ascontiguousarray(vectors, dtype=np.float16)
     off = np.ascontiguousarray(offsets, dtype=np.uint64)
-    n_res, d = vecs.shape
+    n_res, d = vectors.shape
     n_prot = len(off) - 1
+    assert chunk_rows > 0
     assert off[0] == 0 and off[-1] == n_res, "offsets must span the payload"
     payload_off = HEADER_SIZE + (n_prot + 1) * 8
-    hdr = _HDR.pack(MAGIC, VERSION, _DT_CODE[vecs.dtype], int(d), 0,
+    hdr = _HDR.pack(MAGIC, VERSION, _DT_CODE[np.dtype(np.float16)], int(d), 0,
                     n_prot, int(n_res), payload_off)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("wb") as f:
         f.write(hdr.ljust(HEADER_SIZE, b"\0"))
         f.write(off.tobytes())
-        f.write(vecs.tobytes())
+        for s in range(0, n_res, chunk_rows):
+            blk = np.ascontiguousarray(vectors[s : s + chunk_rows],
+                                       dtype=np.float16)
+            f.write(blk.tobytes())
     if meta is not None:
         _sidecar(path).write_text(json.dumps(meta))
     return path

@@ -172,9 +172,11 @@ API facts any bridge must handle:
   (`examples/embed/main.cpp:305-310`).
 * Context length is 2048 tokens (`esmc_n_ctx`, GGUF `esmc.context_length`),
   i.e. 2046 residues after BOS/EOS; see §5 for long proteins.
-* Use **f16 or q8_0** GGUFs only. q4_k_m / q4_k_s fail esmc.cpp's own
-  correctness gate on some sequences (2 / 13 of 100); an index built on them
-  would silently degrade.
+* Use **f16 or q8_0** GGUFs for the frozen default. Upstream recalibrated the
+  Q4_K_* cosine gate from 0.995 to 0.99 after the FFN-bias fix; all four
+  precisions now pass 100/100. This repo still freezes f16 because no retrieval
+  result depends on Q4 and Q4 downstream fidelity is lower. Re-evaluate Q4 only
+  if it becomes a deployment target.
 
 Dependency direction: the **Rust/numpy search core** never touches esmc.cpp.
 The **Python layer** needs esmc.cpp at build time (DB embeddings) *and* at
@@ -879,32 +881,39 @@ Test approximately:
 
 | DB size | DB residues | MACs/query | FP16 index (D=128) | Search/query, M4 Max (measured)‡ | DB build, end-to-end (measured)§ |
 |--------:|------------:|-----------:|-------------------:|---------------------------------:|---------------------------------:|
-| 10K  | 4×10⁶  | 1.5×10¹¹ | 1.0 GB | 0.26 s | 14 min |
-| 100K | 4×10⁷  | 1.5×10¹² | 10 GB  | 1.0 s  | 2.3 h |
-| 1M   | 4×10⁸  | 1.5×10¹³ | 102 GB | 10 s   | 23 h |
-| 10M  | 4×10⁹  | 1.5×10¹⁴ | 1 TB   | 1.7 min | 9.6 days |
-| 100M | 4×10¹⁰ | 1.5×10¹⁵ | 10 TB  | 17 min | 96 days |
+| 10K  | 3.2×10⁶  | 1.5×10¹¹ | 0.81 GB | 0.11 s | 10.5 min |
+| 100K | 3.2×10⁷  | 1.5×10¹² | 8.1 GB  | 1.15 s | 1.8 h |
+| 1M   | 3.2×10⁸  | 1.5×10¹³ | 81 GB   | 11.1 s | 17.5 h |
+| 10M  | 3.2×10⁹  | 1.5×10¹⁴ | 810 GB  | 1.85 min | 7.3 days |
+| 100M | 3.2×10¹⁰ | 1.5×10¹⁵ | 8.1 TB  | 18.5 min | 73 days |
 
 ‡ Measured on this plan's target machine (M4 Max, D=128, 50 queries):
-fused-metal search (T5.3) 0.26 s @10K and 1.00 s @100K per query; T5.1
-baselines cpu 0.49 / 2.54 s and mps 0.47 / 1.77 s at 10K / 100K
-(efficiency 84–92% cpu, 43% mps of GEMM peak — T5.2, `results/m5_search.csv`).
-Rows ≥1M extrapolate linearly (exhaustive cost ∝ DB rows); not yet measured
-at that size (T7.3).
-§ Measured on M4 Max (T6.4, 100K real corpus): frozen default index =
-prefix HF embed 6,298 res/s + 960→128 projection 21,272 res/s + `.esmci`
-write 1.51M rows/s → **4,844 res/s effective** (12 proteins/s at 400 aa);
-base esmc-embed path alone = 7,951 res/s. Rows scale linearly in residues.
+M7 exhaustive 0.112 / 1.15 / 11.13 s per query at 10K / 100K / 1M
+(`results/m7_scaling.csv`). M5 fused-metal search (T5.3) was 0.26 s @10K
+and 1.00 s @100K; T5.1 baselines cpu 0.49 / 2.54 s and mps 0.47 / 1.77 s
+at 10K / 100K (efficiency 84–92% cpu, 43% mps of GEMM peak — T5.2,
+`results/m5_search.csv`). Rows 10M/100M extrapolate linearly; 1M is measured.
+§ Measured on M4 Max (T6.4, 100K real corpus; esmc.cpp `d6dc106`): frozen
+default index = prefix HF embed 6,298 res/s + 960→128 projection 21,272 res/s
++ `.esmci` write 1.51M rows/s → **4,844 res/s effective** (12 proteins/s at
+400 aa); base esmc-embed path alone = 7,951 res/s. The default build is
+HF-prefix-dominated, so the Oct-11 esmc.cpp graph-cache commits do not move
+the 4,844 res/s effective rate; 7,951 res/s is the esmc-embed base path
+measured at `d6dc106`. M7 fused build (UniRef50, T7.3): **629 s/10K,
+6,434 s/100K, 62,947 s/1M** (5,036 res/s; 0.81/8.14/81.17 GB indexes).
+10M/100M extrapolate; 10M is storage-bound (~810 GB) on a 926 GB laptop.
 
 So:
 
-* **Search:** exhaustive is interactive to ~100K; 1M is batch-mode on CPU and
-  ~10 s/query on the GPU (measured metal, extrapolated — see ‡).
+* **Search:** exhaustive is interactive to ~100K; 1M is batch-mode at
+  **11.1 s/query** on the GPU (measured metal — see ‡). The 1M coarse stage
+  reaches recall 0.994 at C=30K but is only 1.1× faster than exhaustive;
+  keep exhaustive as the default.
 * **Build dominates at scale.** Embedding the DB, not searching it, is the
-  wall: ~23 h per 1M proteins on one M4 Max, ~10 days for 10M, ~3 months for
-  100M (measured end-to-end — see §). 100M is out of scope on a laptop
-  regardless of search algorithm; 10M is a "one machine-week" experiment
-  that must be budgeted explicitly.
+  wall: **~17.5 h per 1M** proteins on one M4 Max, ~7.3 days for 10M,
+  ~73 days for 100M (measured M7 path — see §). 100M is out of scope on a
+  laptop regardless of search algorithm; 10M is a one-week build plus a
+  ~810 GB index and must be budgeted explicitly (external storage).
 * **10M/100M rows motivate V2/V3**, they are not promised results. Do not ship
   an unqualified "we searched 100M proteins" claim.
 

@@ -63,7 +63,8 @@ def embed_seq(seq: str, embed_fn) -> np.ndarray:
 
 
 def _pack_meta(rows: list[dict], meta_path: Path, progress: Path,
-               lens: list[int], dtype: str) -> tuple[list[int], int]:
+               lens: list[int], dtype: str, d: int = D_MODEL
+               ) -> tuple[list[int], int]:
     """Write/validate meta; return (offsets, done_index)."""
     n = len(rows)
     offsets = np.cumsum([0] + lens)
@@ -82,7 +83,7 @@ def _pack_meta(rows: list[dict], meta_path: Path, progress: Path,
         meta_path.parent.mkdir(parents=True, exist_ok=True)
         meta_path.write_text(json.dumps(
             {"ids": ids, "offsets": offsets.tolist(),
-             "lens": lens, "dtype": dtype, "d": D_MODEL,
+             "lens": lens, "dtype": dtype, "d": d,
              "win": WIN, "overlap": OVERLAP}))
     return [int(o) for o in offsets], done
 
