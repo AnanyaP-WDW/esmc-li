@@ -2,6 +2,8 @@
 """Fetch and pin all M0 datasets. Second run is a no-op (idempotent).
 
 Writes data/manifest.json with url, sha256, bytes, and SCOPe/Pfam counts.
+The esmc.cpp pin is sticky: rerunning keeps the manifest commit and records
+the current checkout as `head`; edit the manifest to change the pin.
 """
 from __future__ import annotations
 
@@ -118,13 +120,27 @@ def scope_counts(dir_cla: Path, astral: Path) -> dict:
 def esmc_rows() -> dict:
     import subprocess
 
-    sha = subprocess.run(
+    head = subprocess.run(
         ["git", "-C", str(ESMC_CPP), "rev-parse", "HEAD"],
         capture_output=True, text=True, check=True,
     ).stdout.strip()
-    return {
+    prior = {}
+    if MANIFEST.exists():
+        prior = json.loads(MANIFEST.read_text()).get("esmc_cpp", {})
+    commit = prior.get("commit", head)
+    check = subprocess.run(
+        ["git", "-C", str(ESMC_CPP), "cat-file", "-e", f"{commit}^{{commit}}"],
+        capture_output=True,
+    )
+    if check.returncode != 0:
+        raise SystemExit(
+            f"pinned esmc.cpp commit {commit} not found in {ESMC_CPP}; "
+            "update data/manifest.json or fetch that commit"
+        )
+    rows = {
         "path": str(ESMC_CPP),
-        "commit": sha,
+        "commit": commit,
+        "head": head,
         "gguf": {
             "path": str(ESMC_GGUF),
             "sha256": sha256(ESMC_GGUF),
@@ -132,6 +148,9 @@ def esmc_rows() -> dict:
         },
         "esmc_embed_binary": str(ESMC_CPP / "build" / "esmc-embed"),
     }
+    if prior.get("note"):
+        rows["note"] = prior["note"]
+    return rows
 
 
 def main() -> int:

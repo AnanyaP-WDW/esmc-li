@@ -8,14 +8,15 @@
     "scope_superfamilies": 2368
   },
   "esmc_cpp": {
-    "commit": "ffe6eec269e213de7298df58b192bc58cff2586e",
+    "commit": "d6dc10659959a13e73c3627c1cda4e93795743f9",
     "esmc_embed_binary": "/Users/ananyapathak/Desktop/oss/esmc.cpp/build/esmc-embed",
     "gguf": {
       "bytes": 664397696,
       "path": "/Users/ananyapathak/Desktop/oss/esmc.cpp/models/esmc-300m-f16.gguf",
       "sha256": "403ade8ea1d94f7c6fb89c1006c28bfe75e5d09df532ced05ed67e2c9bb9a500"
     },
-    "note": "local patch on pinned commit ffe6eec: ffn.layer_norm_bias was dropped by the converter/graph (official esm uses it; embeddings diverged from PyTorch ESM-C at cos~0.1). Regenerated GGUF sha above.",
+    "head": "8ae39cfc03e061ede93e1e3629d73242eff28372",
+    "note": "Artifacts were generated with the FFN LayerNorm bias fix: a local patch on ffe6eec at generation time, upstream d6dc106. Later commits are perf-only and output-identical (3 SCOPe domains verified bit-exact); `head` records the current checkout.",
     "path": "/Users/ananyapathak/Desktop/oss/esmc.cpp"
   },
   "sources": {
