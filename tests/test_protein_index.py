@@ -41,7 +41,8 @@ def test_long_sequence_chunking(tmp_path):
     fasta = tmp_path / "long.fa"
     fasta.write_text(f">long\n{seq}\n")
     out = tmp_path / "long.esmci"
-    idx = ProteinIndex.from_fasta(fasta, out, model=model, embed_bin=bin_path)
+    idx = ProteinIndex.from_fasta(fasta, out, model=model, embed_bin=bin_path,
+                              device="numpy")
     assert idx._idx.n_residues == 2048 + (2100 - 1918 + 2)
     assert idx.search(seq, k=1)[0]["id"] == "long"
 
@@ -51,12 +52,13 @@ def test_build_load_search_roundtrip(tmp_path):
     fasta = tmp_path / "proteins.fa"
     fasta.write_text(">a alpha\nACDE\n>b beta\nMKT\n")
     out = tmp_path / "proteins.esmci"
-    idx = ProteinIndex.from_fasta(fasta, out, model=model, embed_bin=bin_path)
+    idx = ProteinIndex.from_fasta(fasta, out, model=model, embed_bin=bin_path,
+                              device="numpy")
     assert len(idx) == 2
     assert idx.ids == ["a", "b"]  # longest first
     assert idx.metadata[idx.ids.index("a")]["description"] == "alpha"
 
-    loaded = ProteinIndex.load(out)
+    loaded = ProteinIndex.load(out, device="numpy")
     assert len(loaded) == 2
     hit = loaded.search("ACDE", k=1)[0]
     assert hit["id"] == "a"

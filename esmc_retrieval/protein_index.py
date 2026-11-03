@@ -134,13 +134,15 @@ class ProteinIndex:
     """Local exact MaxSim index over projected ESM-C residue rows."""
 
     def __init__(self, path: str | Path, head: np.ndarray, model: Path | None,
-                 embed_bin: Path | None, metadata: list[dict] | None = None):
+                 embed_bin: Path | None, metadata: list[dict] | None = None,
+                 device: str = "auto"):
         self.path = Path(path)
         self._idx = Esmci(self.path)
         self._head = np.asarray(head, dtype=np.float32)
         self.model = model
         self.embed_bin = embed_bin
         self.metadata = metadata or [{} for _ in range(len(self._idx))]
+        self.device = device
 
     def __len__(self) -> int:
         return len(self._idx)
@@ -156,7 +158,8 @@ class ProteinIndex:
     @classmethod
     def load(cls, path: str | Path, model: str | Path | None = None,
              embed_bin: str | Path | None = None,
-             head: str | Path | None = None) -> "ProteinIndex":
+             head: str | Path | None = None,
+             device: str = "auto") -> "ProteinIndex":
         idx = Esmci(path)
         meta = idx.meta
         companion = Path(str(path) + ".head.npy")
@@ -177,13 +180,14 @@ class ProteinIndex:
         md = meta.get("metadata")
         if not isinstance(md, list) or len(md) != len(idx):
             md = [{} for _ in range(len(idx))]
-        return cls(path, h, mdl, emb, md)
+        return cls(path, h, mdl, emb, md, device=device)
 
     @classmethod
     def build(cls, rows: list[dict] | str | Path, output: str | Path,
               model: str | Path, embed_bin: str | Path | None = None,
               head: str | Path | None = None,
-              metadata: list[dict] | None = None) -> "ProteinIndex":
+              metadata: list[dict] | None = None,
+              device: str = "auto") -> "ProteinIndex":
         if isinstance(rows, (str, Path)):
             rows = _read_fasta(Path(rows))
         if not rows:
@@ -245,7 +249,7 @@ class ProteinIndex:
         }
         write(output, packed, offsets, meta)
         return cls.load(output, model=model, embed_bin=embed_bin,
-                        head=companion)
+                        head=companion, device=device)
 
     @classmethod
     def from_fasta(cls, fasta: str | Path, output: str | Path,
@@ -268,6 +272,22 @@ class ProteinIndex:
         embedded = _run_esmc(rows, self.embed_bin, self.model)
         return [_project(x, self._head) for x in embedded]
 
+    def _search(self, qs: list[np.ndarray], k: int
+                ) -> tuple[np.ndarray, np.ndarray]:
+        if self.device in ("auto", "metal"):
+            try:
+                from esmc_retrieval.metal_search import maxsim_topk_metal
+                return maxsim_topk_metal(qs, self._idx.vecs, self._idx.offsets,
+                                         k, normalize=False)
+            except ImportError:
+                if self.device == "metal":
+                    raise
+                self.device = "numpy"
+        outs = [maxsim_topk_numpy(q, self._idx.vecs, self._idx.offsets, k)
+                for q in qs]
+        return (np.stack([o[0] for o in outs]),
+                np.stack([o[1] for o in outs]))
+
     def _hits(self, scores: np.ndarray, rows: np.ndarray) -> list[dict]:
         out = []
         for s, i in zip(scores, rows):
@@ -278,16 +298,13 @@ class ProteinIndex:
         return out
 
     def search(self, sequence: str, k: int = 10) -> list[dict]:
-        q = self._encode([sequence])[0]
-        s, i = maxsim_topk_numpy(q, self._idx.vecs, self._idx.offsets, k)
-        return self._hits(s, i)
+        s, i = self._search(self._encode([sequence]), k)
+        return self._hits(s[0], i[0])
 
     def search_batch(self, sequences: list[str], k: int = 10
                      ) -> list[list[dict]]:
-        qs = self._encode(sequences)
-        return [self._hits(*maxsim_topk_numpy(q, self._idx.vecs,
-                                              self._idx.offsets, k))
-                for q in qs]
+        s, i = self._search(self._encode(sequences), k)
+        return [self._hits(s[j], i[j]) for j in range(len(sequences))]
 
     def benchmark(self, nq: int = 10, k: int = 10) -> dict:
         n = min(nq, len(self))
@@ -295,8 +312,7 @@ class ProteinIndex:
             raise ValueError("empty index")
         qs = [self._idx.protein(i) for i in range(n)]
         t = time.perf_counter()
-        for q in qs:
-            maxsim_topk_numpy(q, self._idx.vecs, self._idx.offsets, k)
+        self._search(qs, k)
         dt = time.perf_counter() - t
         return {"n": len(self), "nq": n, "k": k, "wall_s": dt,
                 "qps": n / dt if dt > 0 else float("inf")}
