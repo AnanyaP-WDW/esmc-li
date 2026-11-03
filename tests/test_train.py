@@ -1,8 +1,12 @@
 """T2.3: false-negative masking — masked logits are -inf; with no collisions
 the masked loss equals the unmasked reference exactly."""
-import torch
+import pytest
 
-from esmc_retrieval.train import false_negative_mask, nce_logits, symmetric_nce
+pytest.importorskip("torch")
+
+import torch  # noqa: E402
+
+from esmc_retrieval.train import false_negative_mask, nce_logits, symmetric_nce  # noqa: E402
 
 
 def _scores(b=6, seed=0):

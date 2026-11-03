@@ -30,3 +30,11 @@ are ndarrays and drop straight into `search.maxsim_topk`.
 Projection happens at build time (T6.3): store D=128 rows, not 960
 (7.5× smaller). `scripts/m6_index.py` packs `db_tr128.npy` + offsets;
 round-trip and size tests live in `tests/test_esmci.py`.
+
+## M8 `ProteinIndex`
+
+`ProteinIndex.build` uses `esmc-embed --keep-special` (BOS/EOS kept), applies
+the packaged 960→128 head, and stores the same `.esmci` layout. The sidecar
+adds `metadata`, `head_sha256`, `model_sha256`, and `embed_bin`; the head is
+copied to `<index>.head.npy` so `ProteinIndex.load` can verify it. Query rows
+are encoded with the same `--keep-special` path before exact numpy MaxSim.

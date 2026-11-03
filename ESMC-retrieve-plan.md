@@ -152,8 +152,9 @@ the model once, uses the length-aware batch schedule, and writes one
 (`examples/embed/main.cpp:216-226`). Fine for SCOPe/Pfam-sized sets
 (10³–10⁵ files); unworkable at 10⁶ files (M6 fixes that).
 
-A real bridge is needed only for interactive `index.search(sequence)` (M8).
-Options:
+A real bridge is needed only if CLI model-load latency is unacceptable for
+interactive `index.search(sequence)`; M8 ships the CLI path first. Options if
+measured latency requires it:
 
 * **cffi over a new shared build** — add a `SHARED` target in esmc.cpp, load
   `libesmc` from Python. FFI surface stays one header.
@@ -163,9 +164,11 @@ Options:
 API facts any bridge must handle:
 
 * `esmc_embed` returns **`[n_tokens, 960]` including BOS and EOS rows**;
-  residues are rows `1 .. n_tokens-2` (the CLI strips them the same way,
-  `examples/embed/main.cpp:95`). A one-row off-by-one silently embeds
-  `<cls>`/`<eos>` as if they were residues.
+  residues are rows `1 .. n_tokens-2` (the CLI strips them by default,
+  `examples/embed/main.cpp:95`). `esmc-embed --keep-special` (esmc.cpp
+  `28a3913`, M8) writes all `n_tokens` rows; the frozen retrieval scorer
+  requires this path. A one-row off-by-one silently embeds `<cls>`/`<eos>`
+  as if they were residues.
 * `esmc_embed_batch` writes a **packed** buffer `[Σ lengths_i, 960]` —
   sequence *s* starts at row `Σ_{t<s} lengths_t`, and each sequence still
   carries its own BOS/EOS rows. There are no pad rows in the output
@@ -1216,8 +1219,8 @@ Budget: ~1 week.
 
 | ID | Task | Artifact | Exit criterion |
 |---|---|---|---|
-| T8.1 | `ProteinIndex.from_fasta / build / load / search / search_batch`; CLI `build / search / benchmark` (§4, §13). Query embedding through esmc.cpp (bridge or CLI). | package | fresh venv, network off: `pip install .` → build a 1K index → search → correct top-1 on 10 known homolog pairs |
-| T8.2 | Tests: BOS/EOS strip, >2046 aa chunking, index round-trip, deterministic top-k, q4 GGUF rejected or warned. | `tests/` | `pytest` green on macOS arm64 and Linux x86 CI |
+| T8.1 | `ProteinIndex.from_fasta / build / load / search / search_batch`; CLI `build / search / benchmark` (§4, §13). Query embedding through `esmc-embed --keep-special`; bridge only if measured latency requires it. | package | fresh venv, network off: `pip install .` → build a 1K index → search → correct top-1 on 10 known homolog pairs |
+| T8.2 | Tests: BOS/EOS handling (`--keep-special`), >2046 aa chunking, index round-trip, deterministic top-k, q4 GGUF warned. | `tests/` | `pytest` green on macOS arm64 and Linux x86 CI |
 
 ---
 

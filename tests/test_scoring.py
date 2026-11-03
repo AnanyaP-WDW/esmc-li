@@ -2,8 +2,11 @@
 from __future__ import annotations
 
 import numpy as np
+import pytest
 
-from esmc_retrieval.scoring import (
+pytest.importorskip("torch")
+
+from esmc_retrieval.scoring import (  # noqa: E402
     l2_normalize,
     maxsim_matrix,
     naive_maxsim,

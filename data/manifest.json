@@ -15,8 +15,8 @@
       "path": "/Users/ananyapathak/Desktop/oss/esmc.cpp/models/esmc-300m-f16.gguf",
       "sha256": "403ade8ea1d94f7c6fb89c1006c28bfe75e5d09df532ced05ed67e2c9bb9a500"
     },
-    "head": "8ae39cfc03e061ede93e1e3629d73242eff28372",
-    "note": "Artifacts were generated with the FFN LayerNorm bias fix: a local patch on ffe6eec at generation time, upstream d6dc106. Later commits are perf-only and output-identical (3 SCOPe domains verified bit-exact); `head` records the current checkout.",
+    "head": "218cc696188569b7f64da4ad40295a1b71119a2b",
+    "note": "Artifacts were generated with the FFN LayerNorm bias fix: a local patch on ffe6eec at generation time, upstream d6dc106. `head` records the current checkout; 28a3913 adds --keep-special for M8 prefix-token rows (218cc69 labels the output) without changing existing outputs.",
     "path": "/Users/ananyapathak/Desktop/oss/esmc.cpp"
   },
   "sources": {

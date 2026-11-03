@@ -1,5 +1,8 @@
 """T7.2 exits: coarse candidates + rerank consistency."""
 import numpy as np
+import pytest
+
+pytest.importorskip("torch")
 
 from esmc_retrieval.coarse import (candidate_recall, pool_docs, pool_query,
                                    rerank, top_c)

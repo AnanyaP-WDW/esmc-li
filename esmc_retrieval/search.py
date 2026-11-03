@@ -136,6 +136,35 @@ def maxsim_topk(q: list[np.ndarray], db: np.ndarray, offsets: np.ndarray,
     return np.take_along_axis(S, order, axis=1), order
 
 
+def maxsim_topk_numpy(q: np.ndarray, db: np.ndarray, offsets: np.ndarray,
+                      k: int, doc_chunk: int = 512
+                      ) -> tuple[np.ndarray, np.ndarray]:
+    """Exact MaxSim top-k with numpy only (M8 package backend).
+
+    q: [Lq, D] L2-normalized query rows; db: [n_res, D] f16/float index rows;
+    offsets: n_proteins+1 row starts. Rows may include BOS/EOS; the caller
+    keeps them consistent for index and query.
+    """
+    q = np.asarray(q, dtype=np.float32)
+    off = np.asarray(offsets, dtype=np.int64)
+    n_docs = len(off) - 1
+    assert q.ndim == 2 and q.shape[1] == db.shape[1]
+    assert doc_chunk > 0 and n_docs > 0
+    scores = np.empty(n_docs, dtype=np.float32)
+    for d0 in range(0, n_docs, doc_chunk):
+        d1 = min(d0 + doc_chunk, n_docs)
+        lo, hi = int(off[d0]), int(off[d1])
+        blk = np.asarray(db[lo:hi], dtype=np.float32)
+        lens = off[d0 + 1 : d1 + 1] - off[d0:d1]
+        assert np.all(lens > 0), "empty protein rows"
+        starts = np.concatenate(([0], np.cumsum(lens[:-1])))
+        sim = q @ blk.T
+        scores[d0:d1] = np.maximum.reduceat(sim, starts, axis=1).sum(axis=0)
+    k = min(k, n_docs)
+    order = np.argsort(-scores, kind="stable")[:k]
+    return scores[order], order
+
+
 def naive_topk(q: list[np.ndarray], db: np.ndarray, offsets: np.ndarray,
                k: int, proj: np.ndarray | None = None) -> tuple[np.ndarray, np.ndarray]:
     """Reference: per-document MaxSim loop (CPU f32)."""

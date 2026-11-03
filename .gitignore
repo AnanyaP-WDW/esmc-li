@@ -8,3 +8,5 @@ cache/
 astral_scope_40_2.08.fa
 results/m3_models/
 data/fulllength/db.tsv
+build/
+dist/
