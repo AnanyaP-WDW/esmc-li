@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: AnanyaP-WDW/esmc.cpp
-          ref: 218cc696188569b7f64da4ad40295a1b71119a2b
+          ref: c4b67436d5173eccc51ed2d0d849a8a8580f14a0
           path: esmc.cpp
           submodules: recursive
       - uses: actions/setup-python@v5
