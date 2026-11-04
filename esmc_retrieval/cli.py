@@ -6,6 +6,8 @@ import json
 import sys
 from pathlib import Path
 
+from esmc_retrieval.indexes import INDEXES, resolve_index
+from esmc_retrieval.models import DEFAULT_MODEL
 from esmc_retrieval.protein_index import ProteinIndex, _read_fasta
 
 
@@ -46,6 +48,14 @@ def _cmd_benchmark(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_index(args: argparse.Namespace) -> int:
+    if args.action == "list":
+        print("\n".join(INDEXES))
+        return 0
+    print(resolve_index(args.name))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="esmc-retrieval")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -53,7 +63,8 @@ def main(argv: list[str] | None = None) -> int:
     b = sub.add_parser("build", help="build a .esmci index from FASTA")
     b.add_argument("fasta")
     b.add_argument("--output", required=True)
-    b.add_argument("--model", required=True, help="fine-tuned ESM-C GGUF")
+    b.add_argument("--model", default=DEFAULT_MODEL,
+                   help="fine-tuned ESM-C GGUF or registry name")
     b.add_argument("--embed-bin", default=None, help="esmc-embed binary")
     b.add_argument("--head", default=None, help="projection head .npy")
     b.set_defaults(func=_cmd_build)
@@ -77,6 +88,11 @@ def main(argv: list[str] | None = None) -> int:
     m.add_argument("--embed-bin", default=None)
     m.add_argument("--head", default=None)
     m.set_defaults(func=_cmd_benchmark)
+
+    i = sub.add_parser("index", help="list or download prebuilt indexes")
+    i.add_argument("action", choices=["list", "pull"])
+    i.add_argument("name", nargs="?", default="")
+    i.set_defaults(func=_cmd_index)
 
     args = ap.parse_args(argv)
     return args.func(args)

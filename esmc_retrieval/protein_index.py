@@ -20,6 +20,8 @@ import numpy as np
 
 from esmc_retrieval.embed import chunk_windows
 from esmc_retrieval.index import Esmci, write
+from esmc_retrieval.models import DEFAULT_MODEL, resolve_model
+from esmc_retrieval.runtime import EsmcRuntime, find_library
 from esmc_retrieval.search import maxsim_topk_numpy
 
 D_MODEL = 960
@@ -130,12 +132,19 @@ def _resolve(path: str | Path | None, meta: dict, key: str,
     return Path(value) if value else None
 
 
+def _make_runtime(model: Path | None) -> EsmcRuntime | None:
+    if model is None or not model.exists():
+        return None
+    lib = find_library()
+    return EsmcRuntime(lib, model) if lib is not None else None
+
+
 class ProteinIndex:
     """Local exact MaxSim index over projected ESM-C residue rows."""
 
     def __init__(self, path: str | Path, head: np.ndarray, model: Path | None,
                  embed_bin: Path | None, metadata: list[dict] | None = None,
-                 device: str = "auto"):
+                 device: str = "auto", runtime: EsmcRuntime | None = None):
         self.path = Path(path)
         self._idx = Esmci(self.path)
         self._head = np.asarray(head, dtype=np.float32)
@@ -143,6 +152,24 @@ class ProteinIndex:
         self.embed_bin = embed_bin
         self.metadata = metadata or [{} for _ in range(len(self._idx))]
         self.device = device
+        self._runtime = runtime
+
+    def close(self) -> None:
+        if self._runtime is not None:
+            self._runtime.close()
+            self._runtime = None
+
+    def __enter__(self) -> "ProteinIndex":
+        return self
+
+    def __exit__(self, *exc) -> None:
+        self.close()
+
+    def __del__(self) -> None:
+        try:
+            self.close()
+        except Exception:
+            pass
 
     def __len__(self) -> int:
         return len(self._idx)
@@ -160,6 +187,9 @@ class ProteinIndex:
              embed_bin: str | Path | None = None,
              head: str | Path | None = None,
              device: str = "auto") -> "ProteinIndex":
+        if not Path(path).exists():
+            from esmc_retrieval.indexes import resolve_index
+            path = resolve_index(path)
         idx = Esmci(path)
         meta = idx.meta
         companion = Path(str(path) + ".head.npy")
@@ -171,20 +201,25 @@ class ProteinIndex:
             raise ValueError(f"head shape {h.shape} != ({D_PROJ},{D_MODEL})")
         if meta.get("head_sha256") and _sha256(head) != meta["head_sha256"]:
             raise ValueError("projection head hash does not match index")
-        mdl = _resolve(model, meta, "model", "ESMC_RETRIEVAL_GGUF")
+        raw_model = (model if model is not None
+                     else meta.get("model") or os.environ.get(
+                         "ESMC_RETRIEVAL_GGUF"))
+        mdl = resolve_model(raw_model) if raw_model else None
         emb = _resolve(embed_bin, meta, "embed_bin", "ESMC_EMBED",
                        shutil.which("esmc-embed"))
-        if mdl is not None and mdl.exists() and meta.get("model_sha256"):
+        if mdl is not None and meta.get("model_sha256"):
             if _sha256(mdl) != meta["model_sha256"]:
                 raise ValueError("model hash does not match index")
         md = meta.get("metadata")
         if not isinstance(md, list) or len(md) != len(idx):
             md = [{} for _ in range(len(idx))]
-        return cls(path, h, mdl, emb, md, device=device)
+        runtime = _make_runtime(mdl)
+        return cls(path, h, mdl, emb, md, device=device, runtime=runtime)
 
     @classmethod
     def build(cls, rows: list[dict] | str | Path, output: str | Path,
-              model: str | Path, embed_bin: str | Path | None = None,
+              model: str | Path = DEFAULT_MODEL,
+              embed_bin: str | Path | None = None,
               head: str | Path | None = None,
               metadata: list[dict] | None = None,
               device: str = "auto") -> "ProteinIndex":
@@ -200,24 +235,33 @@ class ProteinIndex:
             if len(metadata) != len(rows):
                 raise ValueError("metadata length must match rows")
             metadata = [metadata[i] for i in order]
-        model = Path(model)
-        if not model.exists():
+        model = resolve_model(model)
+        if model is None or not model.exists():
             raise FileNotFoundError(model)
-        raw_bin = (embed_bin or os.environ.get("ESMC_EMBED")
-                   or shutil.which("esmc-embed"))
-        if not raw_bin:
-            raise FileNotFoundError(
-                "esmc-embed not found; pass embed_bin= or set ESMC_EMBED")
-        embed_bin = Path(raw_bin)
-        if not embed_bin.exists():
-            raise FileNotFoundError(embed_bin)
+        runtime = _make_runtime(model)
+        if runtime is None:
+            raw_bin = (embed_bin or os.environ.get("ESMC_EMBED")
+                       or shutil.which("esmc-embed"))
+            if not raw_bin:
+                raise FileNotFoundError(
+                    "libesmc/esmc-embed not found; pass embed_bin= or set "
+                    "ESMC_EMBED/ESMC_LIB")
+            embed_bin = Path(raw_bin)
+            if not embed_bin.exists():
+                raise FileNotFoundError(embed_bin)
         head_path = Path(head) if head is not None else DEFAULT_HEAD
         head_arr = np.load(head_path)
         if head_arr.shape != (D_PROJ, D_MODEL):
             raise ValueError(f"head shape {head_arr.shape}")
 
         rows = [dict(r, sequence=_clean(r["sequence"])) for r in rows]
-        embedded = _run_esmc(rows, embed_bin, model)
+        try:
+            embedded = ([runtime.embed(r["sequence"]) for r in rows]
+                        if runtime is not None
+                        else _run_esmc(rows, embed_bin, model))
+        finally:
+            if runtime is not None:
+                runtime.close()
         projected = [_project(x, head_arr) for x in embedded]
         lens = [len(x) for x in projected]
         offsets = np.cumsum([0] + lens).astype(np.uint64)
@@ -243,7 +287,7 @@ class ProteinIndex:
             "head_sha256": _sha256(companion),
             "model": str(model),
             "model_sha256": _sha256(model),
-            "embed_bin": str(embed_bin),
+            "embed_bin": str(embed_bin) if embed_bin else "",
             "source": str(output),
             "built": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         }
@@ -253,7 +297,8 @@ class ProteinIndex:
 
     @classmethod
     def from_fasta(cls, fasta: str | Path, output: str | Path,
-                   model: str | Path, **kwargs) -> "ProteinIndex":
+                   model: str | Path = DEFAULT_MODEL, **kwargs
+                   ) -> "ProteinIndex":
         return cls.build(_read_fasta(Path(fasta)), output, model, **kwargs)
 
     def _encode(self, sequences: list[str]) -> list[np.ndarray]:
@@ -261,15 +306,18 @@ class ProteinIndex:
             raise FileNotFoundError(
                 "query GGUF not found; pass model= to load() or set "
                 "ESMC_RETRIEVAL_GGUF")
-        if self.embed_bin is None or not self.embed_bin.exists():
-            raise FileNotFoundError(
-                "esmc-embed not found; pass embed_bin= to load() or set "
-                "ESMC_EMBED")
         rows = [{"id": f"q{i}", "sequence": _clean(s)}
                 for i, s in enumerate(sequences)]
         if any(not r["sequence"] for r in rows):
             raise ValueError("empty query sequence")
-        embedded = _run_esmc(rows, self.embed_bin, self.model)
+        if self._runtime is not None:
+            embedded = [self._runtime.embed(r["sequence"]) for r in rows]
+        else:
+            if self.embed_bin is None or not self.embed_bin.exists():
+                raise FileNotFoundError(
+                    "libesmc/esmc-embed not found; pass embed_bin= to load() "
+                    "or set ESMC_EMBED/ESMC_LIB")
+            embedded = _run_esmc(rows, self.embed_bin, self.model)
         return [_project(x, self._head) for x in embedded]
 
     def _search(self, qs: list[np.ndarray], k: int

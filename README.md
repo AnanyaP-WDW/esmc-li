@@ -8,35 +8,45 @@ backend; ESM-C inference runs through
 Model: [`AnanyaPathak/esmc-300m-homology-maxsim-v1`](https://huggingface.co/AnanyaPathak/esmc-300m-homology-maxsim-v1)
 Indexes: [`AnanyaPathak/esmc-retrieval-indexes`](https://huggingface.co/datasets/AnanyaPathak/esmc-retrieval-indexes)
 
-## Requirements
-
-- Python 3.10+ and numpy
-- `esmc-embed` built from esmc.cpp (commit `218cc69` or later, which adds
-  `--keep-special`)
-- The fine-tuned retrieval GGUF
-  `esmc-300m-homology-maxsim-v1-f16.gguf` (query encoder)
-- The packaged projection head (`esmc_retrieval/data/head_k3_seed0.npy`)
-
-Set the runtime paths once:
-
-```bash
-export ESMC_EMBED=/path/to/esmc.cpp/build/esmc-embed
-export ESMC_RETRIEVAL_GGUF=/path/to/esmc-300m-homology-maxsim-v1-f16.gguf
-```
-
 ## Install
 
+Prebuilt macOS arm64 / Linux x86_64 wheels include `libesmc`; no compiler or
+separate esmc.cpp install is needed.
+
 ```bash
-pip install .
+# from a release wheel (PyPI once published)
+pip install dist/esmc_retrieval-*.whl
 # optional, macOS: fused Metal search
-pip install ".[metal]"
+pip install pyobjc-framework-Metal
+```
+
+The fine-tuned GGUF is downloaded from Hugging Face on first use and cached
+under `~/.cache/esmc-retrieval`. The packaged projection head ships in the
+wheel. No model paths are required.
+
+For a source install, `libesmc` is not bundled; set `ESMC_LIB` or use the
+legacy CLI fallback (`ESMC_EMBED`). Release wheels are the supported path.
+
+Optional overrides:
+
+```bash
+export ESMC_LIB=/path/to/libesmc.dylib   # source/dev only
+export ESMC_RETRIEVAL_GGUF=/path/to/local.gguf
+export ESMC_RETRIEVAL_CACHE=/custom/cache
+```
+
+## Prebuilt indexes
+
+```bash
+esmc-retrieval index list
+esmc-retrieval index pull scope-1k
+esmc-retrieval search scope-1k --sequence "MKT..." --top-k 10
 ```
 
 ## Build an index
 
 ```bash
-esmc-retrieval build proteins.fasta \
-    --output proteins.esmci
+esmc-retrieval build proteins.fasta --output proteins.esmci
 ```
 
 The build writes `proteins.esmci` plus `proteins.esmci.json` and
@@ -68,13 +78,15 @@ hits = index.search("MKTIIALSYIFCLVFADYKDDDDK", k=10)
 
 ## Notes
 
+- The in-process `libesmc` context stays loaded; single-query `search()` does
+  not reload the model. Source/legacy CLI fallback does.
 - Search is exact MaxSim over projected residue rows. `device="auto"` uses
   fused Metal when PyObjC is available on macOS, otherwise numpy.
-- `search_batch` uses one `esmc-embed` process for all queries.
-- Single-query `search()` pays one model load; use `search_batch` for throughput.
 - The index is not self-contained: keep the matching head and FT GGUF with it.
-- `--keep-special` is required because the frozen scorer was trained on rows
-  including BOS/EOS.
+- The C API keeps BOS/EOS rows; no CLI `--keep-special` is needed on the
+  runtime path.
+- v1 macOS runtime binaries are unsigned; the package prints a warning. Verify
+  the release checksum or build esmc.cpp locally if that matters.
 - ESM-C weights and derivatives are governed by the EvolutionaryScale
   Cambrian Open License Agreement.
 

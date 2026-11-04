@@ -1,0 +1,40 @@
+name: wheels
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-14
+            python: "3.13"
+          - os: ubuntu-22.04
+            python: "3.13"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: AnanyaP-WDW/esmc.cpp
+          ref: 218cc696188569b7f64da4ad40295a1b71119a2b
+          path: esmc.cpp
+          submodules: recursive
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: install build tools (linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y cmake patchelf
+      - name: build wheel
+        env:
+          ESMC_CPP: ${{ github.workspace }}/esmc.cpp
+          PYTHON: python
+          MACOSX_DEPLOYMENT_TARGET: "11.0"
+        run: bash scripts/build_runtime_wheel.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheel-${{ matrix.os }}
+          path: dist/*.whl

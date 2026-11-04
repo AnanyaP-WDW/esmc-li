@@ -1,7 +1,15 @@
 """M8 end-to-end with a fake esmc-embed (no model download)."""
 import sys
 
+import pytest
+
 from esmc_retrieval import ProteinIndex
+
+
+@pytest.fixture(autouse=True)
+def _no_runtime(monkeypatch):
+    monkeypatch.setattr("esmc_retrieval.protein_index.find_library",
+                        lambda: None)
 
 
 def _fake_embed(tmp_path):
