@@ -37,7 +37,28 @@ def main() -> int:
         if row.get("metrics") != r["metrics"]:
             print(f"lock: {rid} metrics mismatch", file=sys.stderr)
             return 1
-    print(f"lock: {len(lock['results'])} results verified at "
+    rows = [json.loads(x) for x in lines if x.strip()]
+    t03 = next(r for r in rows if r["task"] == "T0.3")
+    t04 = next(r for r in rows if r["task"] == "T0.4")
+    scope = lock["facts"]["scope"]["values"]
+    for k, v in {"domains": t03["metrics"]["astral_40_domains"],
+                 "train": t04["metrics"]["scope_train"],
+                 "val": t04["metrics"]["scope_val"],
+                 "test": t04["metrics"]["scope_test"]}.items():
+        if scope[k] != v:
+            print(f"lock: scope fact {k} mismatch", file=sys.stderr)
+            return 1
+    fl = json.loads((ROOT / "data" / "fulllength" /
+                     "manifest.json").read_text())
+    facts = lock["facts"]["full_length"]["values"]
+    mapping = {"n_db": "db_size", "n_queries": "n_queries",
+               "query_clans": "query_clans", "n_gt_2046": "n_gt_2046",
+               "max_length": "max_length", "clan_overlap": "clan_overlap"}
+    for k, src in mapping.items():
+        if facts[k] != fl[src]:
+            print(f"lock: full-length fact {k} mismatch", file=sys.stderr)
+            return 1
+    print(f"lock: {len(lock['results'])} results and facts verified at "
           f"{commit[:12]}; runs sha256 ok")
     return 0
 
