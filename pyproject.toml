@@ -4,14 +4,24 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "esmc-retrieval"
-version = "0.0.1"
+version = "1.0.0"
 description = "Fast local protein retrieval using ESM-C residue embeddings and late interaction."
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "Ananya Pathak"}]
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.24", "huggingface_hub>=0.23"]
+
+[project.urls]
+Homepage = "https://github.com/AnanyaP-WDW/-esmc-retrieval"
+Paper = "https://github.com/AnanyaP-WDW/-esmc-retrieval/blob/main/paper/main.md"
+Model = "https://huggingface.co/AnanyaPathak/esmc-300m-homology-maxsim-v1"
+Indexes = "https://huggingface.co/datasets/AnanyaPathak/esmc-retrieval-indexes"
 
 [project.optional-dependencies]
 dev = ["pytest>=7", "requests>=2.28", "datasketch>=1.6"]
 metal = ["pyobjc-framework-Metal>=10.0"]
+paper = ["matplotlib>=3.8"]
 
 [project.scripts]
 esmc-retrieval = "esmc_retrieval.cli:main"

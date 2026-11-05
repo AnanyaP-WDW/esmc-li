@@ -1,0 +1,30 @@
+# Third-party notices
+
+`esmc-retrieval` is MIT-licensed (see `LICENSE`). It depends on separate
+components with their own terms.
+
+## ESM-C 300M weights and derivatives
+
+Built with ESM. The ESM-C 300M model weights and any GGUF conversion or
+quantization are Derivative Works governed by the EvolutionaryScale Cambrian
+Open License Agreement:
+
+- https://www.evolutionaryscale.ai/policies/cambrian-open-license-agreement
+- https://www.evolutionaryscale.ai/policies/acceptable-use-policy
+
+The model repository is https://huggingface.co/EvolutionaryScale/esmc-300m-2024-12.
+
+## esmc.cpp
+
+The inference runtime is MIT-licensed. See
+https://github.com/AnanyaP-WDW/esmc.cpp and its `LICENSE` / `NOTICE`.
+The packaged `libesmc` and `libggml` binaries are built from that project.
+
+## ggml / llama.cpp
+
+The `ggml` runtime is MIT-licensed. See the upstream project's `LICENSE`.
+
+## ProtoCol
+
+The ProtoCol code is used only for the reproduced baseline; it is not
+redistributed in the wheel. See https://github.com/gabriellecohn/ProtoCol.

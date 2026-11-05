@@ -31,6 +31,10 @@ SEL: dict[str, tuple[str, str, dict]] = {
     "t1.pooled": ("T1.2", "2026-09-27T15:45:15+0530", {}),
     "t1.maxsim960": ("T1.3", "2026-09-27T15:45:16+0530", {}),
     "t1.maxsim128": ("T1.3", "2026-09-27T15:45:17+0530", {}),
+    "t1.diagD": ("T1.diag", "2026-09-27T16:54:37+0530",
+                  {"variant": "D_esm2_strip_full"}),
+    "t1.diagC": ("T1.diag", "2026-09-27T16:54:37+0530",
+                  {"variant": "C_esm2_keep_trunc_randproj"}),
     "t2.d64.s0": ("T2.5", "2026-09-27T18:55:06+0530", {"d": 64, "seed": 0}),
     "t2.d64.s1": ("T2.5", "2026-09-27T18:55:06+0530", {"d": 64, "seed": 1}),
     "t2.d64.s2": ("T2.5", "2026-09-27T18:55:06+0530", {"d": 64, "seed": 2}),
@@ -89,7 +93,9 @@ for name, ts in FL.items():
         method = {"minhash": "minhash5mer", "mmseqs2": "mmseqs2_s7.5"}.get(
             method, method)
     else:
-        norm = name.rsplit("_", 1)[1]
+        norm = {"divA": "div_lenA", "divB": "div_lenB",
+                "divGeo": "div_len_geomean"}.get(
+                    name.rsplit("_", 1)[1], "raw")
         method = {"maxsim960": "maxsim960", "maxsim128": "maxsim128",
                   "pooled": "pooled_esmc", "trained": "trained_m3"}[method]
     SEL[f"fl.{name}"] = ("T4.3", ts,
@@ -145,7 +151,11 @@ def match(row: dict, task: str, ts: str, extra: dict) -> bool:
         return False
     cfg = row.get("config", {})
     for k, v in extra.items():
-        if cfg.get(k) != v:
+        if k in cfg:
+            got = cfg.get(k)
+        else:
+            got = row.get(k)
+        if got != v:
             return False
     return True
 
@@ -185,6 +195,7 @@ def main() -> int:
             "derived": r.get("derived", False),
         }
 
+    t03 = next(r for r in rows if r["task"] == "T0.3")
     t04 = next(r for r in rows if r["task"] == "T0.4")
     t41 = next(r for r in rows if r["task"] == "T4.1")
     fl = json.loads((ROOT / "data" / "fulllength" /
@@ -196,18 +207,19 @@ def main() -> int:
         raise SystemExit("could not parse identity file")
     facts = {
         "scope": fact_group("scope", {
+            "domains": t03["metrics"]["astral_40_domains"],
             "train": t04["metrics"]["scope_train"],
             "val": t04["metrics"]["scope_val"],
             "test": t04["metrics"]["scope_test"],
-            "superfamilies": t04["metrics"]["scope_superfamilies"],
-            "families": t04["metrics"]["scope_families"],
-            "folds": t04["metrics"]["scope_folds"],
+            "superfamilies": t03["metrics"]["scope_superfamilies"],
+            "families": t03["metrics"]["scope_families"],
+            "folds": t03["metrics"]["scope_folds"],
             "max_train_test_identity_80cov": float(m.group(1)) / 100.0,
         }, ["results/runs.jsonl", "results/m0_split_identity.txt"]),
         "full_length": fact_group("full_length", {
             "n_db": fl["db_size"],
             "n_queries": fl["n_queries"],
-            "test_clans": fl["test_clans"],
+            "query_clans": fl["query_clans"],
             "n_gt_2046": fl["n_gt_2046"],
             "max_length": fl["max_length"],
             "clan_overlap": fl["clan_overlap"],

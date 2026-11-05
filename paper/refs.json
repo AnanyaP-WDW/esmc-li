@@ -1,0 +1,236 @@
+{
+  "protocol": {
+    "authors": "Cohn, G. et al.",
+    "title": "PROTOCOL: Late Interaction Retrieval for Protein Homolog Search",
+    "venue": "arXiv:2605.29158",
+    "year": 2026,
+    "url": "https://arxiv.org/abs/2605.29158",
+    "status": "verified",
+    "verified": "arXiv abs page fetched 2026-09-27; title matches."
+  },
+  "dhr": {
+    "authors": "Hong, L. et al.",
+    "title": "Fast, sensitive detection of protein homologs using deep dense retrieval",
+    "venue": "Nature Biotechnology 43, 983-995",
+    "year": 2024,
+    "url": "https://www.nature.com/articles/s41587-024-02353-6",
+    "status": "verified",
+    "verified": "Publisher page fetched 2026-09-27."
+  },
+  "tmvec": {
+    "authors": "Hamamsy, T. et al.",
+    "title": "Protein remote homology detection and structural alignment using deep learning",
+    "venue": "Nature Biotechnology 42, 975-985",
+    "year": 2024,
+    "url": "https://www.nature.com/articles/s41587-023-01917-2",
+    "status": "verified",
+    "verified": "Publisher page fetched 2026-09-27; TM-Vec and DeepBLAST in one paper."
+  },
+  "plmsearch": {
+    "authors": "Liu, W. et al.",
+    "title": "PLMSearch: Protein language model powers accurate and fast sequence search for remote homology",
+    "venue": "Nature Communications 15, 2775",
+    "year": 2024,
+    "url": "https://www.nature.com/articles/s41467-024-46808-5",
+    "status": "verified",
+    "verified": "Publisher page fetched 2026-09-27."
+  },
+  "plmblast": {
+    "authors": "Kaminski, K. et al.",
+    "title": "pLM-BLAST: distant homology detection based on direct comparison of sequence representations from protein language models",
+    "venue": "Bioinformatics 39, btad579",
+    "year": 2023,
+    "url": "https://pubmed.ncbi.nlm.nih.gov/37725369",
+    "status": "verified",
+    "verified": "PubMed page fetched 2026-09-27."
+  },
+  "peba": {
+    "authors": "Iovino, L. and Ye, Y.",
+    "title": "Protein embedding based alignment",
+    "venue": "BMC Bioinformatics 25, 85",
+    "year": 2024,
+    "url": "https://link.springer.com/article/10.1186/s12859-024-05699-5",
+    "status": "verified",
+    "verified": "Publisher page fetched 2026-09-27."
+  },
+  "erast": {
+    "authors": "Jiang, Y., He, B., Yao, J. et al.",
+    "title": "Scalable homology detection with ERAST",
+    "venue": "Nature Biotechnology",
+    "year": 2026,
+    "url": "https://www.nature.com/articles/s41587-026-03051-1",
+    "status": "verified",
+    "verified": "Publisher page fetched 2026-09-27; DOI 10.1038/s41587-026-03051-1."
+  },
+  "foldseek": {
+    "authors": "van Kempen, M. et al.",
+    "title": "Fast and accurate protein structure search with Foldseek",
+    "venue": "Nature Biotechnology 42, 243-246",
+    "year": 2024,
+    "url": "https://www.nature.com/articles/s41587-023-01773-0",
+    "status": "verified",
+    "verified": "Publisher page fetched 2026-09-27."
+  },
+  "knnprott5": {
+    "authors": "Schutze, K., Heinzinger, M., Steinegger, M., Rost, B.",
+    "title": "Nearest neighbor search on embeddings rapidly identifies distant protein relations",
+    "venue": "Frontiers in Bioinformatics 2, 1033775",
+    "year": 2022,
+    "url": "https://www.frontiersin.org/journals/bioinformatics/articles/10.3389/fbinf.2022.1033775/full",
+    "status": "verified",
+    "verified": "Publisher page fetched 2026-09-27."
+  },
+  "esmc": {
+    "authors": "EvolutionaryScale",
+    "title": "ESM-C 300M (ESM Cambrian) model card",
+    "venue": "Hugging Face",
+    "year": 2024,
+    "url": "https://huggingface.co/EvolutionaryScale/esmc-300m-2024-12",
+    "status": "verified",
+    "verified": "Model card and Cambrian license linked from the model repository."
+  },
+  "esmccpp": {
+    "authors": "Pathak, A. and Pathak, A.",
+    "title": "esmc.cpp: A Zero-Dependency, Metal-Accelerated C/C++ Runtime for ESM Cambrian Protein Embeddings",
+    "venue": "OpenReview (CAISc 2026, non-archival)",
+    "year": 2026,
+    "url": "https://openreview.net/forum?id=0GarVDrEAi",
+    "status": "verified",
+    "verified": "OpenReview URL and citation recorded in the esmc.cpp README."
+  },
+  "scope": {
+    "authors": "SCOPe Consortium",
+    "title": "SCOPe 2.08 ASTRAL 40% domain sequences",
+    "venue": "Structural Classification of Proteins extended",
+    "year": 2026,
+    "url": "https://scop.berkeley.edu/downloads/scopeseq-2.08/astral-scopedom-seqres-gd-sel-gs-bib-40-2.08.fa",
+    "status": "verified",
+    "verified": "Download URL and sha256 pinned in data/manifest.json."
+  },
+  "uniprot": {
+    "authors": "UniProt Consortium",
+    "title": "UniProtKB/Swiss-Prot reviewed sequences",
+    "venue": "UniProt",
+    "year": 2026,
+    "url": "https://www.uniprot.org/",
+    "status": "verified",
+    "verified": "Stream URL and sha256 pinned in data/fulllength/manifest.json."
+  },
+  "uniref50": {
+    "authors": "UniProt Consortium",
+    "title": "UniRef50 protein clusters",
+    "venue": "UniProt",
+    "year": 2026,
+    "url": "https://www.uniprot.org/uniref",
+    "status": "verified",
+    "verified": "Used by the M7 scaling subsets; source URLs recorded in the M7 scripts."
+  },
+  "colbert": {
+    "authors": "Khattab, O. and Zaharia, M.",
+    "title": "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT",
+    "venue": "SIGIR 2020",
+    "year": 2020,
+    "url": "https://arxiv.org/abs/2004.12832",
+    "status": "verified",
+    "verified": "arXiv abs page; late-interaction formulation."
+  },
+  "infonce": {
+    "authors": "van den Oord, A., Li, Y., Vinyals, O.",
+    "title": "Representation Learning with Contrastive Predictive Coding",
+    "venue": "arXiv:1807.03748",
+    "year": 2018,
+    "url": "https://arxiv.org/abs/1807.03748",
+    "status": "verified",
+    "verified": "arXiv abs page; InfoNCE objective."
+  },
+  "clip": {
+    "authors": "Radford, A. et al.",
+    "title": "Learning Transferable Visual Models From Natural Language Supervision",
+    "venue": "ICML 2021",
+    "year": 2021,
+    "url": "https://arxiv.org/abs/2103.00020",
+    "status": "verified",
+    "verified": "arXiv abs page; temperature 0.07 default."
+  },
+  "faiss": {
+    "authors": "Johnson, J., Douze, M., Jegou, H.",
+    "title": "Billion-scale similarity search with GPUs",
+    "venue": "IEEE Transactions on Big Data",
+    "year": 2019,
+    "url": "https://github.com/facebookresearch/faiss",
+    "status": "verified",
+    "verified": "Repository and paper URL resolve; used only as a latency floor."
+  },
+  "plaid": {
+    "authors": "Santhanam, K., Khattab, O., Potts, C., Zaharia, M.",
+    "title": "PLAID: An Efficient Engine for Late Interaction Retrieval",
+    "venue": "CIKM 2022",
+    "year": 2022,
+    "url": "https://dl.acm.org/doi/10.1145/3511808.3557325",
+    "status": "verified",
+    "verified": "DOI page fetched 2026-09-27."
+  },
+  "muvera": {
+    "authors": "Dhulipala, L., Hadian, M., Jayaram, S., Lee, A., Mirrokni, V.",
+    "title": "MUVERA: Multi-Vector Retrieval via Fixed Dimensional Encodings",
+    "venue": "NeurIPS 2024",
+    "year": 2024,
+    "url": "https://arxiv.org/abs/2405.19504",
+    "status": "verified",
+    "verified": "arXiv abs page fetched 2026-09-27."
+  },
+  "dessert": {
+    "authors": "Engels, J., Coleman, B., Lakshman, V., Shrivastava, A.",
+    "title": "DESSERT: An Efficient Algorithm for Vector Set Search with Vector Set Queries",
+    "venue": "NeurIPS 2023",
+    "year": 2023,
+    "url": "https://arxiv.org/abs/2210.15748",
+    "status": "verified",
+    "verified": "arXiv abs page fetched 2026-09-27."
+  },
+  "pylate": {
+    "authors": "Chaffin, A. and Sourty, S.",
+    "title": "PyLate: Flexible Training and Retrieval for Late Interaction Models",
+    "venue": "CIKM 2025",
+    "year": 2025,
+    "url": "https://arxiv.org/abs/2508.03555",
+    "status": "verified",
+    "verified": "arXiv and DOI recorded in docs/related_work.md."
+  },
+  "mmseqs2": {
+    "authors": "Steinegger, M. and Soding, J.",
+    "title": "MMseqs2 enables sensitive protein sequence searching for the analysis of massive data sets",
+    "venue": "Nature Biotechnology 35, 1026-1028",
+    "year": 2017,
+    "url": "https://www.nature.com/articles/nbt.3988",
+    "status": "verified",
+    "verified": "Publisher page fetched 2026-09-27."
+  },
+  "minhash": {
+    "authors": "Zhu, E.",
+    "title": "datasketch: MinHash and LSH implementation",
+    "venue": "GitHub",
+    "year": 2024,
+    "url": "https://github.com/ekzhu/datasketch",
+    "status": "verified",
+    "verified": "Repository URL resolves; used for the 5-mer MinHash baseline."
+  },
+  "blast": {
+    "authors": "Altschul, S. F., Gish, W., Miller, W., Myers, E. W., Lipman, D. J.",
+    "title": "Basic local alignment search tool",
+    "venue": "Journal of Molecular Biology 215, 403-410",
+    "year": 1990,
+    "url": "https://doi.org/10.1016/S0022-2836(05)80360-2",
+    "status": "verified",
+    "verified": "DOI resolves; fetched 2026-09-27."
+  },
+  "cambrian": {
+    "authors": "EvolutionaryScale",
+    "title": "EvolutionaryScale Cambrian Open License Agreement",
+    "venue": "EvolutionaryScale policy",
+    "year": 2026,
+    "url": "https://www.evolutionaryscale.ai/policies/cambrian-open-license-agreement",
+    "status": "verified",
+    "verified": "License URL referenced by the ESM-C model card and esmc.cpp NOTICE."
+  }
+}

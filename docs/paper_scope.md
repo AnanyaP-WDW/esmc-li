@@ -47,6 +47,7 @@ binding constraints are index build and storage, not query search at 10^5.
 |---|---|---|
 | Table 1 | Datasets, splits, hyperparameters, identity control | facts + `T0.3/T0.4/T4.1` |
 | Table 2 | SCOPe ASTRAL40 retrieval, full metrics | `T0.6`, `T0.7`, `T1.2`, `T1.3`, `T2.full`, `T3.full` |
+| Table 2b | Frozen backbone control (ESM-C vs ESM-2 35M) | `T1.3`, `T1.diag` |
 | Table 3 | 100K full-length Swiss-Prot retrieval | `T4.3` |
 | Table 4 | Length-normalization ablation | `T4.3` |
 | Table 5a/b/c | D, tau/masking, k ablations | `T2.5`, `T2.4`, `T3.2`, `T3.full` |
@@ -54,6 +55,7 @@ binding constraints are index build and storage, not query search at 10^5.
 | Table 7 | Compression trade-off | `T7.1` |
 | Table 8 | Coarse candidate stage | `T7.2`, `T7.3` |
 | Table 9 | Package profile (appendix) | `T8.1`, `T8.profile` |
+| Table 9b | Offline package smoke | `T8.1` |
 | Figure 1 | Search latency and index size vs database size | `T7.3` |
 | Figure 2 | Compression: size ratio vs cR@10 | `T7.1` |
 | Figure 3 | Length normalization: cR@10 raw vs normalized | `T4.3` |
