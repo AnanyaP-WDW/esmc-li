@@ -680,7 +680,7 @@ def figures() -> None:
     body.append(_text(94, 248, "exhaustive", 9))
     body.append(_line(170, 245, 198, 245, "#111", 1.5, "5,4"))
     body.append(_text(204, 248, "coarse + rerank", 9))
-    (FIG_DIR / "f1_scaling.svg").write_text(_svg(680, 260, body))
+    (FIG_DIR / "f2_scaling.svg").write_text(_svg(680, 260, body))
 
     # Figure 2: compression ratio vs cR@10.
     m = R["t7.compress"]["metrics"]
@@ -712,7 +712,7 @@ def figures() -> None:
     for (x, y), t in zip(pts, labels):
         body.append(_circle(x, y))
         body.append(_text(x, y - 8, t, 8, "middle"))
-    (FIG_DIR / "f2_compression.svg").write_text(_svg(360, 270, body))
+    (FIG_DIR / "f3_compression.svg").write_text(_svg(360, 270, body))
 
     # Figure 3: grouped bars, raw vs normalized.
     body = [_line(50, 220, 400, 220), _line(50, 220, 50, 20)]
@@ -737,7 +737,7 @@ def figures() -> None:
     body.append(_text(274, 21, "fine-tuned k=3", 8))
     body.append(f'<rect x="260" y="26" width="10" height="10" fill="#999"/>')
     body.append(_text(274, 35, "frozen MaxSim 960D", 8))
-    (FIG_DIR / "f3_length.svg").write_text(_svg(420, 260, body))
+    (FIG_DIR / "f1_length.svg").write_text(_svg(420, 260, body))
 
 
 def main() -> int:

@@ -294,9 +294,9 @@ doing nothing.
 
 Full-length corpus. div_lenA is rank-invariant within a query; the candidate-length variants change the ranking.
 
-![f3_length](figures/f3_length.svg)
+![f1_length](figures/f1_length.svg)
 
-*Figure 3. Length normalization on the full-length corpus. Raw and query-length
+*Figure 1. Length normalization on the full-length corpus. Raw and query-length
 normalization are rank-equivalent; candidate-length normalization destroys the
 ranking.*
 
@@ -381,9 +381,9 @@ M4 Max, fused Metal, a fixed query set. Build/index from UniRef50 subsets; coars
 
 CPU/MPS/Metal are exact MaxSim. FAISS is an approximate latency floor over pooled vectors, not a quality-comparable retriever. The PyLate/PLAID row is a small-index subset because full-DB encoding was infeasible here.
 
-![f1_scaling](figures/f1_scaling.svg)
+![f2_scaling](figures/f2_scaling.svg)
 
-*Figure 1. Exact search and index size versus database size. The
+*Figure 2. Exact search and index size versus database size. The
 million-protein point is measured; beyond it we do not extrapolate a promise.*
 
 The coarse stage is Table 8. It recovers
@@ -428,9 +428,9 @@ step; it is not part of this paper's claim.
 
 Pass = at least four times smaller and no more than one point of cR@10 drop. Only PQ m32 passes; it was not shipped because decode+MaxSim was slower than f16.
 
-![f2_compression](figures/f2_compression.svg)
+![f3_compression](figures/f3_compression.svg)
 
-*Figure 2. Compression trade-off. Passing the recall bar is not enough; the
+*Figure 3. Compression trade-off. Passing the recall bar is not enough; the
 decode path must also beat reading the raw rows.*
 
 ### Package

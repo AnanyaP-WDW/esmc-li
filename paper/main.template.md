@@ -246,9 +246,9 @@ doing nothing.
 
 <!-- TABLE:t4_length -->
 
-<!-- FIGURE:f3_length -->
+<!-- FIGURE:f1_length -->
 
-*Figure 3. Length normalization on the full-length corpus. Raw and query-length
+*Figure 1. Length normalization on the full-length corpus. Raw and query-length
 normalization are rank-equivalent; candidate-length normalization destroys the
 ranking.*
 
@@ -287,9 +287,9 @@ avoiding the score-matrix write.
 
 <!-- TABLE:t6b_devices -->
 
-<!-- FIGURE:f1_scaling -->
+<!-- FIGURE:f2_scaling -->
 
-*Figure 1. Exact search and index size versus database size. The
+*Figure 2. Exact search and index size versus database size. The
 million-protein point is measured; beyond it we do not extrapolate a promise.*
 
 The coarse stage is Table 8. It recovers
@@ -315,9 +315,9 @@ step; it is not part of this paper's claim.
 
 <!-- TABLE:t7_compression -->
 
-<!-- FIGURE:f2_compression -->
+<!-- FIGURE:f3_compression -->
 
-*Figure 2. Compression trade-off. Passing the recall bar is not enough; the
+*Figure 3. Compression trade-off. Passing the recall bar is not enough; the
 decode path must also beat reading the raw rows.*
 
 ### Package
