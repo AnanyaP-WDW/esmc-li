@@ -47,6 +47,6 @@ case "$(uname -s)" in
     ;;
 esac
 
-rm -rf "$ROOT/dist"
+rm -rf "$ROOT/dist" "$ROOT/build" "$ROOT"/*.egg-info
 "$PYTHON" -m pip wheel "$ROOT" --no-deps -w "$ROOT/dist"
 ls -lh "$ROOT/dist"
