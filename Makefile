@@ -3,7 +3,7 @@ PYTEST ?= $(PYTHON) -m pytest
 
 .PHONY: tables paper claims verify-lock check-tables check-paper audit check wheel
 
-tables:
+tables: verify-lock
 	$(PYTHON) scripts/paper_assets.py
 	$(PYTHON) scripts/build_paper.py
 
