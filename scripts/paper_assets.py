@@ -577,8 +577,12 @@ def t9() -> None:
                 "t9_profile", label, "q/s", [rid]),
         ])
     smoke = R["t8.smoke"]["metrics"]
+    smoke_cfg = R["t8.smoke"]["config"]
     put("t9.smoke.n", smoke["n"], ints(smoke["n"]), "t9b_smoke",
-        "SCOPe 1K", "Queries", ["t8.smoke"])
+        "SCOPe 1K", "n_db", ["t8.smoke"])
+    put("t9.smoke.queries", smoke_cfg["n_queries"],
+        ints(smoke_cfg["n_queries"]), "t9b_smoke", "SCOPe 1K",
+        "Queries", ["t8.smoke"])
     put("t9.smoke.superfamily", smoke["top1_superfamily"],
         str(smoke["top1_superfamily"]), "t9b_smoke", "SCOPe 1K",
         "top-1 superfamily", ["t8.smoke"])
@@ -586,9 +590,9 @@ def t9() -> None:
         "t9b_smoke", "SCOPe 1K", "top-1 family", ["t8.smoke"])
     md_table(TABLE_DIR / "t9b_smoke.md",
              "Table 9b. Offline package smoke",
-             ["Index", "Queries", "top-1 superfamily", "top-1 family"],
-             [["SCOPe 1K", ints(smoke["n"]), str(smoke["top1_superfamily"]),
-               str(smoke["top1_family"])]],
+             ["Index", "n_db", "Queries", "top-1 superfamily", "top-1 family"],
+             [["SCOPe 1K", ints(smoke["n"]), ints(smoke_cfg["n_queries"]),
+               str(smoke["top1_superfamily"]), str(smoke["top1_family"])]],
              "Fresh-install smoke from the M8 release check.")
     md_table(TABLE_DIR / "t9_profile.md",
              "Table 9. Package profile (appendix)",

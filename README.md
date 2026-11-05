@@ -104,7 +104,7 @@ make tables     # regenerate 15 tables, 3 figures, and paper/main.md
 make audit      # claims + citations + lock + tests + zero-diff
 ```
 
-`make audit` currently reports 81/81 numeric claims mapped and 26/26 citations
+`make audit` currently reports 82/82 numeric claims mapped and 26/26 citations
 verified. See [`paper/README.md`](paper/README.md) and
 [`docs/claims.md`](docs/claims.md).
 

@@ -325,7 +325,8 @@ decode path must also beat reading the raw rows.*
 The package exposes `ProteinIndex.from_fasta`, `build`, `load`, `search`, and
 `search_batch`, plus a CLI. A fresh install builds and searches a small SCOPe
 index offline; the release smoke retrieves the same superfamily in
-{{n:t9.smoke.superfamily}} of {{n:t9.smoke.n}} top-1 results. Table 9 profiles
+{{n:t9.smoke.superfamily}} of {{n:t9.smoke.queries}} top-1 results on a
+{{n:t9.smoke.n}}-protein index. Table 9 profiles
 the runtime. At one thousand proteins, Metal search is
 {{n:t9.Metal.1000.search}} ms/query; at one hundred thousand it is
 {{n:t9.Metal.100000.search_s}} s/query. The million-protein numpy path is

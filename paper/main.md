@@ -438,7 +438,8 @@ decode path must also beat reading the raw rows.*
 The package exposes `ProteinIndex.from_fasta`, `build`, `load`, `search`, and
 `search_batch`, plus a CLI. A fresh install builds and searches a small SCOPe
 index offline; the release smoke retrieves the same superfamily in
-10 of 1,000 top-1 results. Table 9 profiles
+10 of 10 top-1 results on a
+1,000-protein index. Table 9 profiles
 the runtime. At one thousand proteins, Metal search is
 19.0 ms/query; at one hundred thousand it is
 1.29 s/query. The million-protein numpy path is
@@ -460,9 +461,9 @@ M4 Max. Single-query encode+search; model/context stays loaded. The largest row 
 
 **Table 9b. Offline package smoke**
 
-| Index | Queries | top-1 superfamily | top-1 family |
-|---|---|---|---|
-| SCOPe 1K | 1,000 | 10 | 8 |
+| Index | n_db | Queries | top-1 superfamily | top-1 family |
+|---|---|---|---|---|
+| SCOPe 1K | 1,000 | 10 | 10 | 8 |
 
 Fresh-install smoke from the M8 release check.
 

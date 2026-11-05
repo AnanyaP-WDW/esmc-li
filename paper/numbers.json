@@ -3209,9 +3209,19 @@
     "table": "t9b_smoke"
   },
   "t9.smoke.n": {
-    "col": "Queries",
+    "col": "n_db",
     "display": "1,000",
     "raw": 1000,
+    "row": "SCOPe 1K",
+    "sources": [
+      "t8.smoke"
+    ],
+    "table": "t9b_smoke"
+  },
+  "t9.smoke.queries": {
+    "col": "Queries",
+    "display": "10",
+    "raw": 10,
     "row": "SCOPe 1K",
     "sources": [
       "t8.smoke"

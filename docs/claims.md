@@ -15,7 +15,7 @@ here rather than automated.
 
 ## Numeric claims
 
-Coverage: **81/81** numeric placeholders mapped to a
+Coverage: **82/82** numeric placeholders mapped to a
 generated table cell.
 
 | ID | Section | Value | Table | Row | Column | Source |
@@ -97,10 +97,11 @@ generated table cell.
 | C75 | Compression: the recall bar is reachable, the latency bar is not | 0.0052 | t7_compression | residual PQ m32 | drop | `t7.compress` |
 | C76 | Compression: the recall bar is reachable, the latency bar is not | 0.8921 | t7_compression | residual PQ m32 | cR@10 | `t7.compress` |
 | C77 | Package | 10 | t9b_smoke | SCOPe 1K | top-1 superfamily | `t8.smoke` |
-| C78 | Package | 1,000 | t9b_smoke | SCOPe 1K | Queries | `t8.smoke` |
-| C79 | Package | 19.0 | t9_profile | 1K Metal | search ms/q | `t8.profile.1k_metal` |
-| C80 | Package | 1.29 | t9_profile | 100K Metal | search s/q | `t8.profile.100k_metal` |
-| C81 | Package | 67.05 | t9_profile | 1M numpy | search s/q | `t8.profile.1m_numpy` |
+| C78 | Package | 10 | t9b_smoke | SCOPe 1K | Queries | `t8.smoke` |
+| C79 | Package | 1,000 | t9b_smoke | SCOPe 1K | n_db | `t8.smoke` |
+| C80 | Package | 19.0 | t9_profile | 1K Metal | search ms/q | `t8.profile.1k_metal` |
+| C81 | Package | 1.29 | t9_profile | 100K Metal | search s/q | `t8.profile.100k_metal` |
+| C82 | Package | 67.05 | t9_profile | 1M numpy | search s/q | `t8.profile.1m_numpy` |
 
 ## Table provenance
 
