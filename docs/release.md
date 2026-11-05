@@ -23,8 +23,8 @@ dylibs; it is not a pure-Python wheel.
 
 3. Verify the published artifacts:
 
-   - model: `AnanyaPathak/esmc-300m-homology-maxsim-v1`
-   - indexes: `AnanyaPathak/esmc-retrieval-indexes`
+   - model: `AnanyaPathak/esmc-li-300m-v1`
+   - indexes: `AnanyaPathak/esmc-li-indexes`
    - SHA256 values in `data/manifest.json` and the model card.
 
 4. Tag and upload (requires credentials; not run by the paper gate):

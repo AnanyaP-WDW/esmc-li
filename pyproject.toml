@@ -15,8 +15,8 @@ dependencies = ["numpy>=1.24", "huggingface_hub>=0.23"]
 [project.urls]
 Homepage = "https://github.com/AnanyaP-WDW/esmc-li"
 Paper = "https://github.com/AnanyaP-WDW/esmc-li/blob/main/paper/main.md"
-Model = "https://huggingface.co/AnanyaPathak/esmc-300m-homology-maxsim-v1"
-Indexes = "https://huggingface.co/datasets/AnanyaPathak/esmc-retrieval-indexes"
+Model = "https://huggingface.co/AnanyaPathak/esmc-li-300m-v1"
+Indexes = "https://huggingface.co/datasets/AnanyaPathak/esmc-li-indexes"
 
 [project.optional-dependencies]
 dev = ["pytest>=7", "requests>=2.28", "datasketch>=1.6"]

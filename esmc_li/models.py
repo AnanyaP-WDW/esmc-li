@@ -5,14 +5,17 @@ import hashlib
 import os
 from pathlib import Path
 
-MODELS = {
-    "esmc-300m-homology-maxsim-v1": {
-        "repo_id": "AnanyaPathak/esmc-300m-homology-maxsim-v1",
-        "filename": "esmc-300m-homology-maxsim-v1-f16.gguf",
-        "sha256": "e87b42f1a6344e57b7a0d8a6624cc9d7e2e15f34d4a6927447b4cb3c90209bab",
-    },
+_MODEL = {
+    "repo_id": "AnanyaPathak/esmc-li-300m-v1",
+    "filename": "esmc-300m-homology-maxsim-v1-f16.gguf",
+    "sha256": "e87b42f1a6344e57b7a0d8a6624cc9d7e2e15f34d4a6927447b4cb3c90209bab",
 }
-DEFAULT_MODEL = "esmc-300m-homology-maxsim-v1"
+MODELS = {
+    "esmc-li-300m-v1": _MODEL,
+    # historical registry name; old indexes/sidecars still resolve
+    "esmc-300m-homology-maxsim-v1": _MODEL,
+}
+DEFAULT_MODEL = "esmc-li-300m-v1"
 
 
 def _sha256(path: Path) -> str:
@@ -40,7 +43,7 @@ def resolve_model(model: str | Path | None) -> Path | None:
     rec = MODELS.get(key)
     if rec is None:
         for name, r in MODELS.items():
-            if key in (name, r["filename"]):
+            if key in (name, r["repo_id"], r["filename"]):
                 rec = r
                 break
     if rec is None:

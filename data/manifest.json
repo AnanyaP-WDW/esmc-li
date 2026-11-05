@@ -29,7 +29,7 @@
       "path": "results/m3_models/head_k3_seed0.npy",
       "sha256": "b86b04e28a658ea9a3a209e476a6e130a9f3c83e6fc0ab7f7cd9a48694a09bc3"
     },
-    "hf_repo": "AnanyaPathak/esmc-300m-homology-maxsim-v1"
+    "hf_repo": "AnanyaPathak/esmc-li-300m-v1"
   },
   "sources": {
     "astral_40": {

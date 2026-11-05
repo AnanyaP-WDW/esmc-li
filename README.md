@@ -5,11 +5,11 @@ interaction (MaxSim). Exact search runs on numpy, with an optional fused Metal
 backend; ESM-C inference runs through
 [`esmc.cpp`](https://github.com/AnanyaP-WDW/esmc.cpp).
 
-Model: [`AnanyaPathak/esmc-300m-homology-maxsim-v1`](https://huggingface.co/AnanyaPathak/esmc-300m-homology-maxsim-v1)
-Indexes: [`AnanyaPathak/esmc-retrieval-indexes`](https://huggingface.co/datasets/AnanyaPathak/esmc-retrieval-indexes)
+Model: [`AnanyaPathak/esmc-li-300m-v1`](https://huggingface.co/AnanyaPathak/esmc-li-300m-v1)
+Indexes: [`AnanyaPathak/esmc-li-indexes`](https://huggingface.co/datasets/AnanyaPathak/esmc-li-indexes)
 
-The Hugging Face model/index repositories keep their historical names; the
-package and CLI are ESMC-LI.
+The Hugging Face model/index repositories are now ESMC-LI; their file names
+keep the historical `esmc-300m-homology-maxsim-v1` prefix.
 
 Paper: [`paper/main.md`](paper/main.md) · API: [`docs/api.md`](docs/api.md)
 

@@ -7,12 +7,12 @@ from esmc_li.models import cache_root
 
 INDEXES = {
     "scope-1k": {
-        "repo_id": "AnanyaPathak/esmc-retrieval-indexes",
+        "repo_id": "AnanyaPathak/esmc-li-indexes",
         "folder": "scope-1k",
         "name": "esmc-300m-homology-maxsim-v1-scope-1k",
     },
     "swissprot-100k": {
-        "repo_id": "AnanyaPathak/esmc-retrieval-indexes",
+        "repo_id": "AnanyaPathak/esmc-li-indexes",
         "folder": "swissprot-100k",
         "name": "esmc-300m-homology-maxsim-v1-swissprot-100k",
     },
