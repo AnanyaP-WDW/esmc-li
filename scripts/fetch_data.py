@@ -179,7 +179,7 @@ def main() -> int:
     MANIFEST.parent.mkdir(parents=True, exist_ok=True)
     MANIFEST.write_text(json.dumps(man, indent=2, sort_keys=True) + "\n")
     sys.path.insert(0, str(ROOT))
-    from esmc_retrieval.runlog import log_run
+    from esmc_li.runlog import log_run
     log_run("T0.3", {"sources": sorted(man["sources"]),
                      "esmc_cpp_commit": man["esmc_cpp"]["commit"]},
             man["counts"], model_hash=man["esmc_cpp"]["gguf"]["sha256"])

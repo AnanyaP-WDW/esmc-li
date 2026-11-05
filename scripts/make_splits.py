@@ -173,7 +173,7 @@ def main() -> int:
 
     (OUT / "hashes.json").write_text(json.dumps(hashes, indent=2, sort_keys=True) + "\n")
     sys.path.insert(0, str(ROOT))
-    from esmc_retrieval.runlog import log_run
+    from esmc_li.runlog import log_run
     log_run("T0.4", {"seed": SEED, "test_frac": 0.15, "min_members": 3,
                      "hashes": hashes},
             {k: sum(1 for _ in open(OUT / f"{k}.tsv")) - 1 for k in hashes})

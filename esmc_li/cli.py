@@ -6,9 +6,9 @@ import json
 import sys
 from pathlib import Path
 
-from esmc_retrieval.indexes import INDEXES, resolve_index
-from esmc_retrieval.models import DEFAULT_MODEL
-from esmc_retrieval.protein_index import ProteinIndex, _read_fasta
+from esmc_li.indexes import INDEXES, resolve_index
+from esmc_li.models import DEFAULT_MODEL
+from esmc_li.protein_index import ProteinIndex, _read_fasta
 
 
 def _cmd_build(args: argparse.Namespace) -> int:
@@ -57,7 +57,7 @@ def _cmd_index(args: argparse.Namespace) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(prog="esmc-retrieval")
+    ap = argparse.ArgumentParser(prog="esmc-li")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     b = sub.add_parser("build", help="build a .esmci index from FASTA")

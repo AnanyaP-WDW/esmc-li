@@ -14,9 +14,9 @@ from pathlib import Path
 
 import numpy as np
 
-from esmc_retrieval.eval import evaluate, load_split
-from esmc_retrieval.runlog import log_run
-from esmc_retrieval.scoring import (
+from esmc_li.eval import evaluate, load_split
+from esmc_li.runlog import log_run
+from esmc_li.scoring import (
     load_embeddings,
     maxsim_matrix,
     pooled_cosine_matrix,

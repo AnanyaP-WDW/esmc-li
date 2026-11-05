@@ -22,9 +22,9 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from esmc_retrieval.eval import evaluate, load_split
-from esmc_retrieval.runlog import log_run
-from esmc_retrieval.scoring import l2_normalize, maxsim_matrix, rankings_from_scores
+from esmc_li.eval import evaluate, load_split
+from esmc_li.runlog import log_run
+from esmc_li.scoring import l2_normalize, maxsim_matrix, rankings_from_scores
 
 ROOT = Path(__file__).resolve().parents[1]
 SPLIT = ROOT / "data" / "splits" / "scope_test.tsv"

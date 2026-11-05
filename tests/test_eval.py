@@ -1,6 +1,6 @@
 import math
 
-from esmc_retrieval.eval import evaluate, expected_random_cr, random_ranking
+from esmc_li.eval import evaluate, expected_random_cr, random_ranking
 
 ROWS = [
     {"id": "q1", "sequence": "MKTA", "family": "A1", "superfamily": "A", "fold": "F1"},

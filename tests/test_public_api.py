@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import inspect
 
-import esmc_retrieval
-from esmc_retrieval import ProteinIndex
+import esmc_li
+from esmc_li import ProteinIndex
 
 
 def params(fn):
@@ -12,8 +12,8 @@ def params(fn):
 
 
 def test_exports():
-    assert esmc_retrieval.__all__ == ["ProteinIndex"]
-    assert esmc_retrieval.__version__ == "1.0.0"
+    assert esmc_li.__all__ == ["ProteinIndex"]
+    assert esmc_li.__version__ == "1.0.0"
 
 
 def test_build_signature():

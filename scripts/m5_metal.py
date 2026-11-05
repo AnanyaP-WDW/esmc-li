@@ -2,7 +2,7 @@
 """M5 T5.3: fused-metal search vs T5.1 mps at 10K/100K docs -> gate.
 
 T5.2 showed mps efficiency 43.7% (<50%), so the plan's T5.3 gate fires:
-custom Metal kernel (tiled f16 GEMM + segment-max, esmc_retrieval/metal_search.py).
+custom Metal kernel (tiled f16 GEMM + segment-max, esmc_li/metal_search.py).
 Exit = same top-k ids as T5.1 (tie-tolerant) AND >= 2x T5.1 wall at 100K.
 
 Mps and metal run in separate subprocesses: torch's MPS allocator and live
@@ -48,11 +48,11 @@ def phase(device: str) -> int:
     for n in SIZES:
         q, A, sub = _queries(n)
         if device == "mps":
-            from esmc_retrieval.search import maxsim_topk
+            from esmc_li.search import maxsim_topk
             run = lambda: maxsim_topk(q, A, sub, K, device="mps",
                                       normalize=False)
         else:
-            from esmc_retrieval.metal_search import maxsim_topk_metal
+            from esmc_li.metal_search import maxsim_topk_metal
             run = lambda: maxsim_topk_metal(q, A, sub, K, normalize=False,
                                             rows_budget=6_000)
         run()  # warm: kernel compile / page-in
@@ -84,7 +84,7 @@ def tie_ok(s_a, i_a, s_b, i_b) -> tuple[bool, float]:
 def main() -> int:
     if len(sys.argv) > 1:  # child
         return phase(sys.argv[1])
-    from esmc_retrieval.runlog import log_run
+    from esmc_li.runlog import log_run
 
     for dev in ("mps", "metal"):
         r = subprocess.run([sys.executable, __file__, dev], cwd=ROOT)

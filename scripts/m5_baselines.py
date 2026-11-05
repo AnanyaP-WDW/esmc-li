@@ -187,7 +187,7 @@ def pylate_main() -> int:
 
 
 def main() -> int:
-    from esmc_retrieval.runlog import log_run
+    from esmc_li.runlog import log_run
 
     if len(sys.argv) > 1 and sys.argv[1] == "--pylate":
         return pylate_main()

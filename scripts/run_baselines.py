@@ -18,8 +18,8 @@ from pathlib import Path
 
 import numpy as np
 
-from esmc_retrieval.eval import evaluate, load_split, random_ranking
-from esmc_retrieval.runlog import log_run
+from esmc_li.eval import evaluate, load_split, random_ranking
+from esmc_li.runlog import log_run
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results" / "m0_baselines.csv"

@@ -239,7 +239,7 @@ def main() -> int:
             "lr_head": 0.001,
             "lr_blocks": 0.00002,
         }, ["scripts/m2_train.py", "scripts/m3_train.py",
-            "esmc_retrieval/protein_index.py", "data/manifest.json"]),
+            "esmc_li/protein_index.py", "data/manifest.json"]),
     }
     lock = {
         "schema": 1,

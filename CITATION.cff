@@ -1,11 +1,11 @@
 cff-version: 1.2.0
 message: "If you use this software, cite the paper and the model."
-title: "Scaling Late-Interaction Protein Retrieval: A Practical Index for ESM-C Residue Embeddings"
+title: "ESMC-LI: Scaling Late-Interaction Protein Retrieval: A Practical Index for ESM-C Residue Embeddings"
 authors:
   - family-names: Pathak
     given-names: Ananya
 version: 1.0.0
 date-released: 2026-11-05
-repository-code: "https://github.com/AnanyaP-WDW/-esmc-retrieval"
-url: "https://github.com/AnanyaP-WDW/-esmc-retrieval/blob/main/paper/main.md"
+repository-code: "https://github.com/AnanyaP-WDW/esmc-li"
+url: "https://github.com/AnanyaP-WDW/esmc-li/blob/main/paper/main.md"
 license: MIT

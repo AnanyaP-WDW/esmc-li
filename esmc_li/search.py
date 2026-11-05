@@ -6,7 +6,7 @@ projection applied *without* renormalization, raw MaxSim sum — using the
 tile/chunk structure proven in scripts/m4_eval.py:blockwise_maxsim, on CPU
 or MPS.
 
-Self-check (T5.1 exit): `python -m esmc_retrieval.search --selfcheck` builds a
+Self-check (T5.1 exit): `python -m esmc_li.search --selfcheck` builds a
 1,000-protein subset of the M4 corpus (leave-one-out queries + fillers), runs
 the naive per-document reference and the tiled search on CPU and MPS, and
 asserts identical top-k doc ids.
@@ -208,7 +208,7 @@ def _load_subset(nq: int, seed: int = 0):
 
 
 def selfcheck(nq: int = 100, k: int = 10) -> dict:
-    from esmc_retrieval.runlog import log_run
+    from esmc_li.runlog import log_run
 
     t_all = time.time()
     q, db, lo, _ = _load_subset(nq)

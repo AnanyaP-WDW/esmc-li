@@ -216,7 +216,7 @@ def main() -> int:
     (OUT / "manifest.json").write_text(json.dumps(man, indent=2, sort_keys=True) + "\n")
 
     sys.path.insert(0, str(ROOT))
-    from esmc_retrieval.runlog import log_run
+    from esmc_li.runlog import log_run
 
     log_run("T4.1", {"db_size": len(db), "db_sha256": db_sha,
                      "query_sha256": q_sha, "source": "uniprotkb_stream_reviewed",

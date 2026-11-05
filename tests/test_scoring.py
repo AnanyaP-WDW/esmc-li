@@ -6,7 +6,7 @@ import pytest
 
 pytest.importorskip("torch")
 
-from esmc_retrieval.scoring import (  # noqa: E402
+from esmc_li.scoring import (  # noqa: E402
     l2_normalize,
     maxsim_matrix,
     naive_maxsim,

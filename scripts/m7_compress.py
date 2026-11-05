@@ -25,12 +25,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from esmc_retrieval.compress import (decode_int8, decode_res_int8,  # noqa: E402
+from esmc_li.compress import (decode_int8, decode_res_int8,  # noqa: E402
                                      decode_res_pq, encode_int8,
                                      encode_res_int8, encode_res_pq,
                                      scheme_bytes)
-from esmc_retrieval.eval import evaluate  # noqa: E402
-from esmc_retrieval.runlog import log_run  # noqa: E402
+from esmc_li.eval import evaluate  # noqa: E402
+from esmc_li.runlog import log_run  # noqa: E402
 
 CACHE = ROOT / "cache" / "m4"
 SRC = CACHE / "db_tr128.npy"

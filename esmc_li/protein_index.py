@@ -18,11 +18,11 @@ from pathlib import Path
 
 import numpy as np
 
-from esmc_retrieval.embed import chunk_windows
-from esmc_retrieval.index import Esmci, write
-from esmc_retrieval.models import DEFAULT_MODEL, resolve_model
-from esmc_retrieval.runtime import EsmcRuntime, find_library
-from esmc_retrieval.search import maxsim_topk_numpy
+from esmc_li.embed import chunk_windows
+from esmc_li.index import Esmci, write
+from esmc_li.models import DEFAULT_MODEL, resolve_model
+from esmc_li.runtime import EsmcRuntime, find_library
+from esmc_li.search import maxsim_topk_numpy
 
 D_MODEL = 960
 D_PROJ = 128
@@ -188,7 +188,7 @@ class ProteinIndex:
              head: str | Path | None = None,
              device: str = "auto") -> "ProteinIndex":
         if not Path(path).exists():
-            from esmc_retrieval.indexes import resolve_index
+            from esmc_li.indexes import resolve_index
             path = resolve_index(path)
         idx = Esmci(path)
         meta = idx.meta
@@ -324,7 +324,7 @@ class ProteinIndex:
                 ) -> tuple[np.ndarray, np.ndarray]:
         if self.device in ("auto", "metal"):
             try:
-                from esmc_retrieval.metal_search import maxsim_topk_metal
+                from esmc_li.metal_search import maxsim_topk_metal
                 return maxsim_topk_metal(qs, self._idx.vecs, self._idx.offsets,
                                          k, normalize=False)
             except ImportError:

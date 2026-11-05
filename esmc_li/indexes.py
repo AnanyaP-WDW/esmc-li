@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from esmc_retrieval.models import cache_root
+from esmc_li.models import cache_root
 
 INDEXES = {
     "scope-1k": {

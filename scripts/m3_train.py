@@ -19,10 +19,10 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from esmc_retrieval.eval import evaluate, load_split
-from esmc_retrieval.runlog import log_run
-from esmc_retrieval.scoring import maxsim_matrix, rankings_from_scores
-from esmc_retrieval.train import (DEV, EmbeddingStore, Projection, Suffix,
+from esmc_li.eval import evaluate, load_split
+from esmc_li.runlog import log_run
+from esmc_li.scoring import maxsim_matrix, rankings_from_scores
+from esmc_li.train import (DEV, EmbeddingStore, Projection, Suffix,
                                   _esmc, false_negative_mask, m3_cache_dir,
                                   maxsim, sample_pair_batch, symmetric_nce)
 

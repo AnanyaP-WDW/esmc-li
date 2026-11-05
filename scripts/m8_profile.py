@@ -12,8 +12,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from esmc_retrieval import ProteinIndex  # noqa: E402
-from esmc_retrieval.runlog import log_run  # noqa: E402
+from esmc_li import ProteinIndex  # noqa: E402
+from esmc_li.runlog import log_run  # noqa: E402
 
 
 def main() -> int:

@@ -1,8 +1,8 @@
 """M8 model/index resolution without network."""
 import pytest
 
-from esmc_retrieval.indexes import resolve_index
-from esmc_retrieval.models import resolve_model
+from esmc_li.indexes import resolve_index
+from esmc_li.models import resolve_model
 
 
 def test_resolve_local_model(tmp_path):

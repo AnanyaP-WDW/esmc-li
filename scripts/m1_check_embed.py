@@ -13,7 +13,7 @@ from pathlib import Path
 
 import numpy as np
 
-from esmc_retrieval.runlog import log_run
+from esmc_li.runlog import log_run
 
 ROOT = Path(__file__).resolve().parents[1]
 FA = ROOT / "data" / "scope.fa"

@@ -77,11 +77,11 @@ def rerank(q_rows: list[np.ndarray], vecs: np.ndarray, offsets: np.ndarray,
     exceed RAM). `device="metal"` uses the fused M5 scorer, so the coarse
     comparison is against the same exact reranker as exhaustive search.
     """
-    from esmc_retrieval.search import maxsim_topk
+    from esmc_li.search import maxsim_topk
 
     metal = device == "metal"
     if metal:
-        from esmc_retrieval.metal_search import maxsim_topk_metal
+        from esmc_li.metal_search import maxsim_topk_metal
 
     off = np.asarray(offsets, dtype=np.int64)
     assert chunk_c > 0

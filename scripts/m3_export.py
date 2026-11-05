@@ -21,7 +21,7 @@ from pathlib import Path
 
 import torch
 
-from esmc_retrieval.runlog import log_run
+from esmc_li.runlog import log_run
 
 ROOT = Path(__file__).resolve().parents[1]
 ESMC_CPP = Path("/Users/ananyapathak/Desktop/oss/esmc.cpp")

@@ -26,6 +26,7 @@ def _sha256(path: Path) -> str:
 def cache_root() -> Path:
     return Path(os.environ.get(
         "ESMC_RETRIEVAL_CACHE", Path.home() / ".cache" / "esmc-retrieval"))
+# historical env/cache names kept for compatibility with v1 downloads
 
 
 def resolve_model(model: str | Path | None) -> Path | None:

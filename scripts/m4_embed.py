@@ -18,7 +18,7 @@ import sys
 import time
 from pathlib import Path
 
-from esmc_retrieval.embed import embed_dataset, prefix_dataset
+from esmc_li.embed import embed_dataset, prefix_dataset
 
 ROOT = Path(__file__).resolve().parents[1]
 DB_TSV = ROOT / "data" / "fulllength" / "db.tsv"
@@ -57,7 +57,7 @@ def main() -> int:
         return 1
     wall = time.time() - t0
     sys.path.insert(0, str(ROOT))
-    from esmc_retrieval.runlog import log_run
+    from esmc_li.runlog import log_run
 
     log_run("T4.2", {"fasta": str(DB_TSV.relative_to(ROOT)),
                      "packed": str(out.relative_to(ROOT)), "mode": mode,

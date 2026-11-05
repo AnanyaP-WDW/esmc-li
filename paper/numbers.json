@@ -185,7 +185,7 @@
     "raw": 2048,
     "row": "Context / window / overlap",
     "sources": [
-      "esmc_retrieval/protein_index.py"
+      "esmc_li/protein_index.py"
     ],
     "table": "t1b_hyperparams"
   },

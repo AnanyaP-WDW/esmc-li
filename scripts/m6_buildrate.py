@@ -18,7 +18,7 @@ sys.path.insert(0, str(ROOT))
 
 
 def main() -> int:
-    from esmc_retrieval.runlog import log_run
+    from esmc_li.runlog import log_run
 
     runs = [json.loads(l) for l in (ROOT / "results" / "runs.jsonl")
             .read_text().splitlines()]

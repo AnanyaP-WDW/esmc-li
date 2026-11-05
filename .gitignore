@@ -10,8 +10,8 @@ results/m3_models/
 data/fulllength/db.tsv
 build/
 dist/
-esmc_retrieval/_runtime/*.dylib
-esmc_retrieval/_runtime/*.so
-esmc_retrieval/_runtime/*.dylib.*
-esmc_retrieval/_runtime_tag*.so
-esmc_retrieval/_runtime_tag*.pyd
+esmc_li/_runtime/*.dylib
+esmc_li/_runtime/*.so
+esmc_li/_runtime/*.dylib.*
+esmc_li/_runtime_tag*.so
+esmc_li/_runtime_tag*.pyd

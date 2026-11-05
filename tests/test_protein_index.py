@@ -3,12 +3,12 @@ import sys
 
 import pytest
 
-from esmc_retrieval import ProteinIndex
+from esmc_li import ProteinIndex
 
 
 @pytest.fixture(autouse=True)
 def _no_runtime(monkeypatch):
-    monkeypatch.setattr("esmc_retrieval.protein_index.find_library",
+    monkeypatch.setattr("esmc_li.protein_index.find_library",
                         lambda: None)
 
 

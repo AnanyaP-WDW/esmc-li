@@ -1,4 +1,4 @@
-# Scaling Late-Interaction Protein Retrieval: A Practical Index for ESM-C Residue Embeddings
+# ESMC-LI: Scaling Late-Interaction Protein Retrieval: A Practical Index for ESM-C Residue Embeddings
 
 ## Abstract
 
@@ -62,7 +62,7 @@ cost? We make four contributions.
   max kernel, and measure exact search from
   {{n:t6.n.10000}} to {{n:t6.n.1000000}} proteins. We also report where
   compression and coarse retrieval stop helping.
-- **Software.** The `esmc-retrieval` package builds, saves, loads, and searches
+- **Software.** The **ESMC-LI** package builds, saves, loads, and searches
   an index offline through a small `ProteinIndex` API.
 
 ## Related work

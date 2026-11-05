@@ -51,8 +51,8 @@ def gemm_peak(dev: str) -> float:
 def main() -> int:
     import torch
 
-    from esmc_retrieval.runlog import log_run
-    from esmc_retrieval.search import maxsim_topk
+    from esmc_li.runlog import log_run
+    from esmc_li.search import maxsim_topk
 
     devices = ["cpu"] + (["mps"] if torch.backends.mps.is_available() else [])
     meta = json.loads((CACHE / "db26.meta.json").read_text())  # db_tr128 layout

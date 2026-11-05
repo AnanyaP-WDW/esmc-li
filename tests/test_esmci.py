@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-from esmc_retrieval.index import Esmci, expected_bytes, write
+from esmc_li.index import Esmci, expected_bytes, write
 
 
 def make(n=7, d=5, seed=0):

@@ -26,7 +26,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from esmc_retrieval.embed import D_MODEL, assemble, chunk_windows  # noqa: E402
+from esmc_li.embed import D_MODEL, assemble, chunk_windows  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 N = 10_000
@@ -34,7 +34,7 @@ OUT = ROOT / "cache" / "m6" / "t6_10k.npy"
 
 
 def main() -> int:
-    from esmc_retrieval.runlog import log_run
+    from esmc_li.runlog import log_run
 
     t0 = time.time()
     man = json.loads((ROOT / "data" / "manifest.json").read_text())

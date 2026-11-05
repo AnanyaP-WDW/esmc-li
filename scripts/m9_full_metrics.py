@@ -20,9 +20,9 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from esmc_retrieval.eval import evaluate, load_split  # noqa: E402
-from esmc_retrieval.runlog import log_run  # noqa: E402
-from esmc_retrieval.scoring import rankings_from_scores  # noqa: E402
+from esmc_li.eval import evaluate, load_split  # noqa: E402
+from esmc_li.runlog import log_run  # noqa: E402
+from esmc_li.scoring import rankings_from_scores  # noqa: E402
 
 SPLIT = ROOT / "data" / "splits" / "scope_test.tsv"
 M2_FINAL = ROOT / "results" / "m2_final.csv"

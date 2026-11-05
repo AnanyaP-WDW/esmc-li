@@ -1,12 +1,12 @@
 # Public API (frozen at v1.0.0)
 
-`esmc-retrieval` exposes one class and one CLI. The index format version is 1;
+**ESMC-LI** exposes one class and one CLI. The index format version is 1;
 the public API below is frozen for the v1 line.
 
 ## Python
 
 ```python
-from esmc_retrieval import ProteinIndex
+from esmc_li import ProteinIndex
 
 index = ProteinIndex.from_fasta("proteins.fasta", output="proteins.esmci")
 index = ProteinIndex.load("proteins.esmci")
@@ -31,12 +31,12 @@ and falls back to numpy. `device="metal"` raises if Metal is unavailable.
 ## CLI
 
 ```bash
-esmc-retrieval build proteins.fasta --output proteins.esmci
-esmc-retrieval search proteins.esmci --sequence "MKT..." --top-k 20
-esmc-retrieval search proteins.esmci --query queries.fasta --output hits.tsv
-esmc-retrieval benchmark proteins.esmci
-esmc-retrieval index list
-esmc-retrieval index pull scope-1k
+esmc-li build proteins.fasta --output proteins.esmci
+esmc-li search proteins.esmci --sequence "MKT..." --top-k 20
+esmc-li search proteins.esmci --query queries.fasta --output hits.tsv
+esmc-li benchmark proteins.esmci
+esmc-li index list
+esmc-li index pull scope-1k
 ```
 
 ## Compatibility

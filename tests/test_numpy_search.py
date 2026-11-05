@@ -1,8 +1,8 @@
 """M8 exit: numpy exact MaxSim matches the naive reference."""
 import numpy as np
 
-from esmc_retrieval.scoring import l2_normalize, naive_maxsim
-from esmc_retrieval.search import maxsim_topk_numpy
+from esmc_li.scoring import l2_normalize, naive_maxsim
+from esmc_li.search import maxsim_topk_numpy
 
 
 def test_numpy_maxsim_matches_naive():

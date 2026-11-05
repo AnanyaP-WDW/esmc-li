@@ -38,12 +38,12 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--size", type=int, required=True)
     args = ap.parse_args()
-    from esmc_retrieval.coarse import (candidate_recall, pool_docs,
+    from esmc_li.coarse import (candidate_recall, pool_docs,
                                        pool_query, rerank, top_c)
-    from esmc_retrieval.index import Esmci
-    from esmc_retrieval.metal_search import maxsim_topk_metal
-    from esmc_retrieval.runlog import log_run
-    from esmc_retrieval.search import maxsim_topk
+    from esmc_li.index import Esmci
+    from esmc_li.metal_search import maxsim_topk_metal
+    from esmc_li.runlog import log_run
+    from esmc_li.search import maxsim_topk
 
     N = args.size
     t = time.perf_counter()

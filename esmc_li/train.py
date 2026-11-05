@@ -5,7 +5,7 @@ T2.1: its Contrastive loss calls `self.model(sentence_feature)` on tokenized
 text through its own ColBERT wrapper — no precomputed-embedding path — so this
 is the plan's ~100-line fallback.
 
-One step runs on CPU and MPS: `python -m esmc_retrieval.train --demo`.
+One step runs on CPU and MPS: `python -m esmc_li.train --demo`.
 """
 from __future__ import annotations
 
@@ -21,8 +21,8 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-from esmc_retrieval.eval import load_split
-from esmc_retrieval.runlog import log_run
+from esmc_li.eval import load_split
+from esmc_li.runlog import log_run
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "cache" / "scope"

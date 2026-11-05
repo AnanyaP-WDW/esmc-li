@@ -19,7 +19,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from esmc_retrieval.index import Esmci, expected_bytes, write  # noqa: E402
+from esmc_li.index import Esmci, expected_bytes, write  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "cache" / "m4" / "db_tr128.npy"
@@ -30,8 +30,8 @@ NQ = 50
 
 
 def main() -> int:
-    from esmc_retrieval.runlog import log_run
-    from esmc_retrieval.search import maxsim_topk
+    from esmc_li.runlog import log_run
+    from esmc_li.search import maxsim_topk
 
     meta = json.loads(META.read_text())
     src = np.load(SRC, mmap_mode="r")

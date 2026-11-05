@@ -1,8 +1,8 @@
 """T4.2 exit: chunked embedding outputs exactly len(seq) residue rows."""
 import numpy as np
 
-from esmc_retrieval.embed import OVERLAP as OVERLAP_LEN
-from esmc_retrieval.embed import WIN, assemble, chunk_windows, embed_seq
+from esmc_li.embed import OVERLAP as OVERLAP_LEN
+from esmc_li.embed import WIN, assemble, chunk_windows, embed_seq
 
 
 def local_rows(n: int) -> np.ndarray:

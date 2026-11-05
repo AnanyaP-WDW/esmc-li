@@ -1,3 +1,7 @@
+> **Naming note (2026-11):** the project is publicly named **ESMC-LI**. The
+> distribution is `esmc-li`, the import is `esmc_li`, and the CLI is `esmc-li`.
+> Historical text below retains the original `esmc-retrieval` working name.
+
 Absolutely. I’d make the spec for the **separate ESM-C late-interaction protein retrieval project**, with the paper and software designed together.
 
 # ESMC-Retrieve — Technical Specification

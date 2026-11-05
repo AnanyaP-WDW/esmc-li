@@ -10,9 +10,9 @@ from pathlib import Path
 
 import numpy as np
 
-from esmc_retrieval.eval import load_split
-from esmc_retrieval.runlog import log_run
-from esmc_retrieval.scoring import load_embeddings, l2_normalize, rankings_from_scores
+from esmc_li.eval import load_split
+from esmc_li.runlog import log_run
+from esmc_li.scoring import load_embeddings, l2_normalize, rankings_from_scores
 
 ROOT = Path(__file__).resolve().parents[1]
 SPLIT = ROOT / "data" / "splits" / "scope_test.tsv"

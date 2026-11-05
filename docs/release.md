@@ -7,7 +7,7 @@ dylibs; it is not a pure-Python wheel.
 
    ```bash
    ESMC_CPP=/path/to/esmc.cpp make wheel PYTHON=python3
-   shasum -a 256 dist/esmc_retrieval-1.0.0-*.whl
+   shasum -a 256 dist/esmc_li-1.0.0-*.whl
    ```
 
 2. Check the wheel in a clean venv, offline after the model/index cache is
@@ -15,7 +15,7 @@ dylibs; it is not a pure-Python wheel.
 
    ```bash
    python3 -m venv /tmp/esmc-release
-   /tmp/esmc-release/bin/pip install dist/esmc_retrieval-1.0.0-*.whl
+   /tmp/esmc-release/bin/pip install dist/esmc_li-1.0.0-*.whl
    /tmp/esmc-release/bin/python scripts/m8_smoke.py
    ```
 
@@ -30,8 +30,8 @@ dylibs; it is not a pure-Python wheel.
 4. Tag and upload (requires credentials; not run by the paper gate):
 
    ```bash
-   git tag -a v1.0.0 -m "esmc-retrieval v1.0.0"
-   twine upload dist/esmc_retrieval-1.0.0-*.whl
+   git tag -a v1.0.0 -m "ESMC-LI v1.0.0"
+   twine upload dist/esmc_li-1.0.0-*.whl
    ```
 
    If `twine` is unavailable, `python -m pip install --upgrade twine` first.

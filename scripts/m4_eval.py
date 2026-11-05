@@ -32,9 +32,9 @@ from pathlib import Path
 
 import numpy as np
 
-from esmc_retrieval.eval import evaluate
-from esmc_retrieval.runlog import log_run
-from esmc_retrieval.scoring import random_projection
+from esmc_li.eval import evaluate
+from esmc_li.runlog import log_run
+from esmc_li.scoring import random_projection
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -174,8 +174,8 @@ def build_trained(meta26: dict, rows: list[dict], ckpt: Path,
     import torch
     from esm.models.esmc.tokenizer import EsmcTokenizer
 
-    from esmc_retrieval.embed import chunk_windows
-    from esmc_retrieval.train import Projection, Suffix, _esmc
+    from esmc_li.embed import chunk_windows
+    from esmc_li.train import Projection, Suffix, _esmc
 
     db26 = db26 or CACHE / "db26.npy"
     out = out or CACHE / "db_tr128.npy"

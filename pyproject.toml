@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "esmc-retrieval"
+name = "esmc-li"
 version = "1.0.0"
 description = "Fast local protein retrieval using ESM-C residue embeddings and late interaction."
 readme = "README.md"
@@ -13,8 +13,8 @@ requires-python = ">=3.10"
 dependencies = ["numpy>=1.24", "huggingface_hub>=0.23"]
 
 [project.urls]
-Homepage = "https://github.com/AnanyaP-WDW/-esmc-retrieval"
-Paper = "https://github.com/AnanyaP-WDW/-esmc-retrieval/blob/main/paper/main.md"
+Homepage = "https://github.com/AnanyaP-WDW/esmc-li"
+Paper = "https://github.com/AnanyaP-WDW/esmc-li/blob/main/paper/main.md"
 Model = "https://huggingface.co/AnanyaPathak/esmc-300m-homology-maxsim-v1"
 Indexes = "https://huggingface.co/datasets/AnanyaPathak/esmc-retrieval-indexes"
 
@@ -23,13 +23,13 @@ dev = ["pytest>=7", "requests>=2.28", "datasketch>=1.6"]
 metal = ["pyobjc-framework-Metal>=10.0"]
 
 [project.scripts]
-esmc-retrieval = "esmc_retrieval.cli:main"
+esmc-li = "esmc_li.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["esmc_retrieval*"]
+include = ["esmc_li*"]
 
 [tool.setuptools.package-data]
-esmc_retrieval = ["data/*.npy", "_runtime/*"]
+esmc_li = ["data/*.npy", "_runtime/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

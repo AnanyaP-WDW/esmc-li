@@ -23,8 +23,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from esmc_retrieval.index import Esmci  # noqa: E402
-from esmc_retrieval.protein_index import DEFAULT_HEAD  # noqa: E402
+from esmc_li.index import Esmci  # noqa: E402
+from esmc_li.protein_index import DEFAULT_HEAD  # noqa: E402
 
 MODEL_NAME = "esmc-300m-homology-maxsim-v1-f16.gguf"
 MODEL_SHA = "e87b42f1a6344e57b7a0d8a6624cc9d7e2e15f34d4a6927447b4cb3c90209bab"

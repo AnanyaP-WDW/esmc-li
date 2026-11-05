@@ -6,7 +6,7 @@ pytest.importorskip("torch")
 
 import torch  # noqa: E402
 
-from esmc_retrieval.train import false_negative_mask, nce_logits, symmetric_nce  # noqa: E402
+from esmc_li.train import false_negative_mask, nce_logits, symmetric_nce  # noqa: E402
 
 
 def _scores(b=6, seed=0):

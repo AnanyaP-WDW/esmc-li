@@ -2,7 +2,7 @@
 
 Per tile: custom tiled f16 GEMM (sim stays GPU-side) -> segment-max kernel
 (scores reduced to [nq, nseg] f32) -> tiny CPU readout. The score block is
-never materialized host-side. Exits same top-k as esmc_retrieval.search.
+never materialized host-side. Exits same top-k as esmc_li.search.
 """
 from __future__ import annotations
 
@@ -233,7 +233,7 @@ def maxsim_topk_metal(q: list[np.ndarray], db: np.ndarray, offsets: np.ndarray,
     import os
     import time
 
-    from esmc_retrieval.search import BLOCK_ROWS, _prep
+    from esmc_li.search import BLOCK_ROWS, _prep
 
     prof = os.environ.get("M5_PROFILE")
     T = {"prep": 0.0, "gemm": 0.0, "reduce": 0.0}
@@ -316,8 +316,8 @@ def selfcheck_metal(nq: int = 20, k: int = 10) -> dict:
     """T5.3 exit check: metal top-k == naive reference (tie-tolerant)."""
     import time
 
-    from esmc_retrieval.runlog import log_run
-    from esmc_retrieval.search import _load_subset, naive_topk
+    from esmc_li.runlog import log_run
+    from esmc_li.search import _load_subset, naive_topk
 
     t_all = time.time()
     q, db, lo, _ = _load_subset(nq)

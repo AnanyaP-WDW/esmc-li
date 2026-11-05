@@ -4,7 +4,7 @@ import pytest
 
 pytest.importorskip("torch")
 
-from esmc_retrieval.coarse import (candidate_recall, pool_docs, pool_query,
+from esmc_li.coarse import (candidate_recall, pool_docs, pool_query,
                                    rerank, top_c)
 
 
@@ -47,7 +47,7 @@ def test_candidate_recall_perfect_when_c_full():
 
 
 def test_rerank_matches_direct_maxsim():
-    from esmc_retrieval.search import maxsim_topk
+    from esmc_li.search import maxsim_topk
 
     x, off = make_index(n=20, d=8, seed=1)
     p = pool_docs(x, off)
@@ -84,7 +84,7 @@ def test_candidate_recall_excludes_self():
 
 
 def test_rerank_excludes_self():
-    from esmc_retrieval.search import maxsim_topk
+    from esmc_li.search import maxsim_topk
 
     x, off = make_index(n=20, d=8, seed=1)
     p = pool_docs(x, off)

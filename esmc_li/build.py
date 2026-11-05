@@ -19,7 +19,7 @@ from pathlib import Path
 
 import numpy as np
 
-from esmc_retrieval.embed import _pack_meta, chunk_windows, n_prefix_rows
+from esmc_li.embed import _pack_meta, chunk_windows, n_prefix_rows
 
 
 def build_default_index(rows: list[dict], out_npy: Path, meta_path: Path,
@@ -27,7 +27,7 @@ def build_default_index(rows: list[dict], out_npy: Path, meta_path: Path,
     import torch
     from esm.models.esmc.tokenizer import EsmcTokenizer
 
-    from esmc_retrieval.train import Projection, Suffix, _esmc
+    from esmc_li.train import Projection, Suffix, _esmc
 
     n = len(rows)
     progress = meta_path.with_suffix(".progress.json")

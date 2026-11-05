@@ -1,6 +1,6 @@
 # `.esmci` — single-file ESMC retrieval index (M6)
 
-Raw binary, little-endian. Written/read by `esmc_retrieval/index.py`.
+Raw binary, little-endian. Written/read by `esmc_li/index.py`.
 
 ## Layout
 

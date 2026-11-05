@@ -22,8 +22,8 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from esmc_retrieval.build import build_default_index  # noqa: E402
-from esmc_retrieval.index import write  # noqa: E402
+from esmc_li.build import build_default_index  # noqa: E402
+from esmc_li.index import write  # noqa: E402
 
 M7 = ROOT / "cache" / "m7"
 CKPT = ROOT / "results" / "m3_models" / "k3_seed0.pt"
@@ -83,7 +83,7 @@ def main() -> int:
         return validate()
     if not args.size:
         ap.error("--size or --validate")
-    from esmc_retrieval.runlog import log_run
+    from esmc_li.runlog import log_run
 
     N = args.size
     rows = load_rows(ROOT / "data" / "raw" / "uniref50" / f"db_{N}.tsv")

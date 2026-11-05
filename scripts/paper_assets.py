@@ -187,7 +187,7 @@ def t1() -> None:
          put("model.ctx", h["ctx"],
              f'{h["ctx"]} / {h["win"]} / {h["overlap"]}', "t1b_hyperparams",
              "Context / window / overlap", "value",
-             ["esmc_retrieval/protein_index.py"])],
+             ["esmc_li/protein_index.py"])],
         ["Fine-tuned blocks k",
          put("train.k", h["k_blocks"], str(h["k_blocks"]), "t1b_hyperparams",
              "Fine-tuned blocks k", "value", ["m3_train.py"])],

@@ -1,4 +1,4 @@
-# esmc-retrieval
+# ESMC-LI
 
 Fast local protein retrieval using ESM-C residue embeddings and late
 interaction (MaxSim). Exact search runs on numpy, with an optional fused Metal
@@ -19,14 +19,14 @@ separate esmc.cpp install is needed.
 
 ```bash
 # from a release wheel (PyPI once published)
-pip install dist/esmc_retrieval-*.whl
+pip install dist/esmc_li-*.whl
 # optional, macOS: fused Metal search
 pip install pyobjc-framework-Metal
 ```
 
 The fine-tuned GGUF is downloaded from Hugging Face on first use and cached
-under `~/.cache/esmc-retrieval`. The packaged projection head ships in the
-wheel. No model paths are required.
+under `~/.cache/esmc-retrieval` (the historical cache path is kept so
+existing downloads still work). The packaged projection head ships in the wheel. No model paths are required.
 
 For a source install, `libesmc` is not bundled; set `ESMC_LIB` or use the
 legacy CLI fallback (`ESMC_EMBED`). Release wheels are the supported path.
@@ -42,15 +42,15 @@ export ESMC_RETRIEVAL_CACHE=/custom/cache
 ## Prebuilt indexes
 
 ```bash
-esmc-retrieval index list
-esmc-retrieval index pull scope-1k
-esmc-retrieval search scope-1k --sequence "MKT..." --top-k 10
+esmc-li index list
+esmc-li index pull scope-1k
+esmc-li search scope-1k --sequence "MKT..." --top-k 10
 ```
 
 ## Build an index
 
 ```bash
-esmc-retrieval build proteins.fasta --output proteins.esmci
+esmc-li build proteins.fasta --output proteins.esmci
 ```
 
 The build writes `proteins.esmci` plus `proteins.esmci.json` and
@@ -60,7 +60,7 @@ projects them 960 -> 128, L2-normalizes, and stores f16 rows.
 ## Search
 
 ```bash
-esmc-retrieval search proteins.esmci \
+esmc-li search proteins.esmci \
     --sequence "MKTIIALSYIFCLVFADYKDDDDK" \
     --top-k 10
 ```
@@ -68,13 +68,13 @@ esmc-retrieval search proteins.esmci \
 Batch FASTA queries:
 
 ```bash
-esmc-retrieval search proteins.esmci \
+esmc-li search proteins.esmci \
     --query queries.fasta \
     --output results.tsv
 ```
 
 ```python
-from esmc_retrieval import ProteinIndex
+from esmc_li import ProteinIndex
 
 index = ProteinIndex.load("proteins.esmci")
 hits = index.search("MKTIIALSYIFCLVFADYKDDDDK", k=10)

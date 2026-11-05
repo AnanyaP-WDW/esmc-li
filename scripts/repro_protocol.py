@@ -19,7 +19,7 @@ sys.path.insert(0, str(ROOT / "vendor" / "ProtoCol"))
 import torch  # noqa: E402
 import protocol_experiments as pe  # noqa: E402
 
-from esmc_retrieval.runlog import log_run  # noqa: E402
+from esmc_li.runlog import log_run  # noqa: E402
 
 # Their DataLoader uses num_workers=2 + a closure collate_fn; macOS (spawn
 # start method) can't pickle the closure. num_workers=0 avoids the worker

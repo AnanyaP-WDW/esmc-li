@@ -1,7 +1,7 @@
 """T7.1 exits: compression round-trips."""
 import numpy as np
 
-from esmc_retrieval.compress import (decode_int8, decode_res_int8,
+from esmc_li.compress import (decode_int8, decode_res_int8,
                                      decode_res_pq, encode_int8,
                                      encode_res_int8, encode_res_pq,
                                      kmeans, scheme_bytes)

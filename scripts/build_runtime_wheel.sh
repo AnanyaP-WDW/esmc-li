@@ -9,7 +9,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 ESMC_CPP="${ESMC_CPP:-/Users/ananyapathak/Desktop/oss/esmc.cpp}"
 PYTHON="${PYTHON:-python3}"
-RT="$ROOT/esmc_retrieval/_runtime"
+RT="$ROOT/esmc_li/_runtime"
 export MACOSX_DEPLOYMENT_TARGET="${MACOSX_DEPLOYMENT_TARGET:-11.0}"
 
 cmake -S "$ESMC_CPP" -B "$ESMC_CPP/build" -DCMAKE_BUILD_TYPE=Release \
