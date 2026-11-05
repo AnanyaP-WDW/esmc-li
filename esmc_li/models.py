@@ -14,6 +14,7 @@ MODELS = {
     "esmc-li-300m-v1": _MODEL,
     # historical registry name; old indexes/sidecars still resolve
     "esmc-300m-homology-maxsim-v1": _MODEL,
+    "AnanyaPathak/esmc-300m-homology-maxsim-v1": _MODEL,
 }
 DEFAULT_MODEL = "esmc-li-300m-v1"
 

@@ -7,8 +7,9 @@ from esmc_li.models import DEFAULT_MODEL, MODELS, resolve_model
 
 def test_model_rename_alias():
     assert DEFAULT_MODEL == "esmc-li-300m-v1"
-    assert MODELS["esmc-300m-homology-maxsim-v1"]["repo_id"] == \
-        "AnanyaPathak/esmc-li-300m-v1"
+    for key in ("esmc-300m-homology-maxsim-v1",
+                "AnanyaPathak/esmc-300m-homology-maxsim-v1"):
+        assert MODELS[key]["repo_id"] == "AnanyaPathak/esmc-li-300m-v1"
 
 
 def test_resolve_local_model(tmp_path):
