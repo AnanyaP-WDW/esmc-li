@@ -10,4 +10,4 @@
 | Frozen MaxSim 128D | 0.9100 | 0.7985 | 0.7374 | 0.5530 | 0.9190 | 0.4862 | 0.3091 |
 | ESM-C fine-tuned k=3 | 0.9780 | 0.9252 | 0.8974 | 0.8172 | 0.9792 | 0.7557 | 0.6048 |
 
-100,000 single-clan chains; 500 test-clan queries; leave-one-out; raw MaxSim for the vector scorers.
+Single-clan chains; test-clan queries; leave-one-out; raw MaxSim for the vector scorers.

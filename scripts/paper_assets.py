@@ -304,8 +304,7 @@ def t3() -> None:
     md_table(TABLE_DIR / "t3_fulllength.md",
              "Table 3. Full-length Swiss-Prot retrieval",
              ["Method"] + [m[0] for m in metrics], rows,
-             f"{ints(FACTS['full_length']['n_db'])} single-clan chains; "
-             f"{ints(FACTS['full_length']['n_queries'])} test-clan queries; leave-one-out; "
+             "Single-clan chains; test-clan queries; leave-one-out; "
              "raw MaxSim for the vector scorers.")
 
 
@@ -328,7 +327,7 @@ def t4() -> None:
              "Table 4. Length-normalization ablation",
              ["Method", "Normalization", "cR@10", "sens superfamily",
               "rho(len, score)"], rows,
-             f"Full-length {ints(FACTS['full_length']['n_db'])}-chain corpus. div_lenA is rank-invariant within a "
+             "Full-length corpus. div_lenA is rank-invariant within a "
              "query; the candidate-length variants change the ranking.")
 
 

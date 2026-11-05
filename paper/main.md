@@ -261,7 +261,7 @@ it survives full-length chains and a clan-disjoint corpus.
 | Frozen MaxSim 128D | 0.9100 | 0.7985 | 0.7374 | 0.5530 | 0.9190 | 0.4862 | 0.3091 |
 | ESM-C fine-tuned k=3 | 0.9780 | 0.9252 | 0.8974 | 0.8172 | 0.9792 | 0.7557 | 0.6048 |
 
-100,000 single-clan chains; 500 test-clan queries; leave-one-out; raw MaxSim for the vector scorers.
+Single-clan chains; test-clan queries; leave-one-out; raw MaxSim for the vector scorers.
 
 ### Length bias: real but mild; do not normalize the candidate length
 
@@ -292,7 +292,7 @@ doing nothing.
 | Frozen MaxSim 960D | ÷ len_B | 0.0090 | 0.0000 | 0.069 |
 | Frozen MaxSim 960D | ÷ sqrt(len_A len_B) | 0.0570 | 0.0101 | 0.069 |
 
-Full-length 100,000-chain corpus. div_lenA is rank-invariant within a query; the candidate-length variants change the ranking.
+Full-length corpus. div_lenA is rank-invariant within a query; the candidate-length variants change the ranking.
 
 ![f3_length](figures/f3_length.svg)
 
