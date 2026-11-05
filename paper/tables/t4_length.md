@@ -11,4 +11,4 @@
 | Frozen MaxSim 960D | ÷ len_B | 0.0090 | 0.0000 | 0.069 |
 | Frozen MaxSim 960D | ÷ sqrt(len_A len_B) | 0.0570 | 0.0101 | 0.069 |
 
-Full-length 100K corpus. div_lenA is rank-invariant within a query; the candidate-length variants change the ranking.
+Full-length 100,000-chain corpus. div_lenA is rank-invariant within a query; the candidate-length variants change the ranking.

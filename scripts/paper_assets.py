@@ -257,10 +257,10 @@ def t2() -> None:
     agg("ESM-C fine-tuned k=3 (M3)",
         ["t3.full.s0", "t3.full.s1", "t3.full.s2"], "m3")
     md_table(TABLE_DIR / "t2_scope.md",
-             "Table 2. SCOPe ASTRAL40 retrieval (n=2314)",
+             "Table 2. SCOPe ASTRAL40 retrieval",
              ["Method"] + [m[0] for m in metrics], rows,
              "Leave-one-out; cR@k is ProtoCol's capped recall. M2/M3 are "
-             "mean ± population std over 3 seeds; all other rows are single "
+             "mean ± population std over the seeds; all other rows are single "
              "runs. ProtoCol's released evaluator reports only capped recall.")
 
 
@@ -302,9 +302,10 @@ def t3() -> None:
             vals.append(cell(f"fl.{name}", m, key, "t3_fulllength", label, col))
         rows.append([label] + vals)
     md_table(TABLE_DIR / "t3_fulllength.md",
-             "Table 3. Full-length Swiss-Prot 100K retrieval",
+             "Table 3. Full-length Swiss-Prot retrieval",
              ["Method"] + [m[0] for m in metrics], rows,
-             "100,000 single-clan chains; 500 test-clan queries; leave-one-out; "
+             f"{ints(FACTS['full_length']['n_db'])} single-clan chains; "
+             f"{ints(FACTS['full_length']['n_queries'])} test-clan queries; leave-one-out; "
              "raw MaxSim for the vector scorers.")
 
 
@@ -327,7 +328,7 @@ def t4() -> None:
              "Table 4. Length-normalization ablation",
              ["Method", "Normalization", "cR@10", "sens superfamily",
               "rho(len, score)"], rows,
-             "Full-length 100K corpus. div_lenA is rank-invariant within a "
+             f"Full-length {ints(FACTS['full_length']['n_db'])}-chain corpus. div_lenA is rank-invariant within a "
              "query; the candidate-length variants change the ranking.")
 
 
@@ -346,7 +347,7 @@ def t5a() -> None:
     md_table(TABLE_DIR / "t5a_dims.md",
              "Table 5a. Projection dimension (val)",
              ["D", "val cR@10", "bytes/residue (fp16)"], rows,
-             "Mean ± population std over 3 seeds, selected on scope_val only.")
+             "Mean ± population std over the seeds, selected on scope_val only.")
 
 
 def t5b() -> None:
@@ -362,7 +363,7 @@ def t5b() -> None:
     md_table(TABLE_DIR / "t5b_tau.md",
              "Table 5b. Temperature and false-negative masking (val)",
              ["tau", "masked", "val cR@10"], rows,
-             "Mean ± population std over 3 seeds. Masking removes in-batch "
+             "Mean ± population std over the seeds. Masking removes in-batch "
              "pairs sharing the positive's superfamily from the denominator.")
 
 
@@ -382,7 +383,7 @@ def t5c() -> None:
     md_table(TABLE_DIR / "t5c_k.md",
              "Table 5c. Fine-tuned blocks (val and test)",
              ["k", "val cR@10", "test cR@10"], rows,
-             "Mean ± population std over 3 seeds. Test is evaluated once after "
+             "Mean ± population std over the seeds. Test is evaluated once after "
              "val selection; k=2 test was not evaluated.")
 
 
@@ -427,11 +428,11 @@ def t6a() -> None:
                 label, "speedup", [f"t7.measure.{n}"]),
         ])
     md_table(TABLE_DIR / "t6a_scaling.md",
-             "Table 6a. Exact search and coarse stage, 10K–1M",
+             "Table 6a. Exact search and coarse stage across sizes",
              ["n_db", "residues", "index GB", "build h", "open ms",
               "exhaustive s/q", "q/s", "C", "candidate recall",
               "coarse s/q", "speedup"], rows,
-             "M4 Max, fused Metal, 50 queries. Build/index from UniRef50 "
+             "M4 Max, fused Metal, a fixed query set. Build/index from UniRef50 "
              "subsets; coarse stage reranks C candidates with exact MaxSim.")
 
 
@@ -471,12 +472,13 @@ def t6b() -> None:
                 label, "GEMM eff %", [rid] if rid else []),
         ])
     md_table(TABLE_DIR / "t6b_devices.md",
-             "Table 6b. Search backends at 100K (PyLate at 1K)",
+             "Table 6b. Search backends",
              ["Backend", "n_db", "q/s", "s/query", "index MB", "GEMM eff %"],
              rows,
              "CPU/MPS/Metal are exact MaxSim. FAISS is an approximate latency "
              "floor over pooled vectors, not a quality-comparable retriever. "
-             "PyLate/PLAID is 1K only because full-DB encoding was infeasible here.")
+             "The PyLate/PLAID row is a small-index subset because full-DB "
+             "encoding was infeasible here.")
 
 
 def t7() -> None:
@@ -508,10 +510,10 @@ def t7() -> None:
             "yes" if ok else "no",
         ])
     md_table(TABLE_DIR / "t7_compression.md",
-             "Table 7. Compression trade-off (100K full-length)",
+             "Table 7. Compression trade-off",
              ["Scheme", "ratio vs f16", "cR@10", "drop cR@10", "pass"],
              rows,
-             "Pass = >=4x smaller and cR@10 drop <=0.01. Only PQ m32 passes; "
+             "Pass = at least four times smaller and no more than one point of cR@10 drop. Only PQ m32 passes; "
              "it was not shipped because decode+MaxSim was slower than f16.")
 
 
@@ -546,7 +548,7 @@ def t8() -> None:
              ["n_db", "C", "candidate recall", "coarse s/q",
               "exhaustive s/q", "rerank agreement", "speedup"], rows,
              "Candidate recall is recall of the exhaustive top-10 candidate set. "
-             "At 1M, random candidate gather makes rerank almost exhaustive.")
+             "At the largest size, random candidate gather makes rerank almost exhaustive.")
 
 
 def t9() -> None:
@@ -594,7 +596,7 @@ def t9() -> None:
              ["Index / backend", "encode ms/q", "search ms/q", "search s/q",
               "q/s"], rows,
              "M4 Max. Single-query encode+search; model/context stays loaded. "
-             "The 1M row is numpy (no Metal backend at that size in M8).")
+             "The largest row is numpy (no Metal backend at that size in M8).")
 
 
 def _svg(w: int, h: int, body: list[str]) -> str:

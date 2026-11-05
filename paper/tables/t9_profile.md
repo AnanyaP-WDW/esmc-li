@@ -8,4 +8,4 @@
 | 100K Metal | 112.5 | 1294.0 | 1.29 | 0.711 |
 | 1M numpy | 308.5 | 67051.5 | 67.05 | 0.015 |
 
-M4 Max. Single-query encode+search; model/context stays loaded. The 1M row is numpy (no Metal backend at that size in M8).
+M4 Max. Single-query encode+search; model/context stays loaded. The largest row is numpy (no Metal backend at that size in M8).

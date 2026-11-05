@@ -1,4 +1,4 @@
-**Table 3. Full-length Swiss-Prot 100K retrieval**
+**Table 3. Full-length Swiss-Prot retrieval**
 
 | Method | cR@1 | cR@5 | cR@10 | cR@100 | MRR | sens family | sens superfamily |
 |---|---|---|---|---|---|---|---|

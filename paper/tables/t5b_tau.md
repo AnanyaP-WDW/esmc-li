@@ -11,4 +11,4 @@
 | 1 | yes | 0.8493 ± 0.0010 |
 | 1 | no | 0.8476 ± 0.0025 |
 
-Mean ± population std over 3 seeds. Masking removes in-batch pairs sharing the positive's superfamily from the denominator.
+Mean ± population std over the seeds. Masking removes in-batch pairs sharing the positive's superfamily from the denominator.

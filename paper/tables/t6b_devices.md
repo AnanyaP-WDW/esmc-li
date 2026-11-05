@@ -1,4 +1,4 @@
-**Table 6b. Search backends at 100K (PyLate at 1K)**
+**Table 6b. Search backends**
 
 | Backend | n_db | q/s | s/query | index MB | GEMM eff % |
 |---|---|---|---|---|---|
@@ -8,4 +8,4 @@
 | FAISS flat (pooled) | 100,000 | 7,559 | 0.00014 | 51.2 | — |
 | PyLate/PLAID | 1,000 | 23.4 | 0.0427 | 16.4 | — |
 
-CPU/MPS/Metal are exact MaxSim. FAISS is an approximate latency floor over pooled vectors, not a quality-comparable retriever. PyLate/PLAID is 1K only because full-DB encoding was infeasible here.
+CPU/MPS/Metal are exact MaxSim. FAISS is an approximate latency floor over pooled vectors, not a quality-comparable retriever. The PyLate/PLAID row is a small-index subset because full-DB encoding was infeasible here.

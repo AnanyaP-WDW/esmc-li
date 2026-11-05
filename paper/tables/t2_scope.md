@@ -1,4 +1,4 @@
-**Table 2. SCOPe ASTRAL40 retrieval (n=2314)**
+**Table 2. SCOPe ASTRAL40 retrieval**
 
 | Method | cR@1 | cR@5 | cR@10 | cR@100 | MRR | sens family | sens superfamily | sens fold |
 |---|---|---|---|---|---|---|---|---|
@@ -13,4 +13,4 @@
 | ESM-C + trained head (M2) | 0.9549 ± 0.0014 | 0.8965 ± 0.0012 | 0.8574 ± 0.0023 | 0.7502 ± 0.0072 | 0.9654 ± 0.0007 | 0.2305 ± 0.0011 | 0.4369 ± 0.0012 | 0.4051 ± 0.0022 |
 | ESM-C fine-tuned k=3 (M3) | 0.9705 ± 0.0010 | 0.9305 ± 0.0020 | 0.9065 ± 0.0014 | 0.8329 ± 0.0034 | 0.9765 ± 0.0006 | 0.2426 ± 0.0019 | 0.5566 ± 0.0058 | 0.5275 ± 0.0069 |
 
-Leave-one-out; cR@k is ProtoCol's capped recall. M2/M3 are mean ± population std over 3 seeds; all other rows are single runs. ProtoCol's released evaluator reports only capped recall.
+Leave-one-out; cR@k is ProtoCol's capped recall. M2/M3 are mean ± population std over the seeds; all other rows are single runs. ProtoCol's released evaluator reports only capped recall.

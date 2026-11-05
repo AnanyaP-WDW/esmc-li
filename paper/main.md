@@ -202,7 +202,7 @@ superfamily level the fine-tuned model reaches
 MMseqs2. ProtoCol's released evaluator does not report sensitivity; its capped
 recall is 0.8933.
 
-**Table 2. SCOPe ASTRAL40 retrieval (n=2314)**
+**Table 2. SCOPe ASTRAL40 retrieval**
 
 | Method | cR@1 | cR@5 | cR@10 | cR@100 | MRR | sens family | sens superfamily | sens fold |
 |---|---|---|---|---|---|---|---|---|
@@ -217,7 +217,7 @@ recall is 0.8933.
 | ESM-C + trained head (M2) | 0.9549 ± 0.0014 | 0.8965 ± 0.0012 | 0.8574 ± 0.0023 | 0.7502 ± 0.0072 | 0.9654 ± 0.0007 | 0.2305 ± 0.0011 | 0.4369 ± 0.0012 | 0.4051 ± 0.0022 |
 | ESM-C fine-tuned k=3 (M3) | 0.9705 ± 0.0010 | 0.9305 ± 0.0020 | 0.9065 ± 0.0014 | 0.8329 ± 0.0034 | 0.9765 ± 0.0006 | 0.2426 ± 0.0019 | 0.5566 ± 0.0058 | 0.5275 ± 0.0069 |
 
-Leave-one-out; cR@k is ProtoCol's capped recall. M2/M3 are mean ± population std over 3 seeds; all other rows are single runs. ProtoCol's released evaluator reports only capped recall.
+Leave-one-out; cR@k is ProtoCol's capped recall. M2/M3 are mean ± population std over the seeds; all other rows are single runs. ProtoCol's released evaluator reports only capped recall.
 
 The backbone control is Table 2b. Frozen ESM-C is not a drop-in replacement for
 a smaller frozen ESM-2: on the same harness, frozen ESM-2 35M reaches
@@ -249,7 +249,7 @@ MinHash is weaker still (0.5957). This is the main scientific
 claim: residue-level late interaction is not only a domain benchmark artifact;
 it survives full-length chains and a clan-disjoint corpus.
 
-**Table 3. Full-length Swiss-Prot 100K retrieval**
+**Table 3. Full-length Swiss-Prot retrieval**
 
 | Method | cR@1 | cR@5 | cR@10 | cR@100 | MRR | sens family | sens superfamily |
 |---|---|---|---|---|---|---|---|
@@ -292,7 +292,7 @@ doing nothing.
 | Frozen MaxSim 960D | ÷ len_B | 0.0090 | 0.0000 | 0.069 |
 | Frozen MaxSim 960D | ÷ sqrt(len_A len_B) | 0.0570 | 0.0101 | 0.069 |
 
-Full-length 100K corpus. div_lenA is rank-invariant within a query; the candidate-length variants change the ranking.
+Full-length 100,000-chain corpus. div_lenA is rank-invariant within a query; the candidate-length variants change the ranking.
 
 ![f3_length](figures/f3_length.svg)
 
@@ -319,7 +319,7 @@ selected model reaches 0.9065 ± 0.0014 on test.
 | D=128 | 0.8493 ± 0.0010 | 256 |
 | D=256 | 0.8602 ± 0.0027 | 512 |
 
-Mean ± population std over 3 seeds, selected on scope_val only.
+Mean ± population std over the seeds, selected on scope_val only.
 
 **Table 5b. Temperature and false-negative masking (val)**
 
@@ -334,7 +334,7 @@ Mean ± population std over 3 seeds, selected on scope_val only.
 | 1 | yes | 0.8493 ± 0.0010 |
 | 1 | no | 0.8476 ± 0.0025 |
 
-Mean ± population std over 3 seeds. Masking removes in-batch pairs sharing the positive's superfamily from the denominator.
+Mean ± population std over the seeds. Masking removes in-batch pairs sharing the positive's superfamily from the denominator.
 
 **Table 5c. Fine-tuned blocks (val and test)**
 
@@ -343,7 +343,7 @@ Mean ± population std over 3 seeds. Masking removes in-batch pairs sharing the 
 | k=2 | 0.8703 ± 0.0004 | — |
 | k=3 | 0.8790 ± 0.0031 | 0.9065 ± 0.0014 |
 
-Mean ± population std over 3 seeds. Test is evaluated once after val selection; k=2 test was not evaluated.
+Mean ± population std over the seeds. Test is evaluated once after val selection; k=2 test was not evaluated.
 
 ### Systems: exact search is practical to a million, build is the wall
 
@@ -359,7 +359,7 @@ CPU and 1.774 on MPS. The CPU path is already near the GEMM roofline
 (91.7 percent); the GPU win comes from fusing the max and
 avoiding the score-matrix write.
 
-**Table 6a. Exact search and coarse stage, 10K–1M**
+**Table 6a. Exact search and coarse stage across sizes**
 
 | n_db | residues | index GB | build h | open ms | exhaustive s/q | q/s | C | candidate recall | coarse s/q | speedup |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -367,9 +367,9 @@ avoiding the score-matrix write.
 | 100,000 | 31,787,100 | 8.14 | 1.79 | 7.8 | 1.150 | 0.869 | 10,000 | 0.996 | 0.450 | 2.6 |
 | 1,000,000 | 317,031,935 | 81.17 | 17.49 | 6.0 | 11.134 | 0.0898 | 30,000 | 0.994 | 10.261 | 1.1 |
 
-M4 Max, fused Metal, 50 queries. Build/index from UniRef50 subsets; coarse stage reranks C candidates with exact MaxSim.
+M4 Max, fused Metal, a fixed query set. Build/index from UniRef50 subsets; coarse stage reranks C candidates with exact MaxSim.
 
-**Table 6b. Search backends at 100K (PyLate at 1K)**
+**Table 6b. Search backends**
 
 | Backend | n_db | q/s | s/query | index MB | GEMM eff % |
 |---|---|---|---|---|---|
@@ -379,7 +379,7 @@ M4 Max, fused Metal, 50 queries. Build/index from UniRef50 subsets; coarse stage
 | FAISS flat (pooled) | 100,000 | 7,559 | 0.00014 | 51.2 | — |
 | PyLate/PLAID | 1,000 | 23.4 | 0.0427 | 16.4 | — |
 
-CPU/MPS/Metal are exact MaxSim. FAISS is an approximate latency floor over pooled vectors, not a quality-comparable retriever. PyLate/PLAID is 1K only because full-DB encoding was infeasible here.
+CPU/MPS/Metal are exact MaxSim. FAISS is an approximate latency floor over pooled vectors, not a quality-comparable retriever. The PyLate/PLAID row is a small-index subset because full-DB encoding was infeasible here.
 
 ![f1_scaling](figures/f1_scaling.svg)
 
@@ -403,7 +403,7 @@ a future layout, not a measured win here.
 | 100,000 | 10,000 | 0.996 | 0.450 | 1.150 | 0.98 | 2.6 |
 | 1,000,000 | 30,000 | 0.994 | 10.261 | 11.134 | 0.94 | 1.1 |
 
-Candidate recall is recall of the exhaustive top-10 candidate set. At 1M, random candidate gather makes rerank almost exhaustive.
+Candidate recall is recall of the exhaustive top-10 candidate set. At the largest size, random candidate gather makes rerank almost exhaustive.
 
 ### Compression: the recall bar is reachable, the latency bar is not
 
@@ -415,7 +415,7 @@ slower than reading half-precision rows. We keep the uncompressed index and
 report the negative result. A fused decode-and-max kernel is the obvious next
 step; it is not part of this paper's claim.
 
-**Table 7. Compression trade-off (100K full-length)**
+**Table 7. Compression trade-off**
 
 | Scheme | ratio vs f16 | cR@10 | drop cR@10 | pass |
 |---|---|---|---|---|
@@ -426,7 +426,7 @@ step; it is not part of this paper's claim.
 | residual PQ m16 | 15.06 | 0.8816 | 0.0158 | no |
 | residual PQ m32 | 7.76 | 0.8921 | 0.0052 | yes |
 
-Pass = >=4x smaller and cR@10 drop <=0.01. Only PQ m32 passes; it was not shipped because decode+MaxSim was slower than f16.
+Pass = at least four times smaller and no more than one point of cR@10 drop. Only PQ m32 passes; it was not shipped because decode+MaxSim was slower than f16.
 
 ![f2_compression](figures/f2_compression.svg)
 
@@ -456,7 +456,7 @@ fine-tuned GGUF must travel with it, and the sidecar records their hashes.
 | 100K Metal | 112.5 | 1294.0 | 1.29 | 0.711 |
 | 1M numpy | 308.5 | 67051.5 | 67.05 | 0.015 |
 
-M4 Max. Single-query encode+search; model/context stays loaded. The 1M row is numpy (no Metal backend at that size in M8).
+M4 Max. Single-query encode+search; model/context stays loaded. The largest row is numpy (no Metal backend at that size in M8).
 
 **Table 9b. Offline package smoke**
 

@@ -6,4 +6,4 @@
 | D=128 | 0.8493 ± 0.0010 | 256 |
 | D=256 | 0.8602 ± 0.0027 | 512 |
 
-Mean ± population std over 3 seeds, selected on scope_val only.
+Mean ± population std over the seeds, selected on scope_val only.
