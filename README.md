@@ -7,6 +7,10 @@ backend; ESM-C inference runs through
 
 Model: [`AnanyaPathak/esmc-300m-homology-maxsim-v1`](https://huggingface.co/AnanyaPathak/esmc-300m-homology-maxsim-v1)
 Indexes: [`AnanyaPathak/esmc-retrieval-indexes`](https://huggingface.co/datasets/AnanyaPathak/esmc-retrieval-indexes)
+
+The Hugging Face model/index repositories keep their historical names; the
+package and CLI are ESMC-LI.
+
 Paper: [`paper/main.md`](paper/main.md) · API: [`docs/api.md`](docs/api.md)
 
 Code is MIT-licensed (`LICENSE`); the ESM-C weights and GGUF derivatives are
