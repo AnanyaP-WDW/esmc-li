@@ -30,7 +30,7 @@ generated table cell.
 | C08 | Abstract | 0.8304 | t3_fulllength | MMseqs2 | cR@10 | `fl.mmseqs2` |
 | C09 | Abstract | 0.6048 | t3_fulllength | ESM-C fine-tuned k=3 | sens superfamily | `fl.trained_raw` |
 | C10 | Abstract | 0.4765 | t3_fulllength | MMseqs2 | sens superfamily | `fl.mmseqs2` |
-| C11 | Abstract | 0.999 | t6b_devices | Metal (fused) | s/query | `m5.metal.100000` |
+| C11 | Abstract | 1.150 | t6a_scaling | 100,000 | exhaustive s/q | `t7.measure.100000` |
 | C12 | Abstract | 100,000 | t6a_scaling | 100,000 | n_db | `t7.build.100000,t7.measure.100000` |
 | C13 | Abstract | 11.134 | t6a_scaling | 1,000,000 | exhaustive s/q | `t7.measure.1000000` |
 | C14 | Abstract | 1,000,000 | t6a_scaling | 1,000,000 | n_db | `t7.build.1000000,t7.measure.1000000` |
@@ -83,7 +83,7 @@ generated table cell.
 | C61 | Ablations: dimension, temperature, masking, and depth | 0.8790 ± 0.0031 | t5c_k | k=3 | val cR@10 | `t3.k3.s0,t3.k3.s1,t3.k3.s2` |
 | C62 | Ablations: dimension, temperature, masking, and depth | 0.8703 ± 0.0004 | t5c_k | k=2 | val cR@10 | `t3.k2.s0,t3.k2.s1,t3.k2.s2` |
 | C63 | Ablations: dimension, temperature, masking, and depth | 0.9065 ± 0.0014 | t5c_k | k=3 | test cR@10 | `t3.full.s0,t3.full.s1,t3.full.s2` |
-| C64 | Systems: exact search is practical to a million, build is the wall | 1.150 | t6a_scaling | 100,000 | exhaustive s/q | `t7.measure.100000` |
+| C64 | Systems: exact search is practical to a million, build is the wall | 0.999 | t6b_devices | Metal (fused) | s/query | `m5.metal.100000` |
 | C65 | Systems: exact search is practical to a million, build is the wall | 1.001 | t6b_devices | Metal (fused) | q/s | `m5.metal.100000` |
 | C66 | Systems: exact search is practical to a million, build is the wall | 2.536 | t6b_devices | numpy CPU | s/query | `m5.cpu.100000` |
 | C67 | Systems: exact search is practical to a million, build is the wall | 1.774 | t6b_devices | MPS | s/query | `m5.mps.100000` |

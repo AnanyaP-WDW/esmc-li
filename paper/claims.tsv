@@ -9,7 +9,7 @@ C07	t3.trained_raw.cR@10	Abstract	0.8974	t3_fulllength	ESM-C fine-tuned k=3	cR@1
 C08	t3.mmseqs2.cR@10	Abstract	0.8304	t3_fulllength	MMseqs2	cR@10	fl.mmseqs2
 C09	t3.trained_raw.sens_superfamily	Abstract	0.6048	t3_fulllength	ESM-C fine-tuned k=3	sens superfamily	fl.trained_raw
 C10	t3.mmseqs2.sens_superfamily	Abstract	0.4765	t3_fulllength	MMseqs2	sens superfamily	fl.mmseqs2
-C11	t6b.sq.metal_fused	Abstract	0.999	t6b_devices	Metal (fused)	s/query	m5.metal.100000
+C11	t6.sq.100000	Abstract	1.150	t6a_scaling	100,000	exhaustive s/q	t7.measure.100000
 C12	t6.n.100000	Abstract	100,000	t6a_scaling	100,000	n_db	t7.build.100000,t7.measure.100000
 C13	t6.sq.1000000	Abstract	11.134	t6a_scaling	1,000,000	exhaustive s/q	t7.measure.1000000
 C14	t6.n.1000000	Abstract	1,000,000	t6a_scaling	1,000,000	n_db	t7.build.1000000,t7.measure.1000000
@@ -62,7 +62,7 @@ C60	t5a.d256.cr10_pm	Ablations: dimension, temperature, masking, and depth	0.860
 C61	t5c.k3.val_pm	Ablations: dimension, temperature, masking, and depth	0.8790 ± 0.0031	t5c_k	k=3	val cR@10	t3.k3.s0,t3.k3.s1,t3.k3.s2
 C62	t5c.k2.val_pm	Ablations: dimension, temperature, masking, and depth	0.8703 ± 0.0004	t5c_k	k=2	val cR@10	t3.k2.s0,t3.k2.s1,t3.k2.s2
 C63	t5c.k3.test_pm	Ablations: dimension, temperature, masking, and depth	0.9065 ± 0.0014	t5c_k	k=3	test cR@10	t3.full.s0,t3.full.s1,t3.full.s2
-C64	t6.sq.100000	Systems: exact search is practical to a million, build is the wall	1.150	t6a_scaling	100,000	exhaustive s/q	t7.measure.100000
+C64	t6b.sq.metal_fused	Systems: exact search is practical to a million, build is the wall	0.999	t6b_devices	Metal (fused)	s/query	m5.metal.100000
 C65	t6b.qps.metal_fused	Systems: exact search is practical to a million, build is the wall	1.001	t6b_devices	Metal (fused)	q/s	m5.metal.100000
 C66	t6b.sq.numpy_cpu	Systems: exact search is practical to a million, build is the wall	2.536	t6b_devices	numpy CPU	s/query	m5.cpu.100000
 C67	t6b.sq.mps	Systems: exact search is practical to a million, build is the wall	1.774	t6b_devices	MPS	s/query	m5.mps.100000

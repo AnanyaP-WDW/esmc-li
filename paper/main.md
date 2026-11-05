@@ -19,7 +19,7 @@ reproduced ProtoCol, 0.6304 for frozen ESM-C MaxSim, and
 with a larger gap in sensitivity at superfamily level
 (0.6048 versus
 0.4765). Exact search costs
-0.999 s/query at 100,000 proteins and
+1.150 s/query at 100,000 proteins and
 11.134 s/query at 1,000,000 on an Apple M4 Max laptop;
 the index is 8.14 GB and 81.17 GB respectively, and
 build time is 1.79 h and 17.49 h. Build
@@ -484,8 +484,8 @@ experiment uses one corpus and one seed for the deployment number; the SCOPe
 result is the three-seed result. The systems measurements are Apple Silicon
 only. The million-protein point has systems measurements, not labeled retrieval
 quality. Ten million proteins would need roughly a machine-week of build time
-and an index larger than the machine's memory; we did not run it, and we do not
-claim it. Finally, the package's million-protein path falls back to numpy;
+and an index close to the machine's memory limit; we did not run it, and we do
+not claim it. Finally, the package's million-protein path falls back to numpy;
 Metal is not claimed there.
 
 ## Conclusion
