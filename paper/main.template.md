@@ -23,9 +23,9 @@ with a larger gap in sensitivity at superfamily level
 {{n:t6.sq.1000000}} s/query at {{n:t6.n.1000000}} on an Apple M4 Max laptop;
 the index is {{n:t6.gb.100000}} GB and {{n:t6.gb.1000000}} GB respectively, and
 build time is {{n:t6.build_h.100000}} h and {{n:t6.build_h.1000000}} h. Build
-and storage, not query search, are the wall. Compression and coarse reranking
-do not pay off in this regime. We release an offline package and the measured
-system.
+and storage, not query search, are the wall. Compression does not pay off, and
+coarse reranking helps only in the middle of the measured range. We release an
+offline package and the measured system.
 
 ## Introduction
 

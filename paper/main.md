@@ -23,9 +23,9 @@ with a larger gap in sensitivity at superfamily level
 11.134 s/query at 1,000,000 on an Apple M4 Max laptop;
 the index is 8.14 GB and 81.17 GB respectively, and
 build time is 1.79 h and 17.49 h. Build
-and storage, not query search, are the wall. Compression and coarse reranking
-do not pay off in this regime. We release an offline package and the measured
-system.
+and storage, not query search, are the wall. Compression does not pay off, and
+coarse reranking helps only in the middle of the measured range. We release an
+offline package and the measured system.
 
 ## Introduction
 
