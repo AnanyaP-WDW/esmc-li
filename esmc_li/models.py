@@ -6,17 +6,19 @@ import os
 from pathlib import Path
 
 _MODEL = {
-    "repo_id": "AnanyaPathak/esmc-li-300m-v1",
+    "repo_id": "AnanyaPathak/esmc-li-300m-homology-v1",
     "filename": "esmc-300m-homology-maxsim-v1-f16.gguf",
     "sha256": "e87b42f1a6344e57b7a0d8a6624cc9d7e2e15f34d4a6927447b4cb3c90209bab",
 }
 MODELS = {
-    "esmc-li-300m-v1": _MODEL,
+    "esmc-li-300m-homology-v1": _MODEL,
     # historical registry name; old indexes/sidecars still resolve
+    "esmc-li-300m-v1": _MODEL,
+    "AnanyaPathak/esmc-li-300m-v1": _MODEL,
     "esmc-300m-homology-maxsim-v1": _MODEL,
     "AnanyaPathak/esmc-300m-homology-maxsim-v1": _MODEL,
 }
-DEFAULT_MODEL = "esmc-li-300m-v1"
+DEFAULT_MODEL = "esmc-li-300m-homology-v1"
 
 
 def _sha256(path: Path) -> str:

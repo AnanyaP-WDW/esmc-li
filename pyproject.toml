@@ -15,7 +15,7 @@ dependencies = ["numpy>=1.24", "huggingface_hub>=0.23"]
 [project.urls]
 Homepage = "https://github.com/AnanyaP-WDW/esmc-li"
 Paper = "https://github.com/AnanyaP-WDW/esmc-li/blob/main/paper/main.md"
-Model = "https://huggingface.co/AnanyaPathak/esmc-li-300m-v1"
+Model = "https://huggingface.co/AnanyaPathak/esmc-li-300m-homology-v1"
 Indexes = "https://huggingface.co/datasets/AnanyaPathak/esmc-li-indexes"
 
 [project.optional-dependencies]

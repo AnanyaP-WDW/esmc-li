@@ -23,7 +23,7 @@ dylibs; it is not a pure-Python wheel.
 
 3. Verify the published artifacts:
 
-   - model: `AnanyaPathak/esmc-li-300m-v1`
+   - model: `AnanyaPathak/esmc-li-300m-homology-v1`
    - indexes: `AnanyaPathak/esmc-li-indexes`
    - SHA256 values in `data/manifest.json` and the model card.
 
