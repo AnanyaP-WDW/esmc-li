@@ -94,6 +94,20 @@ hits = index.search("MKTIIALSYIFCLVFADYKDDDDK", k=10)
 - ESM-C weights and derivatives are governed by the EvolutionaryScale
   Cambrian Open License Agreement.
 
+## Paper and reproducibility
+
+The M9 paper is [`paper/main.md`](paper/main.md). All data tables and figures
+are generated from a pinned results lock; no model or embedding cache is needed:
+
+```bash
+make tables     # regenerate 15 tables, 3 figures, and paper/main.md
+make audit      # claims + citations + lock + tests + zero-diff
+```
+
+`make audit` currently reports 81/81 numeric claims mapped and 26/26 citations
+verified. See [`paper/README.md`](paper/README.md) and
+[`docs/claims.md`](docs/claims.md).
+
 ## M8 checks
 
 ```bash
