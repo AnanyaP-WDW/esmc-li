@@ -41,3 +41,17 @@ Searched crates.io API (`q=maxsim`, `q=colbert`) plus direct lookup: `maxsim-rs`
 2. **§15 "TM-Vec + DeepBLAST (2024)"**: fine as issue year, but note it is one joint paper (Hamamsy et al., Nat Biotechnol 42:975–985, online Sep 2023) — cite once, not twice.
 3. **§15 ERAST**: remove the "UNVERIFIED, check in T0.2" marker; it is now verified (Nat Biotechnol 2026).
 4. Minor: DHR is officially "Nature Biotechnology 43, 983–995 (online 2024, issue 2025)" — "Nat Biotech 2024" is how the literature cites it, acceptable as-is. PEbA's venue is BMC Bioinformatics (plan only states the year).
+
+## M9 additions (verified for `paper/refs.json`)
+
+| Citation | Venue/Year | URL | Verified claim | Status |
+|---|---|---|---|---|
+| ESM-C 300M model card | Hugging Face, 2024 | https://huggingface.co/EvolutionaryScale/esmc-300m-2024-12 | Model card and Cambrian license; backbone used here. | verified |
+| esmc.cpp | OpenReview/CAISc 2026 (non-archival) | https://openreview.net/forum?id=0GarVDrEAi | Runtime citation recorded in the esmc.cpp README. | verified |
+| SCOPe 2.08 ASTRAL40 | SCOPe | https://scop.berkeley.edu/downloads/scopeseq-2.08/astral-scopedom-seqres-gd-sel-gs-bib-40-2.08.fa | Download URL and sha256 pinned in `data/manifest.json`. | verified |
+| UniProtKB / UniRef50 | UniProt | https://www.uniprot.org/ | Source URLs pinned in `data/fulllength/manifest.json` and the M7 scripts. | verified |
+| ColBERT | SIGIR 2020 | https://arxiv.org/abs/2004.12832 | Late-interaction formulation. | verified |
+| InfoNCE | arXiv:1807.03748 | https://arxiv.org/abs/1807.03748 | Contrastive objective used for training. | verified |
+| CLIP | ICML 2021 | https://arxiv.org/abs/2103.00020 | Temperature baseline; we sweep rather than inherit. | verified |
+| FAISS | IEEE Big Data 2019 | https://github.com/facebookresearch/faiss | Latency-floor implementation only. | verified |
+| Cambrian Open License | EvolutionaryScale policy | https://www.evolutionaryscale.ai/policies/cambrian-open-license-agreement | Model/GGUF license referenced by `NOTICE`. | verified |
