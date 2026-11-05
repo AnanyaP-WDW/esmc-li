@@ -597,34 +597,91 @@ def t9() -> None:
              "The 1M row is numpy (no Metal backend at that size in M8).")
 
 
-def figures() -> None:
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-    plt.rcParams["svg.hashsalt"] = "esmc-retrieval-m9"
-    plt.rcParams["font.size"] = 8
+def _svg(w: int, h: int, body: list[str]) -> str:
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" '
+            f'height="{h}" viewBox="0 0 {w} {h}">' +
+            "".join(body) + "</svg>\n")
 
+
+def _line(x1, y1, x2, y2, color="#333", width=1, dash=""):
+    d = f' stroke-dasharray="{dash}"' if dash else ""
+    return (f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" '
+            f'y2="{y2:.1f}" stroke="{color}" stroke-width="{width}"{d}/>')
+
+
+def _text(x, y, s, size=10, anchor="start", color="#222"):
+    return (f'<text x="{x:.1f}" y="{y:.1f}" font-family="Helvetica,Arial,'
+            f'sans-serif" font-size="{size}" text-anchor="{anchor}" '
+            f'fill="{color}">{s}</text>')
+
+
+def _circle(x, y, color="#111"):
+    return f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3" fill="{color}"/>'
+
+
+def _map(v, lo, hi, p0, p1):
+    import math
+    return p0 + (math.log10(v) - math.log10(lo)) / (
+        math.log10(hi) - math.log10(lo)) * (p1 - p0)
+
+
+def figures() -> None:
+    import math
     n = [10000, 100000, 1000000]
     ex = [metric(f"t7.measure.{x}", "exhaustive_s_per_q") for x in n]
     co = [metric(f"t7.measure.{x}", "coarse_s_per_q") for x in n]
     gb = [metric(f"t7.measure.{x}", "esmci_bytes") / 1e9 for x in n]
 
-    fig, ax = plt.subplots(1, 2, figsize=(6.8, 2.6))
-    ax[0].loglog(n, ex, "o-", label="exhaustive")
-    ax[0].loglog(n, co, "s--", label="coarse + rerank")
-    ax[0].set_xlabel("database proteins")
-    ax[0].set_ylabel("seconds / query")
-    ax[0].legend(frameon=False, fontsize=7)
-    ax[1].loglog(n, gb, "o-", color="black")
-    ax[1].set_xlabel("database proteins")
-    ax[1].set_ylabel("index size (GB)")
-    for a in ax:
-        a.grid(True, which="both", alpha=0.2)
-    fig.tight_layout()
-    fig.savefig(FIG_DIR / "f1_scaling.svg", bbox_inches="tight",
-                metadata={"Date": None})
-    plt.close(fig)
+    # Figure 1: two log-log panels, hand-drawn SVG for byte determinism.
+    body = [_text(20, 18, "exact search", 11),
+            _text(370, 18, "index size", 11)]
+    for left, title in ((50, "seconds / query"), (400, "GB")):
+        top, bot, right = 30, 220, left + 250
+        body.append(_line(left, bot, right, bot))
+        body.append(_line(left, bottom := bot, x2=left, y2=top))
+        for gx in (10000, 100000, 1000000):
+            x = _map(gx, 10000, 1000000, left, right)
+            body.append(_line(x, bot, x, bot + 4))
+            body.append(_text(x, bot + 16, f"10^{int(math.log10(gx))}",
+                              9, "middle"))
+        body.append(_text((left + right) / 2, bot + 32,
+                          "database proteins", 9, "middle"))
+        body.append(_text(left - 8, top + 4, title, 9, "end"))
+    # left panel y ticks
+    for yv in (0.1, 1, 10):
+        y = _map(yv, 0.08, 20, 220, 30)
+        body.append(_line(50, y, 54, y))
+        body.append(_text(46, y + 3, f"{yv:g}", 9, "end"))
+    # right panel y ticks
+    for yv in (1, 10, 100):
+        y = _map(yv, 0.7, 100, 220, 30)
+        body.append(_line(400, y, 404, y))
+        body.append(_text(396, y + 3, f"{yv:g}", 9, "end"))
+    pts_ex = [(_map(x, 10000, 1000000, 50, 300),
+               _map(y, 0.08, 20, 220, 30)) for x, y in zip(n, ex)]
+    pts_co = [(_map(x, 10000, 1000000, 50, 300),
+               _map(y, 0.08, 20, 220, 30)) for x, y in zip(n, co)]
+    pts_gb = [(_map(x, 10000, 1000000, 400, 650),
+               _map(y, 0.7, 100, 220, 30)) for x, y in zip(n, gb)]
+    for pts, dash in ((pts_ex, ""), (pts_co, "5,4")):
+        body.append(f'<polyline points="' +
+                    " ".join(f"{x:.1f},{y:.1f}" for x, y in pts) +
+                    f'" fill="none" stroke="#111" stroke-width="1.5"'
+                    + (f' stroke-dasharray="{dash}"' if dash else "") + "/>")
+        for x, y in pts:
+            body.append(_circle(x, y))
+    body.append(f'<polyline points="' +
+                " ".join(f"{x:.1f},{y:.1f}" for x, y in pts_gb) +
+                '" fill="none" stroke="#111" stroke-width="1.5"/>')
+    for x, y in pts_gb:
+        body.append(_circle(x, y))
+    body.append(_line(60, 245, 88, 245, "#111", 1.5))
+    body.append(_text(94, 248, "exhaustive", 9))
+    body.append(_line(170, 245, 198, 245, "#111", 1.5, "5,4"))
+    body.append(_text(204, 248, "coarse + rerank", 9))
+    (FIG_DIR / "f1_scaling.svg").write_text(_svg(680, 260, body))
 
+    # Figure 2: compression ratio vs cR@10.
     m = R["t7.compress"]["metrics"]
     labels = ["fp16", "int8", "r-int8", "PQ m8", "PQ m16", "PQ m32"]
     ratios = [float(m["fp16_ratio_vs_f16"]), float(m["int8_ratio_vs_f16"]),
@@ -635,37 +692,51 @@ def figures() -> None:
     cr = [float(m["fp16_cR@10"]), float(m["int8_cR@10"]),
           float(m["residual_int8_cR@10"]), float(m["residual_pq_m8_cR@10"]),
           float(m["residual_pq_m16_cR@10"]), float(m["residual_pq_m32_cR@10"])]
-    fig, ax = plt.subplots(figsize=(3.4, 2.6))
-    ax.semilogx(ratios, cr, "o-", color="black")
-    for x, y, t in zip(ratios, cr, labels):
-        ax.annotate(t, (x, y), textcoords="offset points", xytext=(0, 5),
-                    fontsize=7, ha="center")
-    ax.set_xlabel("compression ratio vs f16")
-    ax.set_ylabel("cR@10")
-    ax.grid(True, which="both", alpha=0.2)
-    fig.tight_layout()
-    fig.savefig(FIG_DIR / "f2_compression.svg", bbox_inches="tight",
-                metadata={"Date": None})
-    plt.close(fig)
+    body = [_line(40, 220, 340, 220), _line(40, 220, 40, 20)]
+    for xv in (1, 3, 10, 30):
+        x = _map(xv, 1, 30, 40, 340)
+        body.append(_line(x, 220, x, 224))
+        body.append(_text(x, 236, f"{xv:g}", 9, "middle"))
+    body.append(_text(190, 250, "compression ratio vs f16", 9, "middle"))
+    for yv in (0.85, 0.87, 0.89):
+        y = 220 - (yv - 0.84) / 0.06 * 200
+        body.append(_line(36, y, 40, y))
+        body.append(_text(32, y + 3, f"{yv:.2f}", 9, "end"))
+    body.append(_text(14, 120, "cR@10", 9, "middle"))
+    pts = [(_map(x, 1, 30, 40, 340), 220 - (y - 0.84) / 0.06 * 200)
+           for x, y in zip(ratios, cr)]
+    body.append(f'<polyline points="' +
+                " ".join(f"{x:.1f},{y:.1f}" for x, y in pts) +
+                '" fill="none" stroke="#111" stroke-width="1.5"/>')
+    for (x, y), t in zip(pts, labels):
+        body.append(_circle(x, y))
+        body.append(_text(x, y - 8, t, 8, "middle"))
+    (FIG_DIR / "f2_compression.svg").write_text(_svg(360, 270, body))
 
-    norms = ["raw", "divA", "divB", "divGeo"]
-    fig, ax = plt.subplots(figsize=(4.2, 2.6))
-    width = 0.36
-    for j, (method, label) in enumerate([("trained", "fine-tuned k=3"),
-                                         ("maxsim960", "frozen MaxSim 960D")]):
-        vals = [metric(f"fl.{method}_{x}", "cR@10") for x in norms]
-        ax.bar([i + (j - 0.5) * width for i in range(4)], vals, width,
-               label=label)
-    ax.set_xticks(range(4))
-    ax.set_xticklabels(["raw", "÷ len_A", "÷ len_B", "÷ √(len_A len_B)"],
-                       fontsize=7)
-    ax.set_ylabel("cR@10")
-    ax.legend(frameon=False, fontsize=7)
-    ax.grid(True, axis="y", alpha=0.2)
-    fig.tight_layout()
-    fig.savefig(FIG_DIR / "f3_length.svg", bbox_inches="tight",
-                metadata={"Date": None})
-    plt.close(fig)
+    # Figure 3: grouped bars, raw vs normalized.
+    body = [_line(50, 220, 400, 220), _line(50, 220, 50, 20)]
+    norms = [("raw", "raw"), ("divA", "len_A"), ("divB", "len_B"),
+             ("divGeo", "sqrt")]
+    for i, (_, lab) in enumerate(norms):
+        x = 80 + i * 80
+        body.append(_text(x, 236, lab, 9, "middle"))
+    for yv in (0.0, 0.25, 0.5, 0.75, 1.0):
+        y = 220 - yv * 200
+        body.append(_line(46, y, 50, y))
+        body.append(_text(42, y + 3, f"{yv:.2f}", 9, "end"))
+    for j, (method, color) in enumerate((("trained", "#222"),
+                                         ("maxsim960", "#999"))):
+        for i, (norm, _) in enumerate(norms):
+            v = metric(f"fl.{method}_{norm}", "cR@10")
+            x = 65 + i * 80 + j * 22
+            y = 220 - v * 200
+            body.append(f'<rect x="{x}" y="{y:.1f}" width="20" '
+                        f'height="{220 - y:.1f}" fill="{color}"/>')
+    body.append(f'<rect x="260" y="12" width="10" height="10" fill="#222"/>')
+    body.append(_text(274, 21, "fine-tuned k=3", 8))
+    body.append(f'<rect x="260" y="26" width="10" height="10" fill="#999"/>')
+    body.append(_text(274, 35, "frozen MaxSim 960D", 8))
+    (FIG_DIR / "f3_length.svg").write_text(_svg(420, 260, body))
 
 
 def main() -> int:

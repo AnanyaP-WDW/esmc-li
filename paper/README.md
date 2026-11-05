@@ -12,9 +12,8 @@ make audit      # lock check + claims + citations + pytest + zero-diff
 
 The lock pins `results/runs.jsonl` at `results_commit` (currently 5a308ac).
 `make verify-lock` re-reads that commit and checks every selected row's line
-hash and metrics. `make tables` needs only the lock and Python (with
-`matplotlib` for the figures): no model, no embedding cache, no network, no
-`esmc.cpp`.
+hash and metrics. `make tables` needs only the lock and Python: no model, no embedding cache, no
+network, no `esmc.cpp`.
 
 Claims are placeholders: `{{n:t2.m3.cR@10_pm}}` becomes the table cell value.
 `scripts/check_claims.py` rejects any hardcoded number and any placeholder
