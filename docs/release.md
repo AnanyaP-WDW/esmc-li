@@ -7,6 +7,7 @@ dylibs; it is not a pure-Python wheel.
 
    ```bash
    ESMC_CPP=/path/to/esmc.cpp make wheel PYTHON=python3
+   shasum -a 256 dist/esmc_retrieval-1.0.0-*.whl
    ```
 
 2. Check the wheel in a clean venv, offline after the model/index cache is
