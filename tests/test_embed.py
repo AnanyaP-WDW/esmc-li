@@ -2,7 +2,7 @@
 import numpy as np
 
 from esmc_li.embed import OVERLAP as OVERLAP_LEN
-from esmc_li.embed import WIN, assemble, chunk_windows, embed_seq
+from esmc_li.embed import WIN, assemble, chunk_windows, embed_seq, safe_name
 
 
 def local_rows(n: int) -> np.ndarray:
@@ -15,6 +15,11 @@ def global_rows(s: int, e: int) -> np.ndarray:
     """Fake window covering global positions [s, e)."""
     idx = np.arange(s, e, dtype=np.float32)
     return np.stack([idx, idx + 1, idx + 2, idx + 3], axis=1)
+
+
+def test_safe_name_blocks_paths():
+    assert "/" not in safe_name("../../evil")
+    assert safe_name("a/b") != safe_name("a_b")
 
 
 def test_short_seq_single_window():

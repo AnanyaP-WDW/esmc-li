@@ -1,9 +1,12 @@
 """M8 end-to-end with a fake esmc-embed (no model download)."""
 import sys
 
+import numpy as np
 import pytest
 
 from esmc_li import ProteinIndex
+from esmc_li.embed import chunk_windows
+from esmc_li.protein_index import _embed_chunked
 
 
 @pytest.fixture(autouse=True)
@@ -55,6 +58,20 @@ def test_long_sequence_chunking(tmp_path):
     assert idx.search(seq, k=1)[0]["id"] == "long"
 
 
+def test_chunked_runtime_contract():
+    seq = "ACDE" * 1300
+    calls = []
+
+    def fake_embed(part):
+        calls.append(len(part))
+        return np.zeros((len(part) + 2, 960), dtype=np.float32)
+
+    out = _embed_chunked(seq, fake_embed)
+    spans = chunk_windows(seq)
+    assert calls == [e - s for s, e in spans]
+    assert out.shape == (sum(e - s + 2 for s, e in spans), 960)
+
+
 def test_build_load_search_roundtrip(tmp_path):
     bin_path, model = _fake_embed(tmp_path)
     fasta = tmp_path / "proteins.fa"
@@ -73,3 +90,4 @@ def test_build_load_search_roundtrip(tmp_path):
     hits = loaded.search_batch(["ACDE", "MKT"], k=1)
     assert [h[0]["id"] for h in hits] == ["a", "b"]
     assert loaded.benchmark(nq=2)["n"] == 2
+    assert loaded.search_batch([]) == []

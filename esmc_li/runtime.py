@@ -29,7 +29,6 @@ def find_library() -> Path | None:
     candidates = [Path(env)] if env else []
     name = "libesmc.dylib" if sys.platform == "darwin" else "libesmc.so"
     candidates.append(Path(__file__).with_name("_runtime") / name)
-    candidates.append(Path.cwd() / name)
     for p in candidates:
         if p.is_file():
             return p
@@ -91,11 +90,18 @@ class EsmcRuntime:
         L.esmc_embed.restype = ctypes.c_int
 
     def embed(self, sequence: str) -> np.ndarray:
-        raw = sequence.encode("ascii")
+        try:
+            raw = sequence.encode("ascii")
+        except UnicodeEncodeError as e:
+            raise ValueError("protein sequence must be ASCII") from e
         tokens = (ctypes.c_int32 * (len(raw) + 2))()
         n = self.lib.esmc_tokenize(self.model, raw, tokens, len(tokens))
         if n < 0:
             raise RuntimeError("esmc_tokenize failed")
+        if n > self.n_ctx:
+            raise RuntimeError(
+                f"sequence needs {n} tokens but model context is {self.n_ctx}; "
+                "chunk it before embedding")
         out = (ctypes.c_float * (n * self.n_embd))()
         if self.lib.esmc_embed(self.ctx, tokens, n, out) != 0:
             raise RuntimeError("esmc_embed failed")

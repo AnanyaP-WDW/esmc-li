@@ -2,6 +2,7 @@
 import numpy as np
 import pytest
 
+from esmc_li import ProteinIndex
 from esmc_li.index import Esmci, expected_bytes, write
 
 
@@ -33,6 +34,13 @@ def test_size_formula_exact(tmp_path):
     vecs, off, meta = make(n=10, d=128, seed=1)
     p = write(tmp_path / "s.esmci", vecs, off, meta)
     assert p.stat().st_size == expected_bytes(10, vecs.shape[0], 128)
+
+
+def test_protein_index_requires_sidecar_ids(tmp_path):
+    vecs, off, _ = make()
+    p = write(tmp_path / "no-meta.esmci", vecs, off, meta=None)
+    with pytest.raises(ValueError, match="sidecar ids invalid"):
+        ProteinIndex.load(p, device="numpy")
 
 
 def test_rejects_non_esmci(tmp_path):

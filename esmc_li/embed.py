@@ -17,7 +17,9 @@ this: its graph applies output_norm unconditionally.
 """
 from __future__ import annotations
 
+import hashlib
 import json
+import re
 import subprocess
 import tempfile
 from pathlib import Path
@@ -27,6 +29,13 @@ import numpy as np
 WIN = 2046
 OVERLAP = 128
 D_MODEL = 960
+
+
+def safe_name(rid: str, limit: int = 80) -> str:
+    """Filesystem-safe, collision-resistant name for a FASTA id."""
+    base = re.sub(r"[^A-Za-z0-9_.-]+", "_", rid).strip("._") or "seq"
+    digest = hashlib.sha256(rid.encode()).hexdigest()[:8]
+    return f"{base[:limit]}_{digest}"
 
 
 def chunk_windows(seq: str, win: int = WIN, overlap: int = OVERLAP) -> list[tuple[int, int]]:
@@ -115,9 +124,9 @@ def embed_dataset(rows: list[dict], out_npy: Path, meta_path: Path,
                     seq = r["sequence"]
                     for s, e in chunk_windows(seq):
                         if s == 0 and e == len(seq):
-                            f.write(f">{r['id']}\n{seq}\n")
+                            f.write(f">{safe_name(r['id'])}\n{seq}\n")
                         else:
-                            f.write(f">{r['id']}|{s}\n{seq[s:e]}\n")
+                            f.write(f">{safe_name(r['id'])}|{s}\n{seq[s:e]}\n")
             npy_dir = td / "npy"
             npy_dir.mkdir()
             subprocess.run([str(binary), "-m", str(gguf), "--fasta", str(fa),
@@ -127,9 +136,9 @@ def embed_dataset(rows: list[dict], out_npy: Path, meta_path: Path,
                 seq = r["sequence"]
                 spans = chunk_windows(seq)
                 if len(spans) == 1:
-                    part = np.load(npy_dir / f"{r['id']}.npy")
+                    part = np.load(npy_dir / f"{safe_name(r['id'])}.npy")
                 else:
-                    parts = [np.load(npy_dir / f"{r['id']}|{s}.npy")
+                    parts = [np.load(npy_dir / f"{safe_name(r['id'])}|{s}.npy")
                              for s, _ in spans]
                     part = assemble(spans, parts)
                 assert part.shape[0] == len(seq) and part.shape[1] == D_MODEL

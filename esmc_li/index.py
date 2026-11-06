@@ -67,6 +67,7 @@ class Esmci:
 
     def __init__(self, path: Path | str):
         self.path = Path(path)
+        self._meta: dict | None = None
         with self.path.open("rb") as f:
             hdr = f.read(_HDR.size)
         magic, self.version, code, self.d, _, self.n_proteins, self.n_residues, \
@@ -77,18 +78,25 @@ class Esmci:
             raise ValueError(f"unsupported .esmci version {self.version}")
         self.dtype = _DT[code]
         off_bytes = (self.n_proteins + 1) * 8
+        if payload_off < HEADER_SIZE + off_bytes:
+            raise ValueError("payload offset overlaps offsets table")
+        if self.path.stat().st_size < payload_off + self.n_residues * self.d * 2:
+            raise ValueError("index file is truncated")
         self.offsets = np.memmap(self.path, dtype=np.uint64, mode="r",
                                  offset=HEADER_SIZE, shape=(self.n_proteins + 1,))
         self.vecs = np.memmap(self.path, dtype=self.dtype, mode="r",
-                              offset=HEADER_SIZE + off_bytes,
+                              offset=payload_off,
                               shape=(self.n_residues, self.d))
-        if int(self.offsets[-1]) != self.n_residues:
-            raise ValueError("offsets[-1] != n_residues")
+        off = self.offsets.astype(np.int64)
+        if off[0] != 0 or off[-1] != self.n_residues or np.any(np.diff(off) < 0):
+            raise ValueError("offsets are not monotonic and complete")
 
     @property
     def meta(self) -> dict:
-        p = _sidecar(self.path)
-        return json.loads(p.read_text()) if p.exists() else {}
+        if self._meta is None:
+            p = _sidecar(self.path)
+            self._meta = json.loads(p.read_text()) if p.exists() else {}
+        return self._meta
 
     @property
     def ids(self) -> list[str]:

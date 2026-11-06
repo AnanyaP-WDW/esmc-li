@@ -18,7 +18,7 @@ from pathlib import Path
 
 import numpy as np
 
-from esmc_li.embed import chunk_windows
+from esmc_li.embed import chunk_windows, safe_name
 from esmc_li.index import Esmci, write
 from esmc_li.models import DEFAULT_MODEL, resolve_model
 from esmc_li.runtime import EsmcRuntime, find_library
@@ -75,9 +75,10 @@ def _read_fasta(path: Path) -> list[dict]:
 
 def _window_names(seq: str, rid: str) -> list[tuple[str, tuple[int, int]]]:
     spans = chunk_windows(seq)
+    safe = safe_name(rid)
     if len(spans) == 1:
-        return [(rid, spans[0])]
-    return [(f"{rid}|{s}", (s, e)) for s, e in spans]
+        return [(safe, spans[0])]
+    return [(f"{safe}|{s}", (s, e)) for s, e in spans]
 
 
 def _run_esmc(rows: list[dict], embed_bin: Path, model: Path) -> list[np.ndarray]:
@@ -117,6 +118,16 @@ def _run_esmc(rows: list[dict], embed_bin: Path, model: Path) -> list[np.ndarray
         return parts
 
 
+def _embed_chunked(sequence: str, embed_fn) -> np.ndarray:
+    """Embed a sequence with the same window contract as the CLI path.
+
+    The M3/M8 scorer keeps BOS/EOS per window and keeps overlap rows; both
+    runtime and CLI paths must produce that exact row sequence.
+    """
+    parts = [embed_fn(sequence[s:e]) for s, e in chunk_windows(sequence)]
+    return np.concatenate(parts, axis=0)
+
+
 def _project(rows: np.ndarray, head: np.ndarray) -> np.ndarray:
     x = np.asarray(rows, dtype=np.float32) @ np.asarray(
         head, dtype=np.float32).T
@@ -151,6 +162,7 @@ class ProteinIndex:
         self.model = model
         self.embed_bin = embed_bin
         self.metadata = metadata or [{} for _ in range(len(self._idx))]
+        self._ids = list(self._idx.ids)
         self.device = device
         self._runtime = runtime
 
@@ -176,7 +188,7 @@ class ProteinIndex:
 
     @property
     def ids(self) -> list[str]:
-        return self._idx.ids
+        return list(self._ids)
 
     @property
     def nbytes(self) -> int:
@@ -192,6 +204,13 @@ class ProteinIndex:
             path = resolve_index(path)
         idx = Esmci(path)
         meta = idx.meta
+        ids = idx.ids
+        if (not isinstance(ids, list) or len(ids) != len(idx)
+                or not all(isinstance(x, str) for x in ids)
+                or len(set(ids)) != len(ids)):
+            raise ValueError(
+                f"index sidecar ids invalid for {path}: "
+                f"{len(ids)} ids for {len(idx)} proteins")
         companion = Path(str(path) + ".head.npy")
         if head is None:
             head = companion if companion.exists() else DEFAULT_HEAD
@@ -235,6 +254,7 @@ class ProteinIndex:
             if len(metadata) != len(rows):
                 raise ValueError("metadata length must match rows")
             metadata = [metadata[i] for i in order]
+        model_arg = model
         model = resolve_model(model)
         if model is None or not model.exists():
             raise FileNotFoundError(model)
@@ -256,7 +276,7 @@ class ProteinIndex:
 
         rows = [dict(r, sequence=_clean(r["sequence"])) for r in rows]
         try:
-            embedded = ([runtime.embed(r["sequence"]) for r in rows]
+            embedded = ([_embed_chunked(r["sequence"], runtime.embed) for r in rows]
                         if runtime is not None
                         else _run_esmc(rows, embed_bin, model))
         finally:
@@ -285,7 +305,8 @@ class ProteinIndex:
             "overlap": OVERLAP,
             "head_file": companion.name,
             "head_sha256": _sha256(companion),
-            "model": str(model),
+            "model": (str(model_arg) if isinstance(model_arg, str)
+                      and not Path(model_arg).exists() else str(model)),
             "model_sha256": _sha256(model),
             "embed_bin": str(embed_bin) if embed_bin else "",
             "source": str(output),
@@ -311,7 +332,8 @@ class ProteinIndex:
         if any(not r["sequence"] for r in rows):
             raise ValueError("empty query sequence")
         if self._runtime is not None:
-            embedded = [self._runtime.embed(r["sequence"]) for r in rows]
+            embedded = [_embed_chunked(r["sequence"], self._runtime.embed)
+                        for r in rows]
         else:
             if self.embed_bin is None or not self.embed_bin.exists():
                 raise FileNotFoundError(
@@ -340,7 +362,7 @@ class ProteinIndex:
         out = []
         for s, i in zip(scores, rows):
             i = int(i)
-            out.append({"id": self.ids[i], "score": float(s),
+            out.append({"id": self._ids[i], "score": float(s),
                         "metadata": self.metadata[i] if i < len(self.metadata)
                         else {}})
         return out
@@ -351,6 +373,8 @@ class ProteinIndex:
 
     def search_batch(self, sequences: list[str], k: int = 10
                      ) -> list[list[dict]]:
+        if not sequences:
+            return []
         s, i = self._search(self._encode(sequences), k)
         return [self._hits(s[j], i[j]) for j in range(len(sequences))]
 
