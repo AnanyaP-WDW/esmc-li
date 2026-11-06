@@ -8,6 +8,11 @@ from __future__ import annotations
 
 import numpy as np
 
+
+class MetalInitError(RuntimeError):
+    """Metal is unavailable or its kernels failed to initialize."""
+
+
 MSL = r"""
 #include <metal_stdlib>
 using namespace metal;
@@ -100,11 +105,16 @@ def _init():
     if _dev is not None:
         return
     from Metal import MTLCreateSystemDefaultDevice
-    _dev = MTLCreateSystemDefaultDevice()
-    _queue = _dev.newCommandQueue()
-    _lib, err = _dev.newLibraryWithSource_options_error_(MSL, None, None)
-    if _lib is None:
-        raise RuntimeError(f"MSL compile failed: {err}")
+    dev = MTLCreateSystemDefaultDevice()
+    if dev is None:
+        raise MetalInitError("no Metal device")
+    queue = dev.newCommandQueue()
+    if queue is None:
+        raise MetalInitError("could not create Metal command queue")
+    lib, err = dev.newLibraryWithSource_options_error_(MSL, None, None)
+    if lib is None:
+        raise MetalInitError(f"MSL compile failed: {err}")
+    _dev, _queue, _lib = dev, queue, lib
 
 
 def _pipeline(name: str):
@@ -112,7 +122,10 @@ def _pipeline(name: str):
         fn = _lib.newFunctionWithName_(name)
         if fn is None:
             raise RuntimeError(f"kernel {name} not found")
-        _pso[name] = _dev.newComputePipelineStateWithFunction_error_(fn, None)[0]
+        pso, err = _dev.newComputePipelineStateWithFunction_error_(fn, None)
+        if pso is None:
+            raise MetalInitError(f"Metal pipeline {name} failed: {err}")
+        _pso[name] = pso
     return _pso[name]
 
 

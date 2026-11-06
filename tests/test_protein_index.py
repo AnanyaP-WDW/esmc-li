@@ -1,5 +1,6 @@
 """M8 end-to-end with a fake esmc-embed (no model download)."""
 import sys
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -83,7 +84,7 @@ def test_build_load_search_roundtrip(tmp_path):
     assert idx.ids == ["a", "b"]  # longest first
     assert idx.metadata[idx.ids.index("a")]["description"] == "alpha"
 
-    loaded = ProteinIndex.load(out, device="numpy")
+    loaded = ProteinIndex.load(out, embed_bin=bin_path, device="numpy")
     assert len(loaded) == 2
     hit = loaded.search("ACDE", k=1)[0]
     assert hit["id"] == "a"
@@ -91,3 +92,5 @@ def test_build_load_search_roundtrip(tmp_path):
     assert [h[0]["id"] for h in hits] == ["a", "b"]
     assert loaded.benchmark(nq=2)["n"] == 2
     assert loaded.search_batch([]) == []
+    meta = Path(str(out) + ".json").read_text()
+    assert "fake_embed" in meta and str(bin_path) not in meta

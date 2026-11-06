@@ -17,14 +17,32 @@ import numpy as np
 
 def pool_docs(vecs: np.ndarray, offsets: np.ndarray,
               chunk: int = 1_000_000) -> np.ndarray:
-    """Mean-pooled, L2-normalized doc vectors [n_docs, d] f32."""
+    """Mean-pooled, L2-normalized doc vectors [n_docs, d] f32.
+
+    ``chunk`` is a row budget: docs are processed in contiguous blocks that
+    stay at or below it, so a 1M-doc mmap index is never materialized at once.
+    """
     off = np.asarray(offsets, dtype=np.int64)
     n = len(off) - 1
     d = vecs.shape[1]
+    if chunk <= 0:
+        raise ValueError("chunk must be positive")
     out = np.empty((n, d), dtype=np.float32)
-    for i in range(n):
-        out[i] = np.asarray(vecs[off[i] : off[i + 1]], dtype=np.float32
-                            ).mean(axis=0)
+    d0 = 0
+    while d0 < n:
+        r0 = int(off[d0])
+        d1 = d0 + 1
+        while d1 < n and int(off[d1 + 1]) - r0 <= chunk:
+            d1 += 1
+        r1 = int(off[d1])
+        blk = np.asarray(vecs[r0:r1], dtype=np.float32)
+        lens = off[d0 + 1 : d1 + 1] - off[d0:d1]
+        if np.any(lens <= 0):
+            raise ValueError("empty protein rows")
+        starts = np.concatenate(([0], np.cumsum(lens)[:-1]))
+        sums = np.add.reduceat(blk, starts.astype(np.int64), axis=0)
+        out[d0:d1] = sums / lens[:, None]
+        d0 = d1
     out /= np.maximum(np.linalg.norm(out, axis=1, keepdims=True), 1e-12)
     return out
 

@@ -140,7 +140,13 @@ def _resolve(path: str | Path | None, meta: dict, key: str,
     value = path if path is not None else meta.get(key) or os.environ.get(env)
     if value is None and default is not None:
         value = default
-    return Path(value) if value else None
+    if not value:
+        return None
+    p = Path(value)
+    if p.exists():
+        return p
+    found = shutil.which(str(value))
+    return Path(found) if found else p
 
 
 def _make_runtime(model: Path | None) -> EsmcRuntime | None:
@@ -308,7 +314,7 @@ class ProteinIndex:
             "model": (str(model_arg) if isinstance(model_arg, str)
                       and not Path(model_arg).exists() else str(model)),
             "model_sha256": _sha256(model),
-            "embed_bin": str(embed_bin) if embed_bin else "",
+            "embed_bin": embed_bin.name if embed_bin else "",
             "source": str(output),
             "built": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         }
@@ -346,10 +352,11 @@ class ProteinIndex:
                 ) -> tuple[np.ndarray, np.ndarray]:
         if self.device in ("auto", "metal"):
             try:
-                from esmc_li.metal_search import maxsim_topk_metal
+                from esmc_li.metal_search import (MetalInitError,
+                                                   maxsim_topk_metal)
                 return maxsim_topk_metal(qs, self._idx.vecs, self._idx.offsets,
                                          k, normalize=False)
-            except ImportError:
+            except (ImportError, MetalInitError):
                 if self.device == "metal":
                     raise
                 self.device = "numpy"

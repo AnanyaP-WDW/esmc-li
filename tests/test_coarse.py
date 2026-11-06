@@ -25,6 +25,13 @@ def test_pool_shapes():
     assert pool_query(x[off[0] : off[1]]).shape == (8,)
 
 
+def test_pool_docs_chunk_equivalence():
+    x, off = make_index()
+    a = pool_docs(x, off, chunk=1)
+    b = pool_docs(x, off, chunk=1000)
+    np.testing.assert_allclose(a, b, rtol=1e-6)
+
+
 def test_top_c_is_exact_pooled_topk():
     x, off = make_index()
     p = pool_docs(x, off)
