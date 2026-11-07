@@ -12,8 +12,13 @@ PYTHON="${PYTHON:-python3}"
 RT="$ROOT/esmc_li/_runtime"
 export MACOSX_DEPLOYMENT_TARGET="${MACOSX_DEPLOYMENT_TARGET:-11.0}"
 
+CMAKE_EXTRA=""
+if [ "$(uname -s)" = "Linux" ]; then
+  # A wheel built on a CI runner must not depend on its CPU features.
+  CMAKE_EXTRA="-DGGML_NATIVE=OFF -DGGML_AVX=ON -DGGML_AVX2=ON"
+fi
 cmake -S "$ESMC_CPP" -B "$ESMC_CPP/build" -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_OSX_DEPLOYMENT_TARGET="$MACOSX_DEPLOYMENT_TARGET"
+      -DCMAKE_OSX_DEPLOYMENT_TARGET="$MACOSX_DEPLOYMENT_TARGET" ${CMAKE_EXTRA}
 cmake --build "$ESMC_CPP/build" --target esmc_shared -j "${JOBS:-8}"
 
 rm -f "$RT"/libesmc.* "$RT"/libggml*

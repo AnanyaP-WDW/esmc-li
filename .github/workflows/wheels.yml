@@ -27,13 +27,22 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: install build tools (linux)
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y cmake patchelf
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake patchelf
+          python -m pip install auditwheel
       - name: build wheel
         env:
           ESMC_CPP: ${{ github.workspace }}/esmc.cpp
           PYTHON: python
           MACOSX_DEPLOYMENT_TARGET: "11.0"
         run: bash scripts/build_runtime_wheel.sh
+      - name: repair Linux wheel
+        if: runner.os == 'Linux'
+        run: |
+          auditwheel repair --plat manylinux_2_35_x86_64 -w dist-repaired dist/*.whl
+          rm dist/*.whl
+          mv dist-repaired/*.whl dist/
       - uses: actions/upload-artifact@v4
         with:
           name: wheel-${{ matrix.os }}

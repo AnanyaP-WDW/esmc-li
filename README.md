@@ -11,7 +11,7 @@ Indexes: [`AnanyaPathak/esmc-li-indexes`](https://huggingface.co/datasets/Ananya
 The Hugging Face model/index repositories are now ESMC-LI; their file names
 keep the historical `esmc-300m-homology-maxsim-v1` prefix.
 
-Paper: [`paper/main.md`](paper/main.md) · API: [`docs/api.md`](docs/api.md)
+Paper: [`paper/main.md`](https://github.com/AnanyaP-WDW/esmc-li/blob/main/paper/main.md) · API: [`docs/api.md`](https://github.com/AnanyaP-WDW/esmc-li/blob/main/docs/api.md)
 
 Code is MIT-licensed (`LICENSE`); the ESM-C weights and GGUF derivatives are
 governed by the Cambrian Open License (`NOTICE`).
@@ -22,11 +22,13 @@ Prebuilt macOS arm64 / Linux x86_64 wheels include `libesmc`; no compiler or
 separate esmc.cpp install is needed.
 
 ```bash
-# from a release wheel (PyPI once published)
-pip install dist/esmc_li-*.whl
+pip install esmc-li
 # optional, macOS: fused Metal search
-pip install pyobjc-framework-Metal
+pip install "esmc-li[metal]"
 ```
+
+PyPI wheels support macOS arm64 and Linux x86_64 (glibc 2.35+), Python
+3.10+. There is no Windows or Intel-macOS wheel in v1.
 
 The fine-tuned GGUF is downloaded from Hugging Face on first use and cached
 under `~/.cache/esmc-retrieval` (the historical cache path is kept so
@@ -100,7 +102,7 @@ hits = index.search("MKTIIALSYIFCLVFADYKDDDDK", k=10)
 
 ## Paper and reproducibility
 
-The M9 paper is [`paper/main.md`](paper/main.md). All data tables and figures
+The M9 paper is [`paper/main.md`](https://github.com/AnanyaP-WDW/esmc-li/blob/main/paper/main.md). All data tables and figures
 are generated from a pinned results lock; no model or embedding cache is needed:
 
 ```bash
@@ -109,8 +111,8 @@ make audit      # claims + citations + lock + tests + zero-diff
 ```
 
 `make audit` currently reports 82/82 numeric claims mapped and 26/26 citations
-verified. See [`paper/README.md`](paper/README.md) and
-[`docs/claims.md`](docs/claims.md).
+verified. See [`paper/README.md`](https://github.com/AnanyaP-WDW/esmc-li/blob/main/paper/README.md) and
+[`docs/claims.md`](https://github.com/AnanyaP-WDW/esmc-li/blob/main/docs/claims.md).
 
 ## M8 checks
 

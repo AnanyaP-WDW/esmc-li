@@ -1,0 +1,136 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "PyPI target"
+        required: true
+        default: testpypi
+        type: choice
+        options: [testpypi, pypi]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: pypi-release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-14
+            platform: macos_arm64
+          - os: ubuntu-22.04
+            platform: manylinux_x86_64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: AnanyaP-WDW/esmc.cpp
+          ref: c4b67436d5173eccc51ed2d0d849a8a8580f14a0
+          path: esmc.cpp
+          submodules: recursive
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: install build tools
+        run: |
+          python -m pip install --upgrade pip build twine
+          if [ "$RUNNER_OS" = Linux ]; then
+            sudo apt-get update
+            sudo apt-get install -y cmake patchelf
+            python -m pip install auditwheel
+          fi
+      - name: tests
+        run: |
+          python -m pip install -e ".[dev]"
+          python -m pytest -q
+      - name: build wheel
+        env:
+          ESMC_CPP: ${{ github.workspace }}/esmc.cpp
+          PYTHON: python
+          MACOSX_DEPLOYMENT_TARGET: "11.0"
+        run: bash scripts/build_runtime_wheel.sh
+      - name: repair Linux wheel
+        if: runner.os == 'Linux'
+        run: |
+          auditwheel repair --plat manylinux_2_35_x86_64 -w dist-repaired dist/*.whl
+          rm dist/*.whl
+          mv dist-repaired/*.whl dist/
+      - name: check wheel tags
+        run: |
+          python - <<'PY'
+          import glob, sys
+          wheels = glob.glob("dist/*.whl")
+          assert len(wheels) == 1, wheels
+          name = wheels[0]
+          assert "cp310-abi3" in name, name
+          if sys.platform.startswith("linux"):
+              assert "manylinux_2_35_x86_64" in name, name
+          else:
+              assert "macosx_11_0_arm64" in name, name
+          print(name)
+          PY
+      - name: twine check
+        run: twine check dist/*.whl
+      - name: wheel smoke
+        run: |
+          python -m venv /tmp/esmc-wheel-smoke
+          /tmp/esmc-wheel-smoke/bin/python -m pip install --upgrade pip
+          /tmp/esmc-wheel-smoke/bin/python -m pip install dist/*.whl
+          /tmp/esmc-wheel-smoke/bin/python -c "import esmc_li; print(esmc_li.__version__)"
+          /tmp/esmc-wheel-smoke/bin/esmc-li --help >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.platform }}
+          path: dist/*.whl
+
+  publish-testpypi:
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'testpypi'
+    needs: build
+    runs-on: ubuntu-latest
+    environment: testpypi
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-*
+          merge-multiple: true
+          path: dist
+      - run: python -m pip install --upgrade twine && twine check dist/*.whl
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          packages-dir: dist/
+
+  publish-pypi:
+    if: >-
+      (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'pypi')
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-*
+          merge-multiple: true
+          path: dist
+      - run: python -m pip install --upgrade twine && twine check dist/*.whl
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
