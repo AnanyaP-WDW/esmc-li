@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "Fast local protein retrieval using ESM-C residue embeddings and late interaction."
 readme = "README.md"
 license = "MIT"
-license-files = ["LICENSE", "NOTICE"]
+license-files = ["LICENSE", "NOTICE", "CAMBRIAN-OPEN-LICENSE.md"]
 authors = [{name = "Ananya Pathak"}]
 maintainers = [{name = "Ananya Pathak"}]
 keywords = ["protein", "retrieval", "ESM-C", "late interaction", "MaxSim", "bioinformatics"]
