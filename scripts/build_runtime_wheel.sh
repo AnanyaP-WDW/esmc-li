@@ -37,9 +37,7 @@ case "$(uname -s)" in
     ;;
   Linux)
     cp "$ESMC_CPP/build/libesmc.so" "$RT/"
-    for f in "$ESMC_CPP"/build/bin/libggml*.so; do
-      cp -L "$f" "$RT/$(basename "$f")"
-    done
+    find "$ESMC_CPP/build" -maxdepth 4 -name 'libggml*.so*' -exec cp -L {} "$RT/" \;
     if command -v patchelf >/dev/null; then
       for f in "$RT"/lib*.so*; do
         patchelf --set-rpath '$ORIGIN' "$f" 2>/dev/null || true
