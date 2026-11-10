@@ -41,7 +41,7 @@ jobs:
       - name: repair Linux wheel
         if: runner.os == 'Linux'
         run: |
-          auditwheel repair --plat manylinux_2_35_x86_64 -w dist-repaired dist/*.whl
+          auditwheel repair --plat manylinux_2_34_x86_64 -w dist-repaired dist/*.whl
           rm dist/*.whl
           mv dist-repaired/*.whl dist/
       - uses: actions/upload-artifact@v4

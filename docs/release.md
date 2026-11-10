@@ -1,4 +1,4 @@
-# Release checklist (v1.0.0)
+# Release checklist (v1.0.1)
 
 The API is frozen in `docs/api.md`. The wheel bundles `libesmc` and its ggml
 dylibs; it is not a pure-Python wheel.
@@ -8,12 +8,12 @@ dylibs; it is not a pure-Python wheel.
 Target one wheel per platform:
 
 ```text
-esmc_li-1.0.0-cp310-abi3-macosx_11_0_arm64.whl
-esmc_li-1.0.0-cp310-abi3-manylinux_2_35_x86_64.whl
+esmc_li-1.0.1-cp310-abi3-macosx_11_0_arm64.whl
+esmc_li-1.0.1-cp310-abi3-manylinux_2_34_x86_64.whl
 ```
 
 - macOS arm64 only; no Intel macOS or Windows wheel in v1.
-- Linux glibc 2.35+ (Ubuntu 22.04 class). Build with `GGML_NATIVE=OFF` and
+- Linux glibc 2.34+ (Ubuntu 22.04 class). Build with `GGML_NATIVE=OFF` and
   AVX2 enabled.
 - No sdist in v1. Source users install from GitHub and supply `ESMC_LIB` or
   `ESMC_EMBED`.
@@ -40,7 +40,7 @@ repaired with:
 
 ```bash
 python -m pip install auditwheel
-auditwheel repair --plat manylinux_2_35_x86_64 -w dist-repaired dist/*.whl
+auditwheel repair --plat manylinux_2_34_x86_64 -w dist-repaired dist/*.whl
 rm dist/*.whl
 mv dist-repaired/*.whl dist/
 ```
@@ -70,7 +70,7 @@ source /tmp/esmc-testpypi/bin/activate
 python -m pip install \
   --index-url https://test.pypi.org/simple/ \
   --extra-index-url https://pypi.org/simple \
-  esmc-li==1.0.0
+  esmc-li==1.0.1
 esmc-li --help
 ```
 
@@ -105,13 +105,13 @@ Never reuse a version after a failed production upload. Yank and bump.
   `release.yml`, environment `testpypi`.
 - PyPI trusted publisher: same repository/workflow, environment `pypi`.
 - Add required reviewers to the `pypi` GitHub environment.
-- Tag production with `v1.0.0`; publish the exact wheels tested on TestPyPI.
+- Tag production with `v1.0.1`; publish the exact wheels tested on TestPyPI.
 
 ## Post-release
 
 ```bash
-git tag -a v1.0.0 -m "ESMC-LI v1.0.0"
-git push origin v1.0.0
+git tag -a v1.0.1 -m "ESMC-LI v1.0.1"
+git push origin v1.0.1
 ```
 
 Create a GitHub release with wheel SHA256 checksums, supported platforms, and
@@ -122,8 +122,8 @@ model/index links. Update `README.md` from local-wheel instructions to
 
 PyPI files are immutable. If a wheel is broken:
 
-1. Yank `1.0.0` in the PyPI UI.
-2. Fix and publish `1.0.1`.
+1. Yank `1.0.1` in the PyPI UI.
+2. Fix and publish `1.0.2`.
 3. Never delete/re-upload the same version.
 
 TestPyPI can be cleaned; PyPI cannot.

@@ -4,8 +4,8 @@ title: "ESMC-LI: Scaling Late-Interaction Protein Retrieval: A Practical Index f
 authors:
   - family-names: Pathak
     given-names: Ananya
-version: 1.0.0
-date-released: 2026-11-07
+version: 1.0.1
+date-released: 2026-11-10
 repository-code: "https://github.com/AnanyaP-WDW/esmc-li"
 url: "https://github.com/AnanyaP-WDW/esmc-li/blob/main/paper/main.md"
 license: MIT

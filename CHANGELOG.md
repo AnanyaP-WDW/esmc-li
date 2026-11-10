@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1 — 2026-11-10
+
+- Polished README with white-background charts and retrieval, ProtoCol, and
+  scaling graphs.
+- Added `CONTRIBUTING.md` and `make readme-assets`.
+- ABI3 marker extension compiled with the limited API.
+- No public API changes.
+
 ## 1.0.0 — 2026-11-07
 
 First PyPI release.
