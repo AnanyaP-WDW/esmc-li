@@ -45,7 +45,7 @@ pip install esmc-li
 pip install "esmc-li[metal]"
 ```
 
-PyPI wheels target **macOS arm64** and **Linux x86_64 (glibc 2.35+)**, Python
+PyPI wheels target **macOS arm64** and **Linux x86_64 (glibc 2.34+)**, Python
 3.10+. There is no Windows or Intel-macOS wheel in v1. Wheels bundle the native
 runtime and projection head; no compiler or separate esmc.cpp build is needed.
 
@@ -171,7 +171,7 @@ searches in ~19 ms/query.
 | Platform | Wheel | Notes |
 |---|---|---|
 | macOS 11+ arm64 | yes | Metal optional via `esmc-li[metal]` |
-| Linux x86_64 glibc 2.35+ | yes | CPU search |
+| Linux x86_64 glibc 2.34+ | yes | CPU search |
 | Windows | no | not supported in v1 |
 | Intel macOS | no | not supported in v1 |
 
@@ -256,7 +256,7 @@ commands are in [CONTRIBUTING.md](https://github.com/AnanyaP-WDW/esmc-li/blob/ma
 @software{pathak2026esmcli,
   author  = {Pathak, Ananya},
   title   = {ESMC-LI: Fast Local Protein Retrieval with ESM-C Residue Embeddings and Late Interaction},
-  version = {1.0.0},
+  version = {1.0.1},
   year    = {2026},
   url     = {https://github.com/AnanyaP-WDW/esmc-li}
 }

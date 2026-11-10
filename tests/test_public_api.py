@@ -13,7 +13,7 @@ def params(fn):
 
 def test_exports():
     assert esmc_li.__all__ == ["ProteinIndex"]
-    assert esmc_li.__version__ == "1.0.0"
+    assert esmc_li.__version__ == "1.0.1"
 
 
 def test_build_signature():

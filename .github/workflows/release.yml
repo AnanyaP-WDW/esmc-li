@@ -64,7 +64,7 @@ jobs:
       - name: repair Linux wheel
         if: runner.os == 'Linux'
         run: |
-          auditwheel repair --plat manylinux_2_35_x86_64 -w dist-repaired dist/*.whl
+          auditwheel repair --plat manylinux_2_34_x86_64 -w dist-repaired dist/*.whl
           rm dist/*.whl
           mv dist-repaired/*.whl dist/
       - name: check wheel tags
@@ -76,7 +76,7 @@ jobs:
           name = wheels[0]
           assert "cp310-abi3" in name, name
           if sys.platform.startswith("linux"):
-              assert "manylinux_2_35_x86_64" in name, name
+              assert "manylinux_2_34_x86_64" in name, name
           else:
               assert "macosx_11_0_arm64" in name, name
           print(name)

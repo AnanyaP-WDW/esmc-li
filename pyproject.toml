@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "esmc-li"
-version = "1.0.0"
+version = "1.0.1"
 description = "Fast local protein retrieval using ESM-C residue embeddings and late interaction."
 readme = "README.md"
 license = "MIT"
@@ -40,7 +40,7 @@ Indexes = "https://huggingface.co/datasets/AnanyaPathak/esmc-li-indexes"
 [project.optional-dependencies]
 dev = ["pytest>=7", "requests>=2.28", "datasketch>=1.6"]
 metal = ["pyobjc-framework-Metal>=10.0"]
-docs = ["matplotlib>=3.8", "Pillow>=10"]
+docs = ["matplotlib>=3.8", "Pillow>=10", "readme_renderer[md]>=43"]
 
 [project.scripts]
 esmc-li = "esmc_li.cli:main"

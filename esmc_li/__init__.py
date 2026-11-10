@@ -1,4 +1,4 @@
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 from esmc_li.protein_index import ProteinIndex  # noqa: E402,F401
 
