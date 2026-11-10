@@ -1,4 +1,5 @@
 /* Marker extension: forces a platform-specific wheel tag. No runtime API. */
+#define Py_LIMITED_API 0x030A0000
 #include <Python.h>
 
 static struct PyModuleDef module = {

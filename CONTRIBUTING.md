@@ -11,7 +11,7 @@ git clone https://github.com/AnanyaP-WDW/esmc-li.git
 cd esmc-li
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e ".[dev]"
+python -m pip install -e ".[dev,docs]"
 ```
 
 The package is importable without the native library. For a source runtime,
@@ -32,6 +32,14 @@ make audit
 
 `make audit` runs the package tests plus the paper lock, claims, citations, and
 zero-diff checks.
+
+## README assets
+
+```bash
+make readme-assets
+```
+
+This regenerates the opaque white README charts from `results/*.csv`.
 
 ## Development checks
 
