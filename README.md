@@ -105,6 +105,21 @@ esmc-li search proteins.esmci \
 Long chains are chunked at 2046 residues with 128-residue overlap. The index
 format is documented in [docs/esmci.md](https://github.com/AnanyaP-WDW/esmc-li/blob/main/docs/esmci.md).
 
+## How we compare
+
+- **ProtoCol**: the released code is vendored at
+  [`vendor/ProtoCol`](https://github.com/AnanyaP-WDW/esmc-li/tree/main/vendor/ProtoCol)
+  and run through `scripts/repro_protocol.py`; only the device is changed.
+- **MMseqs2**: `-s 7.5 -e 1e10 --max-seqs 1000`.
+- **MinHash**: 5-mers, 256 permutations.
+- **Pooled ESM-C**: mean residue vector, cosine similarity.
+- **Frozen MaxSim**: ESM-C residue vectors with no trained projection.
+- **ESMC-LI**: fine-tuned ESM-C suffix, 128D head, exact MaxSim.
+
+All reported values use the same frozen split; see the
+[paper](https://github.com/AnanyaP-WDW/esmc-li/blob/main/paper/main.md) for
+the full protocol and limitations.
+
 ## Results
 
 | Method | SCOPe cR@10 | Full-length 100K cR@10 | Full-length sens superfamily |
@@ -115,15 +130,25 @@ format is documented in [docs/esmci.md](https://github.com/AnanyaP-WDW/esmc-li/b
 | ProtoCol (reproduced) | 0.8933 | — | — |
 | **ESMC-LI fine-tuned** | **0.9065** | **0.8974** | **0.6048** |
 
+![Retrieval comparison](https://raw.githubusercontent.com/AnanyaP-WDW/esmc-li/main/docs/assets/retrieval.png)
+
+*SCOPe cR@k curves and full-length 100K comparison. Values are from the
+committed evaluation CSVs; see the paper for protocol details.*
+
 SCOPe uses ASTRAL40, n=2314, leave-one-out superfamily retrieval, and a
 three-seed mean for the fine-tuned row. Full-length uses 100K single-clan
-Swiss-Prot chains and 500 test-clan queries. See the
+Swiss-Prot chains and 500 test-clan queries; its ESMC-LI row is seed 0. See the
 [paper](https://github.com/AnanyaP-WDW/esmc-li/blob/main/paper/main.md) for
 the full protocol, baselines, and limitations.
 
 A useful negative result: frozen ESM-C is weaker than frozen ESM-2 35M under
 the same harness (0.6304 vs 0.8215 cR@10). The ESM-C gain appears after
 fine-tuning; the model is not a drop-in frozen upgrade.
+
+![ProtoCol reproduction and backbone control](https://raw.githubusercontent.com/AnanyaP-WDW/esmc-li/main/docs/assets/protocol.png)
+
+*ProtoCol reproduction and frozen-backbone control on our SCOPe split. The
+ProtoCol rows use the vendored code in `vendor/ProtoCol/`.*
 
 ## Performance
 
@@ -138,6 +163,8 @@ not query latency at 100K, are the practical constraints. A 1K demo index
 searches in ~19 ms/query.
 
 ![Scaling](https://raw.githubusercontent.com/AnanyaP-WDW/esmc-li/main/docs/assets/scaling.png)
+
+*Exact search, coarse rerank, and index size versus database size on M4 Max.*
 
 ## Platform support
 

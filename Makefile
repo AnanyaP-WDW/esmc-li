@@ -1,7 +1,7 @@
 PYTHON ?= $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python3)
 PYTEST ?= $(PYTHON) -m pytest
 
-.PHONY: tables paper claims verify-lock check-tables check-paper audit check wheel
+.PHONY: tables paper claims verify-lock check-tables check-paper audit check wheel readme-assets
 
 tables: verify-lock
 	$(PYTHON) scripts/paper_assets.py
@@ -31,6 +31,9 @@ audit: verify-lock tables claims
 	$(PYTEST) -q
 
 check: audit
+
+readme-assets:
+	$(PYTHON) scripts/make_readme_assets.py
 
 wheel:
 	PYTHON=$(PYTHON) bash scripts/build_runtime_wheel.sh
