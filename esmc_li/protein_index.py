@@ -20,7 +20,7 @@ import numpy as np
 
 from esmc_li.embed import chunk_windows, safe_name
 from esmc_li.index import Esmci, write
-from esmc_li.models import DEFAULT_MODEL, resolve_model
+from esmc_li.models import DEFAULT_MODEL, is_registry_model, resolve_model
 from esmc_li.runtime import EsmcRuntime, find_library
 from esmc_li.search import maxsim_topk_numpy
 
@@ -135,9 +135,10 @@ def _project(rows: np.ndarray, head: np.ndarray) -> np.ndarray:
     return x
 
 
-def _resolve(path: str | Path | None, meta: dict, key: str,
-             env: str, default: str | Path | None = None) -> Path | None:
-    value = path if path is not None else meta.get(key) or os.environ.get(env)
+def _resolve(path: str | Path | None, env: str,
+             default: str | Path | None = None) -> Path | None:
+    # Sidecar metadata is data, never executable config.
+    value = path if path is not None else os.environ.get(env)
     if value is None and default is not None:
         value = default
     if not value:
@@ -227,10 +228,12 @@ class ProteinIndex:
         if meta.get("head_sha256") and _sha256(head) != meta["head_sha256"]:
             raise ValueError("projection head hash does not match index")
         raw_model = (model if model is not None
-                     else meta.get("model") or os.environ.get(
-                         "ESMC_RETRIEVAL_GGUF"))
+                     else os.environ.get("ESMC_RETRIEVAL_GGUF"))
+        if raw_model is None:
+            meta_model = meta.get("model")
+            raw_model = meta_model if is_registry_model(meta_model) else None
         mdl = resolve_model(raw_model) if raw_model else None
-        emb = _resolve(embed_bin, meta, "embed_bin", "ESMC_EMBED",
+        emb = _resolve(embed_bin, "ESMC_EMBED",
                        shutil.which("esmc-embed"))
         if mdl is not None and meta.get("model_sha256"):
             if _sha256(mdl) != meta["model_sha256"]:

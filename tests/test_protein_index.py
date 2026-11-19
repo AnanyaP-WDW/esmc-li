@@ -1,4 +1,5 @@
 """M8 end-to-end with a fake esmc-embed (no model download)."""
+import json
 import sys
 from pathlib import Path
 
@@ -84,7 +85,8 @@ def test_build_load_search_roundtrip(tmp_path):
     assert idx.ids == ["a", "b"]  # longest first
     assert idx.metadata[idx.ids.index("a")]["description"] == "alpha"
 
-    loaded = ProteinIndex.load(out, embed_bin=bin_path, device="numpy")
+    loaded = ProteinIndex.load(out, model=model, embed_bin=bin_path,
+                               device="numpy")
     assert len(loaded) == 2
     hit = loaded.search("ACDE", k=1)[0]
     assert hit["id"] == "a"
@@ -94,3 +96,33 @@ def test_build_load_search_roundtrip(tmp_path):
     assert loaded.search_batch([]) == []
     meta = Path(str(out) + ".json").read_text()
     assert "fake_embed" in meta and str(bin_path) not in meta
+
+
+def test_sidecar_paths_are_not_trusted(tmp_path, monkeypatch):
+    bin_path, model = _fake_embed(tmp_path)
+    fasta = tmp_path / "proteins.fa"
+    fasta.write_text(">a alpha\nACDE\n>b beta\nMKT\n")
+    out = tmp_path / "proteins.esmci"
+    ProteinIndex.from_fasta(fasta, out, model=model, embed_bin=bin_path,
+                            device="numpy").close()
+
+    marker = tmp_path / "pwned"
+    evil = tmp_path / "evil_embed"
+    evil.write_text(f"#!/bin/sh\ntouch {marker}\nexit 1\n")
+    evil.chmod(0o755)
+    side = Path(str(out) + ".json")
+    meta = json.loads(side.read_text())
+    meta["embed_bin"] = str(evil)
+    meta["model"] = str(model)
+    side.write_text(json.dumps(meta))
+
+    monkeypatch.delenv("ESMC_EMBED", raising=False)
+    monkeypatch.delenv("ESMC_RETRIEVAL_GGUF", raising=False)
+    monkeypatch.setattr("esmc_li.protein_index.shutil.which", lambda *a: None)
+
+    loaded = ProteinIndex.load(out, device="numpy")
+    assert loaded.model is None
+    assert loaded.embed_bin is None
+    with pytest.raises(FileNotFoundError):
+        loaded.search("ACDE")
+    assert not marker.exists()
