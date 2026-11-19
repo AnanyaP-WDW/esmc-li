@@ -21,6 +21,14 @@ MODELS = {
 DEFAULT_MODEL = "esmc-li-300m-homology-v1"
 
 
+def is_registry_model(value: object) -> bool:
+    """True iff value names a registered model, not a local path."""
+    return isinstance(value, str) and (
+        value in MODELS
+        or any(value in (r["repo_id"], r["filename"]) for r in MODELS.values())
+    )
+
+
 def _sha256(path: Path) -> str:
     h = hashlib.sha256()
     with open(path, "rb") as f:

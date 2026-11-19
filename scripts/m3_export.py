@@ -44,8 +44,9 @@ def main() -> int:
     cands = sorted(MODELS.glob("k*_seed*.pt"))
     if not cands:
         sys.exit(f"no checkpoints in {MODELS}; run m3_train.py --final first")
-    best_path = max(cands, key=lambda p: torch.load(p)["val_cR@10"])
-    ck = torch.load(best_path, map_location="cpu")
+    best_path = max(cands,
+                    key=lambda p: torch.load(p, weights_only=True)["val_cR@10"])
+    ck = torch.load(best_path, map_location="cpu", weights_only=True)
     k, cut, seed = ck["k"], ck["cut"], ck["seed"]
     print(f"best: {best_path.name} val={ck['val_cR@10']} test={ck['test_cR@10']}")
 
