@@ -66,6 +66,25 @@ This is validation data, not a held-out test, and the reference shares the S1
 universe; treat it as a smoke signal only. The single-domain comparison did not
 finish within the timebox.
 
+## Homolog-free diagnostic
+
+The first EnzymARC FPR was confounded by close homologs in the reference.
+Removing every reference protein at ≥30% identity / ≥80% coverage to a decoy
+parent cuts the FPR roughly in half:
+
+| Category | Unfiltered FPR | Homolog-free FPR |
+|---|---:|---:|
+| catalytic, decoy-aware | 0.672 | **0.340** |
+| catalytic, no decoy loss | 0.676 | **0.344** |
+| 5 Å, decoy-aware | 0.674 | **0.334** |
+| 5 Å, no decoy loss | 0.674 | **0.340** |
+
+FPR by parent→reference identity (catalytic, decoy-aware): `<30%` 0.320,
+30–50% 0.300, 50–70% 0.374, 70–90% 0.291, `≥90%` 0.464. There is no
+identity bin where FPR approaches zero. The decoy loss is within noise.
+
+See `results/ec/DIAGNOSTIC.md` for the full table and artifacts.
+
 ## Product prototype
 
 `scripts/ec_annotate.py` works on the 20K EC index:

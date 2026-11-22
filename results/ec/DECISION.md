@@ -15,7 +15,7 @@ publish CARE/EnzymARC numbers as a competitive EC method.
 | G2 tiny overfit | 32/32 top-1; loss <0.1; no NaN | 32/32 top-1; loss reaches 0; no NaN | **pass** |
 | G3 head-only | val EC4 top-1 beats frozen/pooled by ≥3 | val 5K: 0.57 vs 0.28 pooled; CARE ood30 0.477 vs 0.093 pooled | **pass (local), but below published** |
 | G4 suffix | val ≥ head-only +1, or decoy gain | suffix fine-tune not run | **not run** |
-| G5 decoy | parent-vs-decoy AUC / FPR improves | internal FPR 0.085 vs 0.090; EnzymARC 0.672 vs 0.676 catalytic; no gain | **fail** |
+| G5 decoy | parent-vs-decoy AUC / FPR improves | internal FPR 0.085 vs 0.090; EnzymARC 0.672 vs 0.676 catalytic; no gain. Homolog-free diagnostic: 0.340 decoy-aware vs 0.344 plain; still no gain | **fail** |
 | G6 external | beat FuncSeek/CLEAN or ≥50% FPR reduction or multi-domain win | CARE ood30 0.477 vs FuncSeek 0.646 / CLEAN 0.551; no decoy reduction | **fail** |
 | G7 product | 100K index; CLI; latency | 20K head-only index + annotate prototype works; 100K not built | **partial** |
 
@@ -28,9 +28,13 @@ The first pass does not show that:
 - The decoy-aware head is statistically tied with the no-decoy head on internal
   catalytic decoys (8.5% vs 9.0% FPR).
 - On EnzymARC external decoys, the FPR is ~67% at top-1 for both heads.
-- Exact-parent filtering leaves close homologs in the reference; the model
-  retrieves the parent EC from those homologs, which is the failure mode the
-  EnzymARC benchmark was designed to expose.
+- A follow-up homolog-free diagnostic removed every reference protein at
+  ≥30% identity / ≥80% coverage to the decoy parent. This halved the FPR to
+  ~34%, confirming that a large part of the original signal was close-homolog
+  transfer.
+- Even with close homologs removed, FPR remains ~32–34% with no identity bin
+  approaching zero. The residual failure is not explained by reference homologs;
+  the model is not locally active-site sensitive.
 - CARE ood30 top-1 is 47.7% with a 20K reference; even allowing for the smaller
   reference, this is below CLEAN 55.1% and FuncSeek 64.6%. No suffix training or
   full reference was run, so this is not a final comparison, but it is not a

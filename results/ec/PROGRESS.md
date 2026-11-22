@@ -14,7 +14,7 @@ Status: completed first pass; EC method gate failed; retrieval/evidence prototyp
 | 6 Suffix | 3 seeds; val gain | not run (compute/timebox) |
 | 7 Decoy-aware | decoy FPR/AUC improves | fail: internal 8.5% vs 9.0%; EnzymARC 67.2% vs 67.6% |
 | 8 External | beat FuncSeek/CLEAN or ≥50% FPR cut | fail: 47.7% CARE ood30 vs 64.6/55.1; no FPR cut |
-| 9 Decision | explicit go/no-go | **no-go for EC method claim**; see DECISION.md |
+| 9 Decision | explicit go/no-go | **no-go for EC method claim**; homolog-free diagnostic halved FPR to ~34% but did not eliminate it; see DECISION.md and DIAGNOSTIC.md |
 | 10 Product | 100K index; CLI | partial: 20K head index + `ec_annotate.py` works; 100K not built |
 | 11 Write-up | reproducible claims | summary + data card + decision written; no SOTA claim |
 
