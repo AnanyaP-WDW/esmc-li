@@ -1,0 +1,81 @@
+{
+  "counts": {
+    "brenda_trembl": 6893,
+    "care": {
+      "care_30_50": 559,
+      "care_ood30": 432,
+      "care_price": 148,
+      "care_promiscuous": 209
+    },
+    "enzymarc": {
+      "10A": 70783,
+      "15A": 70783,
+      "5A": 70747,
+      "catalytic": 76480
+    },
+    "train_s1_multi": 153295,
+    "train_s1_single": 153295,
+    "val_s2": 18224
+  },
+  "generated": "2026-11-22T18:36:33+0530",
+  "missing": {
+    "s1": 16,
+    "s2": 0,
+    "s3": 1138
+  },
+  "release": "uniprot_2026_04",
+  "sources": {
+    "data/ec/raw/enzymarc/enzymarc_10A.fasta": {
+      "bytes": 29151145,
+      "sha256": "dae7a8b20eefce7a3ba076042b7c66c5a79b86e6e3c5459f7e0e1bb8dafa5840"
+    },
+    "data/ec/raw/enzymarc/enzymarc_15A.fasta": {
+      "bytes": 29151149,
+      "sha256": "5107d38942e3ab81834dadf5bf2536352b7d41cb04328df47b86ddec73b3f7a6"
+    },
+    "data/ec/raw/enzymarc/enzymarc_5A.fasta": {
+      "bytes": 29062015,
+      "sha256": "203727dadb05cb74962818345c8d5df0d5827f1ff985da8e036083ff8b16f9de"
+    },
+    "data/ec/raw/enzymarc/enzymarc_catalytic.fasta": {
+      "bytes": 32004000,
+      "sha256": "dff83f0e63b7ce6bfad67b84f74cd20a5dd31bb2265e7432a99b39b82ca9ecaf"
+    },
+    "data/ec/raw/funcseek/care_30_50.csv": {
+      "bytes": 280624,
+      "sha256": "9c9e900024548a6bb94ba3fd0530163ac6c61da48051d98efe26575acfedd3ad"
+    },
+    "data/ec/raw/funcseek/care_ood30.csv": {
+      "bytes": 207713,
+      "sha256": "3a5ee217d18caa10bccbf4162bf5de7dd5b72cc58f6347839562b408d50ca949"
+    },
+    "data/ec/raw/funcseek/care_price.csv": {
+      "bytes": 62121,
+      "sha256": "57b68ec2050f893df26ba2b9bee182a9be3106c813e2a0f683b7bdb72fbec687"
+    },
+    "data/ec/raw/funcseek/care_promiscuous.csv": {
+      "bytes": 129551,
+      "sha256": "43885b8979a563f26791e7bb34f1c9e3292a383cc340c4c57d65d5cd30036d38"
+    },
+    "data/ec/raw/funcseek/s1_train.csv": {
+      "bytes": 2436024,
+      "sha256": "4d3635de7be1c9bb6e645dca1350480343f56391ea0d379c9f26651dcf62dab9"
+    },
+    "data/ec/raw/funcseek/s2_val.csv": {
+      "bytes": 290667,
+      "sha256": "6767b337511a55f224d9e6e748c3481365c24c835f4d2be473ca0d4f622a3453"
+    },
+    "data/ec/raw/funcseek/s3_brenda.csv": {
+      "bytes": 132744,
+      "sha256": "13761f554dda599f01d08f106ff9c469017f31d76d743751321c654b48ca5e9f"
+    },
+    "data/ec/raw/uniprot/sprot_2026_04.tsv": {
+      "bytes": 598294301,
+      "sha256": "dde3ad1b4449dad2341a21a79a6f455b461eb619601aeaeca58b0b4255fbce71"
+    },
+    "data/ec/raw/uniprot/trembl_s3.tsv": {
+      "bytes": 3334070,
+      "sha256": "c5df822b41956b5e3ee1f2a9b14735e212bd30abb09f8342696e840510acc428"
+    }
+  }
+}

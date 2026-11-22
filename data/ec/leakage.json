@@ -1,0 +1,14 @@
+{
+  "accession_overlap": {
+    "train_s1_single__val_s2": 0,
+    "train_s1_single__brenda_trembl": 0,
+    "train_s1_single__care_ood30": 0,
+    "train_s1_single__care_30_50": 0,
+    "train_s1_single__care_price": 0,
+    "train_s1_single__care_promiscuous": 0,
+    "train__enzymarc_catalytic_parents": 53795,
+    "train__enzymarc_5A_parents": 49884,
+    "train__enzymarc_10A_parents": 49904,
+    "train__enzymarc_15A_parents": 49904
+  }
+}
