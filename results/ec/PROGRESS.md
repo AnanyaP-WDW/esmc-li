@@ -1,7 +1,8 @@
 # EC experiment progress
 
-Branch: `exp/ec-active-site-late-interaction`
-Status: completed first pass; EC method gate failed; retrieval/evidence prototype kept.
+Branch: `exp/ec-local-objective` (from `exp/ec-active-site-late-interaction`)
+Status: first pass completed; EC method gate failed; local-objective 32-overfit
+failed; retrieval/evidence prototype kept.
 
 | Phase | Exit criterion | Status |
 |---|---|---|
@@ -17,6 +18,7 @@ Status: completed first pass; EC method gate failed; retrieval/evidence prototyp
 | 9 Decision | explicit go/no-go | **no-go for EC method claim**; homolog-free diagnostic halved FPR to ~34% but did not eliminate it; see DECISION.md and DIAGNOSTIC.md |
 | 10 Product | 100K index; CLI | partial: 20K head index + `ec_annotate.py` works; 100K not built |
 | 11 Write-up | reproducible claims | summary + data card + decision written; no SOTA claim |
+| 12 Local-objective 32-overfit | 32/32 full accuracy; local loss <0.1 | fail: local loss 0.085 but full accuracy 25/32; global decoy triplet 32/32; see OVERFIT32.md |
 
 ## Blockers / deviations
 
@@ -34,4 +36,5 @@ Status: completed first pass; EC method gate failed; retrieval/evidence prototyp
 
 ## Artifacts
 
-See `results/ec/SUMMARY.md` and `results/ec/DATA_CARD.md`. Run log: `results/ec/runs.jsonl`.
+See `results/ec/SUMMARY.md`, `results/ec/DATA_CARD.md`, and
+`results/ec/OVERFIT32.md`. Run log: `results/ec/runs.jsonl`.

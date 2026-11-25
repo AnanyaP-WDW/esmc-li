@@ -4,6 +4,9 @@ __pycache__/
 data/raw/
 data/ec/raw/
 data/ec/reference/
+data/ec/clusters/*.fa
+data/ec/clusters/*.fasta
+data/ec/clusters/tmp_*/
 data/ec/decoys/*.fasta
 data/ec/splits/train_s1_single.tsv
 data/ec/splits/train_s1_multi.tsv

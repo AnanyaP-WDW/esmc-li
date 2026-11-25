@@ -49,6 +49,16 @@ The first pass does not show that:
 - `scripts/ec_annotate.py` returns top-k EC neighbours + consensus + confidence.
   It is the honest product fallback from the plan.
 
+## 2026-11-25 update: local-objective 32-overfit
+
+The planned local-patch objective was tested on 32 cluster-disjoint triples. The
+local loss overfits (0.085; active-patch accuracy 1.000) but the full-sequence
+parent-vs-decoy accuracy is 25/32 (0.781). The global decoy triplet is the only
+variant that reaches 32/32. The active-window local loss beats the random-window
+control on the patch and full-sequence accuracy, but both are below the global
+baseline. The local objective is not a viable training signal under the fixed
+architecture. Do not scale to 100K/153K with it. See `OVERFIT32.md`.
+
 ## What would change the decision
 
 A future run needs all three:
