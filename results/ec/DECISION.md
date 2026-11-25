@@ -67,6 +67,18 @@ homolog-free EnzymARC FPR: catalytic 0.346 vs 0.340 decoy-aware / 0.344 plain;
 training signals have now failed the meaningful test; stop EC research and ship
 the 100K `annotate` product.
 
+## 2026-11-26 update: suffix fine-tune
+
+The last-3-block suffix fine-tune (3 seeds, 20K reference) improves CARE ood30
+to 0.5116 (+2.1 points) and ties promiscuous at 0.8421, but the homolog-free
+EnzymARC FPR is 0.3607 catalytic / 0.3633 5 Å, slightly worse than the 0.346 /
+0.346 head-only baseline and far from the ≤17% target. The FPR is consistent
+across seeds. The EC active-site hypothesis is closed under this architecture:
+local patch loss, global decoy triplet, and suffix fine-tune all fail to lower
+the homolog-free FPR. The retrieval gain is real but is not the EC claim. The
+100K/153K reference is disk-blocked; ship the 20K `annotate` product. See
+`SUFFIX.md`.
+
 ## What would change the decision
 
 A future run needs all three:
