@@ -142,9 +142,17 @@ def main() -> int:
     ap.add_argument("--decoy-cache", type=Path, default=None)
     ap.add_argument("--decoy-weight", type=float, default=0.0)
     ap.add_argument("--margin", type=float, default=0.3)
+    ap.add_argument("--clusters", type=Path, default=None)
     ap.add_argument("--val-ref", type=int, default=1000)
     ap.add_argument("--val-qry", type=int, default=500)
+    ap.add_argument("--skip-val", action="store_true",
+                    help="skip the in-memory quick_top1 check; use ec_eval.py")
     args = ap.parse_args()
+    clusters = {}
+    if args.clusters:
+        for line in args.clusters.open():
+            rep, mem = line.split()
+            clusters[mem] = rep
     train_rows = load_rows(args.train)
     val_rows = load_rows(args.val)
     rng = random.Random(args.seed)
@@ -196,6 +204,9 @@ def main() -> int:
                 if parent["id"] in emb:
                     e = ec4(parent)
                     pos = [r for r in by_ec[e] if r["id"] != parent["id"]]
+                    if clusters:
+                        pos = [r for r in pos if clusters.get(r["id"])
+                               != clusters.get(parent["id"])]
                     if pos:
                         positive = rng.choice(pos)
                         if positive["id"] in emb:
@@ -222,8 +233,10 @@ def main() -> int:
     head.eval()
     if DEV == "mps":
         torch.mps.empty_cache()
-    val_top1 = quick_top1(head, ref_rows, qry_rows, ref_emb, qry_emb)
     args.out.parent.mkdir(parents=True, exist_ok=True)
+    val_top1 = None
+    if not args.skip_val:
+        val_top1 = quick_top1(head, ref_rows, qry_rows, ref_emb, qry_emb)
     torch.save({"head": {k: v.cpu() for k, v in head.state_dict().items()},
                 "d": 128, "tau": args.tau, "seed": args.seed,
                 "val_top1": val_top1}, args.out)

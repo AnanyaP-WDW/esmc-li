@@ -37,3 +37,6 @@ results/ec/nohom_*/*.fa
 results/ec/nohom_*/*.tsv
 
 results/ec/nohom_*/mm_tmp/
+results/ec/diag_*/*.fa
+results/ec/diag_*/*.tsv
+results/ec/diag_*/mm_tmp/

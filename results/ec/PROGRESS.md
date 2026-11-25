@@ -2,7 +2,7 @@
 
 Branch: `exp/ec-local-objective` (from `exp/ec-active-site-late-interaction`)
 Status: first pass completed; EC method gate failed; local-objective 32-overfit
-failed; retrieval/evidence prototype kept.
+and full-scale global decoy both failed; retrieval/evidence prototype kept.
 
 | Phase | Exit criterion | Status |
 |---|---|---|
@@ -19,6 +19,7 @@ failed; retrieval/evidence prototype kept.
 | 10 Product | 100K index; CLI | partial: 20K head index + `ec_annotate.py` works; 100K not built |
 | 11 Write-up | reproducible claims | summary + data card + decision written; no SOTA claim |
 | 12 Local-objective 32-overfit | 32/32 full accuracy; local loss <0.1 | fail: local loss 0.085 but full accuracy 25/32; global decoy triplet 32/32; see OVERFIT32.md |
+| 13 Global decoy at scale | homolog-free FPR improves | fail: catalytic 0.346 vs 0.340/0.344; 5 Å 0.346 vs 0.334/0.340; CARE ood30 0.491 (+1.4 pts); see DECOY_GLOBAL.md |
 
 ## Blockers / deviations
 
@@ -36,5 +37,6 @@ failed; retrieval/evidence prototype kept.
 
 ## Artifacts
 
-See `results/ec/SUMMARY.md`, `results/ec/DATA_CARD.md`, and
-`results/ec/OVERFIT32.md`. Run log: `results/ec/runs.jsonl`.
+See `results/ec/SUMMARY.md`, `results/ec/DATA_CARD.md`,
+`results/ec/OVERFIT32.md`, and `results/ec/DECOY_GLOBAL.md`. Run log:
+`results/ec/runs.jsonl`.

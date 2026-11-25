@@ -59,6 +59,14 @@ control on the patch and full-sequence accuracy, but both are below the global
 baseline. The local objective is not a viable training signal under the fixed
 architecture. Do not scale to 100K/153K with it. See `OVERFIT32.md`.
 
+The global decoy triplet was then scaled to the full 5K training set with
+cluster-disjoint positives (weight 3.0, margin 2.0). It also fails to lower the
+homolog-free EnzymARC FPR: catalytic 0.346 vs 0.340 decoy-aware / 0.344 plain;
+5 Å 0.346 vs 0.334 / 0.340. CARE improves slightly (ood30 0.4907; promiscuous
+0.8421), but the decoy objective does not. See `DECOY_GLOBAL.md`. Both candidate
+training signals have now failed the meaningful test; stop EC research and ship
+the 100K `annotate` product.
+
 ## What would change the decision
 
 A future run needs all three:
