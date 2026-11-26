@@ -227,6 +227,33 @@ esmc-li index list
 esmc-li index pull scope-1k
 ```
 
+## EC annotation (experimental, 20K local index)
+
+`scripts/ec_annotate.py` is a retrieval/evidence tool for EC annotation. It
+searches a 20K S1 reference with exact MaxSim and returns the top-k neighbours,
+a score-weighted EC4 consensus, and a confidence. It is not a calibrated
+classifier and does not claim SOTA EC accuracy; the active-site decoy
+experiments in [`results/ec/`](results/ec/) are negative.
+
+```bash
+python scripts/ec_annotate.py data/ec/reference/ec_head20k.esmci \
+  --sequence "MSTAGK..." \
+  --head results/ec_models/head_ec_tau1_seed0.pt \
+  --k 5
+```
+
+The 20K `.esmci` index is a local 1.9GB artifact (not in git); the tracked
+`head_ec_tau1_seed0.pt` is the tau=1.0 head. The output is JSON with the query,
+the EC4 consensus, the confidence, and the top-k neighbours. A worked example
+is [`results/ec/annotate_example.json`](results/ec/annotate_example.json):
+CARE ood30 query O32178 returns 1.1.1.35 with a top-5 all 1.1.1.35. The
+retrieval numbers and the negative decoy results are in
+[`results/ec/SUMMARY.md`](results/ec/SUMMARY.md); the homolog-free EnzymARC FPR
+is ~0.36, so use the evidence, not the consensus, as the decision input.
+
+Limitations: 20K S1 reference only; the 100K/153K reference is not built; no
+active-site sensitivity was demonstrated.
+
 ## Limitations
 
 - Exact search is interactive at 100K and batch-oriented at 1M.

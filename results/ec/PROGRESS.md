@@ -17,7 +17,7 @@ prototype kept.
 | 7 Decoy-aware | decoy FPR/AUC improves | fail: internal 8.5% vs 9.0%; EnzymARC 67.2% vs 67.6% |
 | 8 External | beat FuncSeek/CLEAN or ≥50% FPR cut | fail: 47.7% CARE ood30 vs 64.6/55.1; no FPR cut |
 | 9 Decision | explicit go/no-go | **no-go for EC method claim**; homolog-free diagnostic halved FPR to ~34% but did not eliminate it; see DECISION.md and DIAGNOSTIC.md |
-| 10 Product | 100K index; CLI | partial: 20K head index + `ec_annotate.py` works; 100K not built |
+| 10 Product | 100K index; CLI | shipped 20K: 20K head index + `ec_annotate.py` packaged (README + test + example); 100K/153K disk-blocked |
 | 11 Write-up | reproducible claims | summary + data card + decision written; no SOTA claim |
 | 12 Local-objective 32-overfit | 32/32 full accuracy; local loss <0.1 | fail: local loss 0.085 but full accuracy 25/32; global decoy triplet 32/32; see OVERFIT32.md |
 | 13 Global decoy at scale | homolog-free FPR improves | fail: catalytic 0.346 vs 0.340/0.344; 5 Å 0.346 vs 0.334/0.340; CARE ood30 0.491 (+1.4 pts); see DECOY_GLOBAL.md |

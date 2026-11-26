@@ -21,8 +21,10 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "scripts"))
 from esmc_li.index import Esmci  # noqa: E402
 from esmc_li.search import maxsim_topk_numpy  # noqa: E402
+from ec_eval import load_head  # noqa: E402
 
 DEFAULT_MODEL = Path("/Users/ananyapathak/Desktop/oss/esmc.cpp/models/esmc-300m-f16.gguf")
 DEFAULT_BIN = Path("/Users/ananyapathak/Desktop/oss/esmc.cpp/build/esmc-embed")
@@ -80,7 +82,7 @@ def main() -> int:
     rows = ([{"id": "q0", "sequence": args.sequence}] if args.sequence
             else read_fasta(args.query))
     idx = Esmci(args.index)
-    head = np.load(args.head).astype(np.float32)
+    head = load_head(args.head)
     embs = embed(rows, args.model, args.embed_bin)
     out = []
     for r, x in zip(rows, embs):
